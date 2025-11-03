@@ -17,6 +17,3 @@ verify_jwt = false
 
 [functions.send-signup-confirmation]
 verify_jwt = false
-
-[functions.send-magic-link]
-verify_jwt = false

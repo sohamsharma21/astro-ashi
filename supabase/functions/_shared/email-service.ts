@@ -2,7 +2,6 @@ import { Resend } from "npm:resend@2.0.0";
 import { Logger } from "./security.ts";
 import {
   EmailTemplate,
-  getMagicLinkTemplate,
   getSignupConfirmationTemplate,
   getBookingVerificationTemplate,
   getBookingConfirmationTemplate
@@ -42,16 +41,6 @@ export async function sendEmail(options: SendEmailOptions): Promise<void> {
 
 // Pre-configured email senders for different types
 export const emailService = {
-  async sendMagicLink(
-    email: string,
-    magicLink: string,
-    language: 'en' | 'hi',
-    logger: Logger
-  ): Promise<void> {
-    const template = getMagicLinkTemplate(magicLink, language);
-    await sendEmail({ to: email, template, logger });
-  },
-
   async sendSignupConfirmation(
     email: string,
     name: string,
