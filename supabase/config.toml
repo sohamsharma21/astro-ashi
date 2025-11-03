@@ -1,1 +1,19 @@
 project_id = "czpumlrofurdktvjtibl"
+
+[functions.generate-horoscope]
+verify_jwt = false
+
+[functions.calculate-kundli]
+verify_jwt = false
+
+[functions.generate-kundli-insights]
+verify_jwt = false
+
+[functions.get-astro-insight]
+verify_jwt = false
+
+[functions.send-booking-confirmation]
+verify_jwt = false
+
+[functions.send-signup-confirmation]
+verify_jwt = false

@@ -118,6 +118,43 @@ export const bookingsApi = {
       console.log('Verification email sent successfully:', data);
     }, 'sendBookingVerificationEmail');
   },
+  
+  // Send direct booking confirmation email (no verification required)
+  async sendBookingConfirmationEmail(
+    email: string, 
+    name: string,
+    bookingId: string,
+    packageTitle: string,
+    date: string,
+    time: string,
+    language: 'en' | 'hi'
+  ): Promise<void> {
+    return withRetry(async () => {
+      // Validate inputs to prevent edge function errors
+      if (!email || !name || !bookingId || !packageTitle || !date || !time) {
+        throw new Error('Missing required parameters for confirmation email');
+      }
+      
+      const { data, error } = await supabase.functions.invoke('send-booking-confirmation', {
+        body: {
+          email,
+          name,
+          bookingId,
+          packageTitle,
+          date,
+          time,
+          language
+        }
+      });
+      
+      if (error) {
+        console.error('Error sending confirmation email:', error);
+        throw error;
+      }
+      
+      console.log('Confirmation email sent successfully:', data);
+    }, 'sendBookingConfirmationEmail');
+  },
 
   // Get booking verification status
   async getBookingVerificationStatus(bookingId: string): Promise<{ verified: boolean; expires_at?: string }> {

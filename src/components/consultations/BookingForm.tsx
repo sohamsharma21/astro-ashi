@@ -101,8 +101,8 @@ export const BookingForm = ({ selectedPackage, onCancel }: BookingFormProps) => 
             || user.email?.split('@')[0] 
             || 'AstroAshi User');
 
-          // Send verification email
-          await bookingsApi.sendBookingVerificationEmail(
+          // Send direct booking confirmation email (no verification)
+          await bookingsApi.sendBookingConfirmationEmail(
             user.email,
             displayName,
             booking.id || '',
@@ -118,8 +118,8 @@ export const BookingForm = ({ selectedPackage, onCancel }: BookingFormProps) => 
       }
       toast.success(
         language === 'en' 
-          ? 'Consultation booked successfully! Please check your email and click the verification link to confirm your booking.'
-          : 'परामर्श सफलतापूर्वक बुक किया गया! कृपया अपना ईमेल जांचें और अपनी बुकिंग की पुष्टि के लिए सत्यापन लिंक पर क्लिक करें।'
+          ? 'Consultation booked successfully! A confirmation email has been sent to you.'
+          : 'परामर्श सफलतापूर्वक बुक किया गया! आपको एक पुष्टिकरण ईमेल भेजा गया है।'
       );
       
       onCancel();

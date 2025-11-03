@@ -1,160 +1,135 @@
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { corsHeaders } from "../_shared/cors.ts";
+import { Logger, generateRequestId } from "../_shared/security.ts";
 
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
-import { corsHeaders } from '../_shared/cors.ts';
-import { ZodiacSign } from '../_shared/types.ts';
-
-// Define the request body type
-interface RequestBody {
+interface AstroInsightRequest {
   query: string;
   language: 'en' | 'hi';
   userProfile?: {
     full_name?: string;
     birth_date?: string;
     birth_place?: string;
-    primary_zodiac_sign?: ZodiacSign;
+    primary_zodiac_sign?: string;
   };
 }
 
-// Initialize Supabase client
-const supabaseUrl = Deno.env.get('SUPABASE_URL') || '';
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || '';
-const supabase = createClient(supabaseUrl, supabaseKey);
+const handler = async (req: Request): Promise<Response> => {
+  const requestId = generateRequestId();
+  const logger = new Logger({ 
+    functionName: 'get-astro-insight',
+    requestId 
+  });
+  
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
 
-// Generate response using Swiss Ephemeris calculations
-const generateAstroInsight = async (
-  query: string,
-  language: 'en' | 'hi',
-  userProfile?: RequestBody['userProfile']
-): Promise<string> => {
   try {
-    // In a production app, we would use a proper AI service with our own prompt
-    // For now, we'll simulate the response based on the query content
+    logger.info('Processing astro insight request');
     
-    // Get current planetary positions from database (simulated)
-    const { data: planets } = await supabase
-      .from('astrological_events')
-      .select('*')
-      .limit(3);
-      
-    // Extract query keywords
-    const keywords = query.toLowerCase();
-    const zodiacSigns = [
-      'aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo',
-      'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces',
-      'मेष', 'वृषभ', 'मिथुन', 'कर्क', 'सिंह', 'कन्या',
-      'तुला', 'वृश्चिक', 'धनु', 'मकर', 'कुंभ', 'मीन'
-    ];
+    const { query, language, userProfile }: AstroInsightRequest = await req.json();
     
-    const mentionedSign = zodiacSigns.find(sign => keywords.includes(sign)) || 
-      userProfile?.primary_zodiac_sign || 
-      'aries';
-      
-    // Topics
-    const isAboutCareer = keywords.includes('career') || keywords.includes('job') || 
-      keywords.includes('work') || keywords.includes('business') ||
-      keywords.includes('करियर') || keywords.includes('नौकरी') ||
-      keywords.includes('काम') || keywords.includes('व्यापार');
-      
-    const isAboutLove = keywords.includes('love') || keywords.includes('relationship') ||
-      keywords.includes('marriage') || keywords.includes('partner') || 
-      keywords.includes('प्यार') || keywords.includes('रिश्ता') ||
-      keywords.includes('शादी') || keywords.includes('साथी');
-      
-    const isAboutHealth = keywords.includes('health') || keywords.includes('medical') ||
-      keywords.includes('wellness') || keywords.includes('body') ||
-      keywords.includes('स्वास्थ्य') || keywords.includes('चिकित्सा') ||
-      keywords.includes('तंदुरुस्ती') || keywords.includes('शरीर');
-      
-    const isAboutMoney = keywords.includes('money') || keywords.includes('finance') ||
-      keywords.includes('wealth') || keywords.includes('investment') ||
-      keywords.includes('पैसा') || keywords.includes('वित्त') ||
-      keywords.includes('धन') || keywords.includes('निवेश');
-
-    // Current date for calculations
-    const now = new Date();
-    const currentMonth = now.getMonth() + 1;
-    const currentDay = now.getDate();
-    
-    // Generate appropriate response based on query context
-    let response = '';
-    
-    if (language === 'en') {
-      if (isAboutCareer) {
-        response = `Based on the current position of Mars and Jupiter, ${mentionedSign} is experiencing a positive influence in career matters. The next 3 weeks present opportunities for growth and recognition. Focus on showcasing your unique skills, and don't hesitate to take calculated risks. A senior colleague may offer valuable guidance around the ${currentDay + 5}th.`;
-      } else if (isAboutLove) {
-        response = `Venus is currently in a favorable position for ${mentionedSign}, bringing harmony and understanding to your relationships. If single, you may encounter someone intriguing through a mutual friend. If committed, this is an excellent time to deepen your connection through meaningful conversations. Pay attention to subtle cues from your partner around the ${currentDay + 3}rd.`;
-      } else if (isAboutHealth) {
-        response = `The alignment of the Sun and Saturn suggests that ${mentionedSign} should pay special attention to rest and recovery right now. Your energy levels might fluctuate, so balance activity with adequate rest. Focus on nutrition rich in minerals and vitamins C and D. Gentle movement like walking or swimming would be beneficial rather than intense exercise for the next 10 days.`;
-      } else if (isAboutMoney) {
-        response = `Mercury's current position indicates a favorable time for ${mentionedSign} to review financial strategies. You may discover overlooked opportunities for saving or investment. Avoid impulsive purchases until after the ${currentDay + 7}th. A conversation with someone experienced in financial matters could prove extremely valuable this month.`;
-      } else {
-        response = `According to the Swiss Ephemeris calculations, ${mentionedSign} is currently under the influence of ${planets ? planets[0].event_type : 'a planetary transit'}. This is a time of reflection and inner growth. Your intuition is heightened, making it an excellent period to connect with your deeper purpose. Pay attention to recurring thoughts or dreams, as they contain important messages for your journey ahead. The coming weeks will bring clarity to a situation that has seemed uncertain.`;
-      }
-    } else {
-      // Hindi responses
-      if (isAboutCareer) {
-        response = `मंगल और बृहस्पति की वर्तमान स्थिति के आधार पर, ${mentionedSign} करियर के मामलों में सकारात्मक प्रभाव का अनुभव कर रहा है। अगले 3 हफ्तों में विकास और पहचान के अवसर मिलेंगे। अपने अनोखे कौशल को प्रदर्शित करने पर ध्यान दें, और सोच-समझकर जोखिम लेने से हिचकिचाएं नहीं। एक वरिष्ठ सहकर्मी ${currentDay + 5} के आसपास मूल्यवान मार्गदर्शन प्रदान कर सकते हैं।`;
-      } else if (isAboutLove) {
-        response = `शुक्र वर्तमान में ${mentionedSign} के लिए एक अनुकूल स्थिति में है, जो आपके संबंधों में सामंजस्य और समझ ला रहा है। अगर आप अविवाहित हैं, तो आप एक आम दोस्त के माध्यम से किसी दिलचस्प व्यक्ति से मिल सकते हैं। अगर आप प्रतिबद्ध हैं, तो यह सार्थक बातचीत के माध्यम से अपने संबंध को गहरा करने का एक उत्कृष्ट समय है। ${currentDay + 3} के आसपास अपने साथी के सूक्ष्म संकेतों पर ध्यान दें।`;
-      } else if (isAboutHealth) {
-        response = `सूर्य और शनि का संरेखण बताता है कि ${mentionedSign} को अभी आराम और रिकवरी पर विशेष ध्यान देना चाहिए। आपके ऊर्जा स्तर में उतार-चढ़ाव हो सकता है, इसलिए गतिविधि को पर्याप्त आराम के साथ संतुलित करें। खनिजों और विटामिन सी और डी से भरपूर पोषण पर ध्यान दें। अगले 10 दिनों के लिए तीव्र व्यायाम के बजाय पैदल चलना या तैराकी जैसी हल्की गतिविधि फायदेमंद होगी।`;
-      } else if (isAboutMoney) {
-        response = `बुध की वर्तमान स्थिति ${mentionedSign} के लिए वित्तीय रणनीतियों की समीक्षा के लिए एक अनुकूल समय का संकेत देती है। आप बचत या निवेश के लिए अनदेखे अवसरों की खोज कर सकते हैं। ${currentDay + 7} के बाद तक आवेगी खरीदारी से बचें। वित्तीय मामलों में अनुभवी किसी व्यक्ति के साथ बातचीत इस महीने बेहद मूल्यवान साबित हो सकती है।`;
-      } else {
-        response = `स्विस एफेमेरिस गणनाओं के अनुसार, ${mentionedSign} वर्तमान में ${planets ? planets[0].event_type : 'एक ग्रह पारगमन'} के प्रभाव में है। यह चिंतन और आंतरिक विकास का समय है। आपकी अंतर्ज्ञान बढ़ी हुई है, जिससे यह आपके गहरे उद्देश्य से जुड़ने के लिए एक उत्कृष्ट अवधि बन जाती है। बार-बार आने वाले विचारों या सपनों पर ध्यान दें, क्योंकि उनमें आपकी यात्रा के लिए महत्वपूर्ण संदेश हैं। आने वाले हफ्तों में एक ऐसी स्थिति में स्पष्टता आएगी जो अनिश्चित लग रही थी।`;
-      }
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY is not configured');
     }
+
+    // Build context from user profile
+    let userContext = '';
+    if (userProfile) {
+      userContext = `\n\nUser Context:`;
+      if (userProfile.full_name) userContext += `\n- Name: ${userProfile.full_name}`;
+      if (userProfile.birth_date) userContext += `\n- Birth Date: ${userProfile.birth_date}`;
+      if (userProfile.birth_place) userContext += `\n- Birth Place: ${userProfile.birth_place}`;
+      if (userProfile.primary_zodiac_sign) userContext += `\n- Zodiac Sign: ${userProfile.primary_zodiac_sign}`;
+    }
+
+    const systemPrompt = language === 'en' 
+      ? `You are an expert Vedic astrologer from AstroAshi, a trusted platform for astrological insights. You provide accurate, insightful, and compassionate astrological guidance based on Vedic astrology principles. When answering questions:
+- Always consider the user's birth details and zodiac sign if available
+- Provide detailed, personalized insights
+- Answer ONLY astrology, horoscope, kundli, and AstroAshi-related questions
+- For non-astrology questions, politely redirect them to astrology topics
+- Use proper astrological terminology and concepts
+- Be encouraging and positive while maintaining authenticity${userContext}`
+      : `आप AstroAshi के एक विशेषज्ञ वैदिक ज्योतिषी हैं, जो ज्योतिषीय अंतर्दृष्टि के लिए एक विश्वसनीय मंच है। आप वैदिक ज्योतिष सिद्धांतों के आधार पर सटीक, अंतर्दृष्टिपूर्ण और दयालु ज्योतिषीय मार्गदर्शन प्रदान करते हैं। प्रश्नों का उत्तर देते समय:
+- उपलब्ध होने पर हमेशा उपयोगकर्ता के जन्म विवरण और राशि चिन्ह पर विचार करें
+- विस्तृत, व्यक्तिगत अंतर्दृष्टि प्रदान करें
+- केवल ज्योतिष, राशिफल, कुंडली और AstroAshi से संबंधित प्रश्नों का उत्तर दें
+- गैर-ज्योतिष प्रश्नों के लिए, उन्हें विनम्रता से ज्योतिष विषयों की ओर पुनर्निर्देशित करें
+- उचित ज्योतिषीय शब्दावली और अवधारणाओं का उपयोग करें
+- प्रामाणिकता बनाए रखते हुए उत्साहजनक और सकारात्मक रहें${userContext}`;
+
+    logger.info('Calling Gemini API');
     
-    return response;
-  } catch (error) {
-    console.error('Error generating astrological insight:', error);
-    return language === 'en' 
-      ? 'I apologize, but I am unable to provide an astrological insight at this time due to a technical issue. Please try again later.'
-      : 'मुझे क्षमा करें, लेकिन मैं तकनीकी समस्या के कारण इस समय ज्योतिषीय अंतर्दृष्टि प्रदान करने में असमर्थ हूं। कृपया बाद में पुन: प्रयास करें।';
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                { text: systemPrompt },
+                { text: `\n\nUser Question: ${query}` }
+              ]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+          }
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      logger.error('Gemini API error', { status: response.status, error: errorText });
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    logger.info('Gemini API response received');
+    
+    const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+      (language === 'en' 
+        ? "I apologize, but I'm having trouble accessing the astrological data at the moment. Please try again." 
+        : "मुझे क्षमा करें, लेकिन मुझे इस समय ज्योतिषीय डेटा तक पहुंचने में परेशानी हो रही है। कृपया पुन: प्रयास करें।");
+
+    return new Response(
+      JSON.stringify({ response: aiResponse }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+          "X-Request-Id": requestId
+        },
+      }
+    );
+  } catch (error: any) {
+    logger.error('Error in get-astro-insight function', error);
+    return new Response(
+      JSON.stringify({ 
+        error: error.message || 'Internal server error',
+        requestId 
+      }),
+      {
+        status: 500,
+        headers: { 
+          "Content-Type": "application/json", 
+          ...corsHeaders,
+          "X-Request-Id": requestId
+        },
+      }
+    );
   }
 };
 
-Deno.serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
-  }
-  
-  try {
-    const { query, language, userProfile } = await req.json() as RequestBody;
-    
-    if (!query) {
-      return new Response(
-        JSON.stringify({ error: 'Query is required' }),
-        { 
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        }
-      );
-    }
-    
-    const response = await generateAstroInsight(
-      query, 
-      language || 'en',
-      userProfile
-    );
-    
-    return new Response(
-      JSON.stringify({ response }),
-      { 
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
-  } catch (error) {
-    console.error('Error processing request:', error);
-    
-    return new Response(
-      JSON.stringify({ error: 'Failed to process request' }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
-  }
-});
+serve(handler);
