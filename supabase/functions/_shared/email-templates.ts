@@ -13,6 +13,89 @@ export interface EmailTemplate {
   html: string;
 }
 
+export function getMagicLinkTemplate(
+  magicLink: string,
+  language: 'en' | 'hi'
+): EmailTemplate {
+  if (language === 'hi') {
+    return {
+      subject: '🔮 आपका AstroAshi साइन इन लिंक',
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8">
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffd700; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+              .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+              .button { display: inline-block; padding: 12px 30px; background: #ffd700; color: #1a1a2e; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+              .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>🔮 AstroAshi में साइन इन करें</h1>
+              </div>
+              <div class="content">
+                <p>अपने AstroAshi खाते में सुरक्षित रूप से साइन इन करने के लिए नीचे दिए गए बटन पर क्लिक करें:</p>
+                <div style="text-align: center;">
+                  <a href="${magicLink}" class="button">अभी साइन इन करें</a>
+                </div>
+                <p style="margin-top: 30px; color: #666; font-size: 14px;">सुरक्षा कारणों से यह लिंक 1 घंटे में समाप्त हो जाएगा।</p>
+                <p style="color: #666; font-size: 12px;">यदि आपने इस लिंक का अनुरोध नहीं किया है, तो आप इस ईमेल को सुरक्षित रूप से अनदेखा कर सकते हैं।</p>
+              </div>
+              <div class="footer">
+                <p>© 2025 AstroAshi. सर्वाधिकार सुरक्षित।</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `
+    };
+  }
+  
+  return {
+    subject: '🔮 Your AstroAshi Sign In Link',
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #ffd700; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; padding: 12px 30px; background: #ffd700; color: #1a1a2e; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🔮 Sign In to AstroAshi</h1>
+            </div>
+            <div class="content">
+              <p>Click the button below to securely sign in to your AstroAshi account:</p>
+              <div style="text-align: center;">
+                <a href="${magicLink}" class="button">Sign In Now</a>
+              </div>
+              <p style="margin-top: 30px; color: #666; font-size: 14px;">This link will expire in 1 hour for security reasons.</p>
+              <p style="color: #666; font-size: 12px;">If you did not request this link, you can safely ignore this email.</p>
+            </div>
+            <div class="footer">
+              <p>© 2025 AstroAshi. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `
+  };
+}
+
 export function getSignupConfirmationTemplate(
   name: string,
   language: 'en' | 'hi'
