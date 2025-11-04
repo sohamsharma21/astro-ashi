@@ -9,15 +9,23 @@ import KundliTabs from '@/components/kundli/KundliTabs';
 import CompareKundliButton from '@/components/kundli/CompareKundliButton';
 import { useKundli } from '@/hooks/useKundli';
 import { motion } from 'framer-motion';
+import { SEOHead } from '@/components/SEOHead';
 
 const KundliGenerator = () => {
   const { language } = useAuth();
   const { loading, loadingInsights, kundliData, generateKundli, resetKundli } = useKundli();
 
   return (
-    <div className="cosmic-bg min-h-screen">
-      <StarBackground starCount={150} />
-      <Navigation />
+    <>
+      <SEOHead 
+        title="Kundli Generator - Free Birth Chart & Horoscope Analysis | AstroAshi"
+        description="Generate your personalized Kundli (birth chart) with detailed planetary positions, houses, and AI-powered insights. Free Vedic astrology chart calculator."
+        keywords="kundli generator, birth chart, janam kundali, vedic horoscope, natal chart, planetary positions, कुंडली, जन्म कुंडली"
+        canonical="/kundli-generator"
+      />
+      <div className="cosmic-bg min-h-screen">
+        <StarBackground starCount={150} />
+        <Navigation />
       
       <main className="container mx-auto px-4 pt-32 pb-20">
         <motion.h1 
@@ -86,6 +94,7 @@ const KundliGenerator = () => {
       
       <Footer />
     </div>
+    </>
   );
 };
 

@@ -10,6 +10,7 @@ import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 import { CTASection } from '@/components/home/CTASection';
 import { AnimatedSection } from '@/components/home/AnimatedSection';
 import { useAuth } from '@/lib/auth';
+import { SEOHead } from '@/components/SEOHead';
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
@@ -64,9 +65,16 @@ const Index = () => {
   }
 
   return (
-    <div className="cosmic-bg min-h-screen">
-      <StarBackground starCount={150} />
-      <Navigation />
+    <>
+      <SEOHead 
+        title="AstroAshi - Your Personal Astrology & Kundli Platform"
+        description="Get personalized horoscopes, Kundli analysis, astrology consultations, and AI-powered astrological insights. Explore your cosmic journey with AstroAshi."
+        keywords="astrology, horoscope, kundli, birth chart, zodiac signs, astrology consultation, daily horoscope, vedic astrology, jyotish, राशिफल, कुंडली"
+        canonical="/"
+      />
+      <div className="cosmic-bg min-h-screen">
+        <StarBackground starCount={150} />
+        <Navigation />
       <main>
         <HeroSection />
         <AnimatedSection>
@@ -84,6 +92,7 @@ const Index = () => {
       </main>
       <Footer />
     </div>
+    </>
   );
 };
 

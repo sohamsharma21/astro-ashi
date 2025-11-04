@@ -1,18 +1,45 @@
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth';
 import { useNavPreference } from '@/hooks/useNavPreference';
 import { NavDisplayMode } from '@/lib/navigationConfig';
-import { Home, Calendar, Sparkles } from 'lucide-react';
+import { Home, Calendar, Sparkles, Check } from 'lucide-react';
+import { toast } from 'sonner';
 
 export const NavigationPreferences = () => {
   const { language } = useAuth();
   const { navDisplayMode, updateNavPreference, loading } = useNavPreference();
+  const [selectedMode, setSelectedMode] = useState<NavDisplayMode>(navDisplayMode);
+  const [applying, setApplying] = useState(false);
 
   const handleModeChange = (value: string) => {
-    updateNavPreference(value as NavDisplayMode);
+    setSelectedMode(value as NavDisplayMode);
   };
+
+  const handleApply = async () => {
+    setApplying(true);
+    try {
+      await updateNavPreference(selectedMode);
+      toast.success(
+        language === 'en' 
+          ? 'Navigation preference updated successfully!' 
+          : 'नेविगेशन प्राथमिकता सफलतापूर्वक अपडेट की गई!'
+      );
+    } catch (error) {
+      toast.error(
+        language === 'en' 
+          ? 'Failed to update navigation preference' 
+          : 'नेविगेशन प्राथमिकता अपडेट करने में विफल'
+      );
+    } finally {
+      setApplying(false);
+    }
+  };
+
+  const hasChanges = selectedMode !== navDisplayMode;
 
   if (loading) return null;
 
@@ -29,7 +56,7 @@ export const NavigationPreferences = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <RadioGroup value={navDisplayMode} onValueChange={handleModeChange}>
+        <RadioGroup value={selectedMode} onValueChange={handleModeChange}>
           <div className="flex items-center space-x-3 p-3 rounded-lg border border-cosmic-gold border-opacity-20 hover:border-opacity-40 transition-all">
             <RadioGroupItem value="icons" id="icons" />
             <Label 
@@ -101,6 +128,18 @@ export const NavigationPreferences = () => {
             ? 'Tip: Icons Only mode provides a cleaner, more spacious interface'
             : 'सुझाव: केवल आइकन मोड एक साफ़, अधिक विशाल इंटरफ़ेस प्रदान करता है'}
         </div>
+
+        <Button
+          onClick={handleApply}
+          disabled={!hasChanges || applying}
+          className={`w-full bg-cosmic-gold hover:bg-cosmic-gold/90 text-cosmic-deep-space font-semibold ${language === 'hi' ? 'font-noto-devanagari' : ''}`}
+        >
+          <Check className="h-4 w-4 mr-2" />
+          {applying 
+            ? (language === 'en' ? 'Applying...' : 'लागू हो रहा है...')
+            : (language === 'en' ? 'Apply Changes' : 'परिवर्तन लागू करें')
+          }
+        </Button>
       </CardContent>
     </Card>
   );

@@ -50,21 +50,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             : 'वापसी पर स्वागत है!'
         });
         
-        // Send signup confirmation email ONLY for new signups
+        // Send welcome email for new signups
         if (isNewUser) {
-          try {
-            await supabase.functions.invoke('send-signup-confirmation', {
-              body: {
-                email: currentSession.user.email,
-                name: currentSession.user.user_metadata?.full_name || currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0],
-                language: language
-              }
-            });
-            console.log('Signup confirmation email sent successfully');
-          } catch (error) {
-            console.error('Error sending signup confirmation:', error);
-            // Non-critical error, don't block the flow
-          }
+          setTimeout(async () => {
+            try {
+              await supabase.functions.invoke('send-signup-confirmation', {
+                body: {
+                  email: currentSession.user.email,
+                  name: currentSession.user.user_metadata?.full_name || currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0],
+                  language: language
+                }
+              });
+            } catch (error) {
+              // Non-critical error, don't block the flow
+            }
+          }, 0);
         }
       } else if (currentSession?.user && event === 'TOKEN_REFRESHED') {
         setUser(currentSession.user);
@@ -78,8 +78,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const { data } = await supabase.auth.getSession();
         setUser(data.session?.user || null);
         setSession(data.session);
-      } catch (error) {
-        console.error('Error checking session:', error);
       } finally {
         setLoading(false);
       }

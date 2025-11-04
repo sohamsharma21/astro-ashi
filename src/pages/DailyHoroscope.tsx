@@ -7,6 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
 import { getZodiacSignName } from '@/lib/translations';
+import { SEOHead } from '@/components/SEOHead';
 
 // Import our new components and hooks
 import ZodiacSignSelector from '@/components/horoscope/ZodiacSignSelector';
@@ -35,9 +36,16 @@ const DailyHoroscope = () => {
   };
 
   return (
-    <div className="cosmic-bg min-h-screen">
-      <StarBackground starCount={150} />
-      <Navigation />
+    <>
+      <SEOHead 
+        title="Daily Horoscope - Personalized Zodiac Predictions | AstroAshi"
+        description="Get your personalized daily horoscope based on your zodiac sign. Accurate predictions for love, career, health, and more. Updated daily."
+        keywords="daily horoscope, zodiac predictions, astrology forecast, today's horoscope, राशिफल, आज का राशिफल"
+        canonical="/daily-horoscope"
+      />
+      <div className="cosmic-bg min-h-screen">
+        <StarBackground starCount={150} />
+        <Navigation />
       
       <main className="container mx-auto px-4 pt-32 pb-20">
         <h1 className={`text-4xl md:text-6xl font-bold mb-12 text-center text-gradient-gold ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
@@ -64,6 +72,7 @@ const DailyHoroscope = () => {
 
       <Footer />
     </div>
+    </>
   );
 };
 

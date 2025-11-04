@@ -54,7 +54,6 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
         );
       }
     } catch (error) {
-      console.error('Error:', error);
       toast.error(language === 'en' ? 'Failed to get response' : 'प्रतिक्रिया प्राप्त करने में विफल');
     } finally {
       setLoading(false);
