@@ -38,8 +38,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             : 'आप सफलतापूर्वक साइन आउट हो गए हैं'
         });
       } else if (currentSession?.user && event === 'SIGNED_IN') {
-        const isNewUser = currentSession.user.created_at === currentSession.user.updated_at;
-        
         setUser(currentSession.user);
         setSession(currentSession);
         
@@ -50,11 +48,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             : 'वापसी पर स्वागत है!'
         });
         
-        // Send welcome email for new signups
-        if (isNewUser) {
+        // Send welcome email for Google sign-in
+        const provider = currentSession.user.app_metadata?.provider;
+        if (provider === 'google') {
           setTimeout(async () => {
             try {
-              await supabase.functions.invoke('send-signup-confirmation', {
+              await supabase.functions.invoke('send-welcome-email', {
                 body: {
                   email: currentSession.user.email,
                   name: currentSession.user.user_metadata?.full_name || currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0],
@@ -62,13 +61,30 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 }
               });
             } catch (error) {
-              // Non-critical error, don't block the flow
+              // Non-critical
             }
           }, 0);
         }
-      } else if (currentSession?.user && event === 'TOKEN_REFRESHED') {
-        setUser(currentSession.user);
-        setSession(currentSession);
+      } else if (currentSession?.user && event === 'USER_UPDATED') {
+        // Send welcome email after email verification
+        const wasJustVerified = currentSession.user.email_confirmed_at && 
+                               !currentSession.user.app_metadata?.provider;
+        
+        if (wasJustVerified) {
+          setTimeout(async () => {
+            try {
+              await supabase.functions.invoke('send-welcome-email', {
+                body: {
+                  email: currentSession.user.email,
+                  name: currentSession.user.user_metadata?.full_name || currentSession.user.user_metadata?.name || currentSession.user.email?.split('@')[0],
+                  language: language
+                }
+              });
+            } catch (error) {
+              // Non-critical
+            }
+          }, 0);
+        }
       }
     });
 

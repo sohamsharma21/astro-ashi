@@ -101,7 +101,7 @@ export const BookingForm = ({ selectedPackage, onCancel }: BookingFormProps) => 
             || user.email?.split('@')[0] 
             || 'AstroAshi User');
 
-          // Send direct booking confirmation email (no verification)
+          // Send booking confirmation email
           await bookingsApi.sendBookingConfirmationEmail(
             user.email,
             displayName,
@@ -112,7 +112,6 @@ export const BookingForm = ({ selectedPackage, onCancel }: BookingFormProps) => 
             language
           );
         } catch (emailError) {
-          console.error('Error sending verification email:', emailError);
           // Continue with success message even if email fails
         }
       }

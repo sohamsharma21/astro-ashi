@@ -1,187 +1,87 @@
-# Google OAuth Setup Guide for Jyotisham
+# Google OAuth Setup Guide
 
-This guide will help you configure Google Sign-In for your Jyotisham astrology application.
+To enable Google Sign-In for AstroAshi, follow these steps:
 
-## Prerequisites
-
-- A Google Cloud account
-- Access to your Supabase project dashboard
-- Your application's production URL
-
-## Step 1: Create Google Cloud Project
+## 1. Create Google Cloud Project
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Click **Select a project** → **New Project**
-3. Enter project name: `Jyotisham-Auth`
-4. Click **Create**
+2. Create a new project or select an existing one
 
-## Step 2: Configure OAuth Consent Screen
+## 2. Configure OAuth Consent Screen
 
-1. In Google Cloud Console, navigate to **APIs & Services** → **OAuth consent screen**
-2. Select **External** user type (unless you have Google Workspace)
-3. Click **Create**
-
-### Fill in the required information:
-
-- **App name**: Jyotisham
-- **User support email**: Your email
-- **App logo**: (Optional) Upload your app logo
-- **Application home page**: `https://jyotisham.lovable.app`
-- **Authorized domains**: 
-  - `lovable.app`
-  - `supabase.co`
-- **Developer contact email**: Your email
-
-4. Click **Save and Continue**
-
-### Configure Scopes:
-
-1. Click **Add or Remove Scopes**
-2. Add these scopes:
+1. Navigate to **APIs & Services** > **OAuth consent screen**
+2. Select **External** user type
+3. Fill in the required information:
+   - App name: **AstroAshi**
+   - User support email: Your email
+   - Developer contact email: Your email
+4. Under **Authorized domains**, add:
+   - `czpumlrofurdktvjtibl.supabase.co`
+   - `lovable.app` (if deploying to Lovable)
+   - Your custom domain (if applicable)
+5. Configure scopes:
    - `.../auth/userinfo.email`
    - `.../auth/userinfo.profile`
    - `openid`
-3. Click **Update** → **Save and Continue**
+6. Save and continue
 
-### Test Users (for development):
+## 3. Create OAuth Client ID
 
-1. Add your email and any test user emails
-2. Click **Save and Continue**
-
-## Step 3: Create OAuth Credentials
-
-1. Go to **APIs & Services** → **Credentials**
-2. Click **Create Credentials** → **OAuth Client ID**
-3. Select **Application type**: Web application
-4. Enter **Name**: `Jyotisham Web Client`
-
-### Configure Authorized JavaScript origins:
-
-Add these URLs:
-```
-http://localhost:5173
-https://jyotisham.lovable.app
-https://czpumlrofurdktvjtibl.supabase.co
-```
-
-### Configure Authorized redirect URIs:
-
-Add these URLs:
-```
-http://localhost:5173/auth/callback
-https://jyotisham.lovable.app/auth/callback
-https://czpumlrofurdktvjtibl.supabase.co/auth/v1/callback
-```
-
+1. Go to **APIs & Services** > **Credentials**
+2. Click **Create Credentials** > **OAuth Client ID**
+3. Select **Web application**
+4. Configure:
+   - **Name**: AstroAshi Web Client
+   - **Authorized JavaScript origins**:
+     - `https://astroashi.lovable.app` (or your domain)
+     - `http://localhost:5173` (for local development)
+   - **Authorized redirect URIs**:
+     - `https://czpumlrofurdktvjtibl.supabase.co/auth/v1/callback`
+     - `http://localhost:54321/auth/v1/callback` (for local Supabase)
 5. Click **Create**
-6. **Save your credentials**: Copy the Client ID and Client Secret
+6. Copy your **Client ID** and **Client Secret**
 
-## Step 4: Configure Supabase
+## 4. Configure Supabase
 
-1. Go to [Supabase Dashboard](https://supabase.com/dashboard/project/czpumlrofurdktvjtibl)
-2. Navigate to **Authentication** → **Providers**
-3. Find **Google** and toggle it **ON**
+1. Go to your [Supabase Dashboard](https://supabase.com/dashboard/project/czpumlrofurdktvjtibl/auth/providers)
+2. Navigate to **Authentication** > **Providers**
+3. Find **Google** in the list
+4. Enable Google provider
+5. Enter your:
+   - **Client ID** (from step 3)
+   - **Client Secret** (from step 3)
+6. Save configuration
 
-### Enter Google OAuth credentials:
+## 5. Test Google Sign-In
 
-- **Client ID**: Paste the Client ID from Google Cloud Console
-- **Client Secret**: Paste the Client Secret from Google Cloud Console
-
-4. Click **Save**
-
-## Step 5: Configure Site URL and Redirect URLs in Supabase
-
-1. In Supabase Dashboard, go to **Authentication** → **URL Configuration**
-
-### Set Site URL:
-```
-https://jyotisham.lovable.app
-```
-
-### Add Redirect URLs:
-```
-http://localhost:5173/**
-https://jyotisham.lovable.app/**
-https://czpumlrofurdktvjtibl.supabase.co/auth/v1/callback
-```
-
-2. Click **Save**
-
-## Step 6: Test Google Sign-In
-
-1. Open your application: `https://jyotisham.lovable.app`
-2. Click on the **Sign In** or **Sign Up** button
-3. Click **Sign in with Google**
-4. Choose a Google account
-5. Grant permissions
-6. You should be redirected back to the app and logged in
+1. Go to your AstroAshi application
+2. Click "Sign in with Google"
+3. You should be redirected to Google's login page
+4. After successful login, you'll be redirected back to AstroAshi
 
 ## Troubleshooting
 
-### Error: "requested path is invalid"
-
-**Solution**: Make sure Site URL and Redirect URLs are correctly set in Supabase under **Authentication** → **URL Configuration**
-
 ### Error: "redirect_uri_mismatch"
+- Make sure the redirect URI in Google Console matches exactly: `https://czpumlrofurdktvjtibl.supabase.co/auth/v1/callback`
 
-**Solution**: 
-1. Check that the redirect URI in Google Cloud Console matches exactly with Supabase's callback URL
-2. Make sure to include `https://czpumlrofurdktvjtibl.supabase.co/auth/v1/callback`
+### Error: "invalid_client"
+- Verify your Client ID and Client Secret are correct in Supabase
 
-### Error: "Access blocked: This app's request is invalid"
+### Welcome email not sent
+- Check Supabase Edge Function logs
+- Verify RESEND_API_KEY is configured
+- Ensure `send-welcome-email` function is deployed
 
-**Solution**:
-1. Verify all authorized domains are added in OAuth consent screen
-2. Ensure the OAuth consent screen is published (or add yourself as a test user)
+## Production Deployment
 
-### Users stuck on loading after signing in
+When deploying to production:
 
-**Solution**:
-1. Check browser console for errors
-2. Verify that the Site URL in Supabase matches your production URL
-3. Clear browser cookies and try again
+1. Update **Authorized JavaScript origins** in Google Console with your production domain
+2. Update **Authorized redirect URIs** with your production Supabase URL
+3. Update **Site URL** in Supabase Auth settings
+4. Verify all environment variables are set
 
-## Additional Configuration (Optional)
+## Resources
 
-### Disable Email Confirmation for Faster Testing
-
-1. Go to Supabase Dashboard → **Authentication** → **Providers**
-2. Scroll to **Email Auth**
-3. Toggle **OFF** "Confirm email"
-4. Click **Save**
-
-**Note**: Re-enable this for production!
-
-### Custom Domain Setup
-
-If you're using a custom domain:
-
-1. Update Site URL in Supabase to your custom domain
-2. Add custom domain to Authorized JavaScript origins in Google Cloud Console
-3. Add `https://yourdomain.com/auth/callback` to Authorized redirect URIs
-4. Add `https://yourdomain.com/**` to Redirect URLs in Supabase
-
-## Production Checklist
-
-- [ ] OAuth consent screen is published
-- [ ] Production URLs are added to Google Cloud Console
-- [ ] Production URLs are added to Supabase URL Configuration
-- [ ] Email confirmation is re-enabled (if disabled for testing)
-- [ ] Test sign-in flow on production URL
-- [ ] Test sign-out flow
-- [ ] Verify user profile data is saved correctly
-
-## Support
-
-If you encounter issues:
-
-1. Check [Supabase Auth Documentation](https://supabase.com/docs/guides/auth/social-login/auth-google)
-2. Review [Google OAuth Documentation](https://developers.google.com/identity/protocols/oauth2)
-3. Check Supabase logs: **Authentication** → **Logs**
-4. Check browser console for errors
-
----
-
-**Last Updated**: December 2024
-**Supabase Project**: czpumlrofurdktvjtibl
-**Application URL**: https://jyotisham.lovable.app
+- [Supabase Google Auth Docs](https://supabase.com/docs/guides/auth/social-login/auth-google)
+- [Google OAuth 2.0 Setup](https://developers.google.com/identity/protocols/oauth2)

@@ -82,44 +82,7 @@ export const bookingsApi = {
     }, 'getUserBookings');
   },
   
-  // Send booking verification email using Supabase function invocation
-  async sendBookingVerificationEmail(
-    email: string, 
-    name: string,
-    bookingId: string,
-    packageTitle: string,
-    date: string,
-    time: string,
-    language: 'en' | 'hi'
-  ): Promise<void> {
-    return withRetry(async () => {
-      // Validate inputs to prevent edge function errors
-      if (!email || !name || !bookingId || !packageTitle || !date || !time) {
-        throw new Error('Missing required parameters for verification email');
-      }
-      
-      const { data, error } = await supabase.functions.invoke('send-booking-verification', {
-        body: {
-          email,
-          name,
-          bookingId,
-          packageTitle,
-          date,
-          time,
-          language
-        }
-      });
-      
-      if (error) {
-        console.error('Error sending verification email:', error);
-        throw error;
-      }
-      
-      console.log('Verification email sent successfully:', data);
-    }, 'sendBookingVerificationEmail');
-  },
-  
-  // Send direct booking confirmation email (no verification required)
+  // Send direct booking confirmation email
   async sendBookingConfirmationEmail(
     email: string, 
     name: string,
@@ -152,31 +115,7 @@ export const bookingsApi = {
         throw error;
       }
       
-      console.log('Confirmation email sent successfully:', data);
+      // Silent log for debugging
     }, 'sendBookingConfirmationEmail');
-  },
-
-  // Get booking verification status
-  async getBookingVerificationStatus(bookingId: string): Promise<{ verified: boolean; expires_at?: string }> {
-    try {
-      const { data, error } = await supabase
-        .from('booking_verifications')
-        .select('verified_at, expires_at')
-        .eq('booking_id', bookingId)
-        .single();
-        
-      if (error) {
-        console.error('Error fetching verification status:', error);
-        return { verified: false };
-      }
-      
-      return { 
-        verified: !!data.verified_at,
-        expires_at: data.expires_at 
-      };
-    } catch (error) {
-      console.error('Error in getBookingVerificationStatus:', error);
-      return { verified: false };
-    }
   }
 };

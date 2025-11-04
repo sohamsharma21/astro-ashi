@@ -1,4 +1,5 @@
 import { serve } from 'https://deno.land/std@0.190.0/http/server.ts';
+import { Resend } from "npm:resend@2.0.0";
 import { corsHeaders } from "../_shared/cors.ts";
 import { 
   Logger, 
@@ -6,7 +7,8 @@ import {
   checkRateLimit,
   validateInput
 } from "../_shared/security.ts";
-import { emailService } from "../_shared/email-service.ts";
+
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 interface BookingConfirmationRequest {
   name: string;
@@ -25,7 +27,6 @@ const handler = async (req: Request): Promise<Response> => {
     requestId 
   });
   
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -35,7 +36,6 @@ const handler = async (req: Request): Promise<Response> => {
     
     const { name, email, bookingId, packageTitle, date, time, language }: BookingConfirmationRequest = await req.json();
     
-    // Rate limiting
     const rateLimit = checkRateLimit(`confirm:${bookingId}`, { 
       maxRequests: 3, 
       windowMs: 3600000 
@@ -55,7 +55,6 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
     
-    // Validate input
     const validation = validateInput(
       { name, email, bookingId, packageTitle, date, time, language },
       {
@@ -80,19 +79,113 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Send email using centralized service
-    await emailService.sendBookingConfirmation(
-      email,
-      name,
-      bookingId,
-      packageTitle,
-      date,
-      time,
-      language,
-      logger
-    );
+    const subject = language === 'en' 
+      ? 'Consultation Booking Confirmed! 🌟'
+      : 'परामर्श बुकिंग की पुष्टि! 🌟';
+
+    const html = language === 'en' 
+      ? `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%); color: #D4AF37; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+              .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+              .booking-details { background: white; padding: 20px; border-left: 4px solid #D4AF37; margin: 20px 0; }
+              .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>✅ Booking Confirmed!</h1>
+              </div>
+              <div class="content">
+                <h2>Hello ${name}!</h2>
+                <p>Your consultation booking has been confirmed. We're excited to guide you on your cosmic journey!</p>
+                
+                <div class="booking-details">
+                  <h3>Booking Details:</h3>
+                  <p><strong>Booking ID:</strong> ${bookingId}</p>
+                  <p><strong>Package:</strong> ${packageTitle}</p>
+                  <p><strong>Date:</strong> ${date}</p>
+                  <p><strong>Time:</strong> ${time}</p>
+                </div>
+                
+                <p>Our astrology expert will reach out to you shortly before your scheduled consultation.</p>
+                
+                <p>Please keep this email for your records.</p>
+                
+                <p>If you need to reschedule or have any questions, please contact us.</p>
+                
+                <p>Best wishes,</p>
+                <p><strong>The AstroAshi Team</strong></p>
+              </div>
+              <div class="footer">
+                <p>© 2025 AstroAshi. All rights reserved.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `
+      : `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 100%); color: #D4AF37; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+              .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+              .booking-details { background: white; padding: 20px; border-left: 4px solid #D4AF37; margin: 20px 0; }
+              .footer { text-align: center; margin-top: 30px; color: #666; font-size: 12px; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="header">
+                <h1>✅ बुकिंग की पुष्टि!</h1>
+              </div>
+              <div class="content">
+                <h2>नमस्ते ${name}!</h2>
+                <p>आपकी परामर्श बुकिंग की पुष्टि हो गई है। हम आपको आपकी कॉस्मिक यात्रा में मार्गदर्शन करने के लिए उत्साहित हैं!</p>
+                
+                <div class="booking-details">
+                  <h3>बुकिंग विवरण:</h3>
+                  <p><strong>बुकिंग आईडी:</strong> ${bookingId}</p>
+                  <p><strong>पैकेज:</strong> ${packageTitle}</p>
+                  <p><strong>तिथि:</strong> ${date}</p>
+                  <p><strong>समय:</strong> ${time}</p>
+                </div>
+                
+                <p>हमारे ज्योतिष विशेषज्ञ आपके निर्धारित परामर्श से कुछ समय पहले आपसे संपर्क करेंगे।</p>
+                
+                <p>कृपया इस ईमेल को अपने रिकॉर्ड के लिए रखें।</p>
+                
+                <p>यदि आपको पुनर्निर्धारित करने की आवश्यकता है या कोई प्रश्न है, तो कृपया हमसे संपर्क करें।</p>
+                
+                <p>शुभकामनाएं,</p>
+                <p><strong>AstroAshi टीम</strong></p>
+              </div>
+              <div class="footer">
+                <p>© 2025 AstroAshi. सर्वाधिकार सुरक्षित।</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `;
+
+    const emailResponse = await resend.emails.send({
+      from: "AstroAshi <onboarding@resend.dev>",
+      to: [email],
+      subject,
+      html,
+    });
     
     logger.info('Booking confirmation email sent successfully', { 
+      emailId: emailResponse.data?.id,
       bookingId,
       email 
     });
