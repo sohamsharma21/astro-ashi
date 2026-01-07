@@ -11,13 +11,28 @@ import { CTASection } from '@/components/home/CTASection';
 import { AnimatedSection } from '@/components/home/AnimatedSection';
 import { useAuth } from '@/lib/auth';
 import { SEOHead } from '@/components/SEOHead';
+import PersonalizedDashboard from '@/components/dashboard/PersonalizedDashboard';
+import KundliOnboardingModal from '@/components/onboarding/KundliOnboardingModal';
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
-  const { user, userProfile } = useAuth();
+  const { user, userProfile, needsKundliOnboarding, refetchProfile } = useAuth();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   const handleLoaded = () => {
     setLoading(false);
+  };
+
+  // Show onboarding modal when needed
+  useEffect(() => {
+    if (needsKundliOnboarding && !loading) {
+      setShowOnboarding(true);
+    }
+  }, [needsKundliOnboarding, loading]);
+
+  const handleOnboardingComplete = async () => {
+    await refetchProfile();
+    setShowOnboarding(false);
   };
 
   // Effect to simulate some loading time but ensure not too long
@@ -64,34 +79,54 @@ const Index = () => {
     return <Preloader onLoaded={handleLoaded} />;
   }
 
+  // Show personalized dashboard for logged-in users with Kundli
+  const showDashboard = user && userProfile?.kundli_generated;
+
   return (
     <>
       <SEOHead 
-        title="AstroAshi - Your Personal Astrology & Kundli Platform"
-        description="Get personalized horoscopes, Kundli analysis, astrology consultations, and AI-powered astrological insights. Explore your cosmic journey with AstroAshi."
-        keywords="astrology, horoscope, kundli, birth chart, zodiac signs, astrology consultation, daily horoscope, vedic astrology, jyotish, राशिफल, कुंडली"
+        title="AstroAshi - Your Personal Vedic Astrology & Kundli Platform"
+        description="Get personalized Kundli-based horoscopes, real-time Panchang, AI-powered Vedic astrology predictions. Your cosmic journey starts here with AstroAshi."
+        keywords="astrology, horoscope, kundli, birth chart, zodiac signs, panchang, vedic astrology, jyotish, राशिफल, कुंडली, पंचांग, mahadasha"
         canonical="/"
       />
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={150} />
         <Navigation />
-      <main>
-        <HeroSection />
-        <AnimatedSection>
-          <AboutSection />
-        </AnimatedSection>
-        <AnimatedSection delay={0.2}>
-          <ServicesSection />
-        </AnimatedSection>
-        <AnimatedSection delay={0.3}>
-          <TestimonialsSection />
-        </AnimatedSection>
-        <AnimatedSection delay={0.4}>
-          <CTASection />
-        </AnimatedSection>
-      </main>
-      <Footer />
-    </div>
+        
+        {/* Kundli Onboarding Modal */}
+        <KundliOnboardingModal 
+          open={showOnboarding} 
+          onComplete={handleOnboardingComplete} 
+        />
+
+        <main>
+          {showDashboard ? (
+            // Personalized Kundli-based Dashboard for logged-in users
+            <div className="pt-20 pb-10">
+              <PersonalizedDashboard />
+            </div>
+          ) : (
+            // Landing page for guests
+            <>
+              <HeroSection />
+              <AnimatedSection>
+                <AboutSection />
+              </AnimatedSection>
+              <AnimatedSection delay={0.2}>
+                <ServicesSection />
+              </AnimatedSection>
+              <AnimatedSection delay={0.3}>
+                <TestimonialsSection />
+              </AnimatedSection>
+              <AnimatedSection delay={0.4}>
+                <CTASection />
+              </AnimatedSection>
+            </>
+          )}
+        </main>
+        <Footer />
+      </div>
     </>
   );
 };
