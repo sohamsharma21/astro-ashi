@@ -1,17 +1,17 @@
-
-import { createContext, useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthContext, UserProfile } from '@/lib/auth';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import { toast } from '@/hooks/use-toast';
+import type { User, Session } from '@supabase/supabase-js';
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [user, setUser] = useState(null);
-  const [session, setSession] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [language, setLanguage] = useState<'en' | 'hi'>(
     localStorage.getItem('preferred_language') === 'hi' ? 'hi' : 'en'
   );
