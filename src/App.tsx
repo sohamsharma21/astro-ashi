@@ -25,6 +25,7 @@ import CosmicJournal from "./pages/CosmicJournal";
 import Profile from "./pages/Profile";
 import Help from "./pages/Help";
 import VerifyBooking from "./pages/VerifyBooking";
+import Panchang from "./pages/Panchang";
 import FloatingPlanets from "./components/FloatingPlanets";
 
 // Create a client for React Query
@@ -97,6 +98,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/help" element={<Help />} />
+            <Route path="/panchang" element={<Panchang />} />
             <Route path="/verify-booking" element={<VerifyBooking />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />

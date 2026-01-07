@@ -9,6 +9,7 @@ import {
   BookOpen, 
   Info, 
   Mail,
+  CalendarDays,
   type LucideIcon 
 } from 'lucide-react';
 
@@ -37,6 +38,14 @@ export const navigationConfig: NavItem[] = [
     icon: Calendar,
     requiresAuth: true,
     showWhenLoggedOut: false
+  },
+  {
+    path: '/panchang',
+    labelEn: 'Panchang',
+    labelHi: 'पंचांग',
+    icon: CalendarDays,
+    requiresAuth: false,
+    showWhenLoggedOut: true
   },
   {
     path: '/kundli-generator',
