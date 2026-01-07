@@ -47,6 +47,8 @@ const Panchang = () => {
       sunset: 'Sunset',
       rahuKaal: 'Rahu Kaal',
       abhijitMuhurat: 'Abhijit Muhurat',
+      shubhMuhurat: 'Auspicious Timings',
+      ashubhMuhurat: 'Avoid Periods',
       caution: 'Avoid',
       auspicious: 'Auspicious',
       loading: 'Loading Panchang...',
@@ -71,6 +73,8 @@ const Panchang = () => {
       sunset: 'सूर्यास्त',
       rahuKaal: 'राहु काल',
       abhijitMuhurat: 'अभिजीत मुहूर्त',
+      shubhMuhurat: 'शुभ मुहूर्त',
+      ashubhMuhurat: 'अशुभ काल',
       caution: 'अशुभ',
       auspicious: 'शुभ',
       loading: 'पंचांग लोड हो रहा है...',
@@ -282,34 +286,54 @@ const Panchang = () => {
                     </div>
 
                     {/* Muhurat Section */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Rahu Kaal - Warning */}
-                      <div className="p-4 rounded-xl bg-destructive/10 border border-destructive/20">
-                        <div className="flex items-center gap-2 mb-2">
-                          <AlertTriangle className="w-4 h-4 text-destructive" />
-                          <span className="text-sm font-medium text-destructive">{t.rahuKaal}</span>
-                          <Badge variant="destructive" className="text-[10px] ml-auto">{t.caution}</Badge>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-muted-foreground" />
-                          <p className="font-bold text-lg">
-                            {panchang.rahu_kaal?.start} - {panchang.rahu_kaal?.end}
-                          </p>
+                    <div className="space-y-4">
+                      {/* Shubh Muhurat */}
+                      <div>
+                        <h4 className="text-sm font-medium text-green-500 mb-2 flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4" />
+                          {t.shubhMuhurat || 'Shubh Muhurat'}
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                          {panchang.shubh_muhurat?.map((muhurat: any, idx: number) => (
+                            <div key={idx} className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                              <p className="text-xs text-muted-foreground">{muhurat.name}</p>
+                              <p className="font-semibold text-sm text-green-600">
+                                {muhurat.start} - {muhurat.end}
+                              </p>
+                            </div>
+                          )) || (
+                            <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                              <p className="text-xs text-muted-foreground">{t.abhijitMuhurat}</p>
+                              <p className="font-semibold text-sm text-green-600">
+                                {panchang.abhijit_muhurat?.start} - {panchang.abhijit_muhurat?.end}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      {/* Abhijit Muhurat - Auspicious */}
-                      <div className="p-4 rounded-xl bg-green-500/10 border border-green-500/20">
-                        <div className="flex items-center gap-2 mb-2">
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                          <span className="text-sm font-medium text-green-600">{t.abhijitMuhurat}</span>
-                          <Badge className="text-[10px] ml-auto bg-green-500">{t.auspicious}</Badge>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-muted-foreground" />
-                          <p className="font-bold text-lg">
-                            {panchang.abhijit_muhurat?.start} - {panchang.abhijit_muhurat?.end}
-                          </p>
+                      {/* Ashubh / Avoid Periods */}
+                      <div>
+                        <h4 className="text-sm font-medium text-destructive mb-2 flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4" />
+                          {t.ashubhMuhurat || 'Avoid Periods'}
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                          {panchang.ashubh_muhurat?.map((muhurat: any, idx: number) => (
+                            <div key={idx} className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                              <p className="text-xs text-muted-foreground">{muhurat.name}</p>
+                              <p className="font-semibold text-sm text-destructive">
+                                {muhurat.start} - {muhurat.end}
+                              </p>
+                            </div>
+                          )) || (
+                            <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                              <p className="text-xs text-muted-foreground">{t.rahuKaal}</p>
+                              <p className="font-semibold text-sm text-destructive">
+                                {panchang.rahu_kaal?.start} - {panchang.rahu_kaal?.end}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

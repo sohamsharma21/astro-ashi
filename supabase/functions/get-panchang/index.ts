@@ -60,6 +60,19 @@ serve(async (req) => {
     // Abhijit Muhurat (midday auspicious time)
     const abhijitStart = '11:48';
     const abhijitEnd = '12:36';
+    
+    // Shubh Muhurat timings (auspicious periods)
+    const shubhMuhuratTimings = [
+      { name: 'Brahma Muhurat', start: '04:24', end: '05:12', type: 'spiritual' },
+      { name: 'Abhijit Muhurat', start: abhijitStart, end: abhijitEnd, type: 'general' },
+      { name: 'Vijay Muhurat', start: '14:00', end: '14:48', type: 'success' },
+    ];
+    
+    // Ashubh (inauspicious) periods
+    const ashubhMuhuratTimings = [
+      { name: 'Rahu Kaal', start: rahuKaalTimings[dayOfWeek].start, end: rahuKaalTimings[dayOfWeek].end, type: 'avoid' },
+      { name: 'Gulika Kaal', start: getGulikaKaal(dayOfWeek), end: addMinutes(getGulikaKaal(dayOfWeek), 90), type: 'caution' },
+    ];
 
     const panchang = {
       date: targetDate.toISOString().split('T')[0],
@@ -85,6 +98,8 @@ serve(async (req) => {
       sunset,
       rahu_kaal: rahuKaalTimings[dayOfWeek],
       abhijit_muhurat: { start: abhijitStart, end: abhijitEnd },
+      shubh_muhurat: shubhMuhuratTimings,
+      ashubh_muhurat: ashubhMuhuratTimings,
       location: { latitude, longitude },
     };
 
@@ -142,4 +157,17 @@ function calculateSunset(date: Date, latitude: number): string {
   const hours = Math.floor(baseTime);
   const minutes = Math.floor((baseTime - hours) * 60);
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+}
+
+function getGulikaKaal(dayOfWeek: number): string {
+  const gulikaTimings = ['15:00', '13:30', '12:00', '10:30', '09:00', '07:30', '06:00'];
+  return gulikaTimings[dayOfWeek];
+}
+
+function addMinutes(time: string, minutes: number): string {
+  const [h, m] = time.split(':').map(Number);
+  const totalMinutes = h * 60 + m + minutes;
+  const newHours = Math.floor(totalMinutes / 60) % 24;
+  const newMinutes = totalMinutes % 60;
+  return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
 }
