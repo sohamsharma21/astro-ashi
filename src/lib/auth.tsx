@@ -35,9 +35,10 @@ export type AuthContextType = {
   needsKundliOnboarding: boolean;
 };
 
+// Create context with a default undefined value
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
