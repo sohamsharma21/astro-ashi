@@ -139,6 +139,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Final loading state combines auth and profile loading
   const isLoading = loading || (user && profileLoading);
 
+  // Check if user needs Kundli onboarding
+  const needsKundliOnboarding = Boolean(user && userProfile && !userProfile.kundli_generated);
+
   return (
     <AuthContext.Provider
       value={{
@@ -148,7 +151,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setLanguage: handleSetLanguage,
         userProfile,
         updateUserProfile,
-        loading: isLoading
+        refetchProfile,
+        loading: isLoading,
+        needsKundliOnboarding
       }}
     >
       {children}
