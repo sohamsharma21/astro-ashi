@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      articles: {
+        Row: {
+          category: string
+          content_en: string
+          content_hi: string
+          created_at: string | null
+          excerpt_en: string
+          excerpt_hi: string
+          id: string
+          image_url: string
+          published_date: string
+          title_en: string
+          title_hi: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          content_en: string
+          content_hi: string
+          created_at?: string | null
+          excerpt_en: string
+          excerpt_hi: string
+          id?: string
+          image_url: string
+          published_date?: string
+          title_en: string
+          title_hi: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          content_en?: string
+          content_hi?: string
+          created_at?: string | null
+          excerpt_en?: string
+          excerpt_hi?: string
+          id?: string
+          image_url?: string
+          published_date?: string
+          title_en?: string
+          title_hi?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       astro_conversations: {
         Row: {
           conversation: Json
@@ -227,6 +272,7 @@ export type Database = {
           created_at: string | null
           full_name: string | null
           id: string
+          nav_display_mode: string | null
           nav_icon_style: string
           preferred_language: string | null
           updated_at: string | null
@@ -237,6 +283,7 @@ export type Database = {
           created_at?: string | null
           full_name?: string | null
           id: string
+          nav_display_mode?: string | null
           nav_icon_style?: string
           preferred_language?: string | null
           updated_at?: string | null
@@ -247,6 +294,7 @@ export type Database = {
           created_at?: string | null
           full_name?: string | null
           id?: string
+          nav_display_mode?: string | null
           nav_icon_style?: string
           preferred_language?: string | null
           updated_at?: string | null
