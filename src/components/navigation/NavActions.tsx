@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { getTranslation } from '@/lib/translations';
 import { supabase } from '@/integrations/supabase/client';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 interface NavActionsProps {
   menuOpen: boolean;
@@ -50,6 +51,8 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
       >
         {language === 'en' ? 'हिंदी' : 'EN'}
       </Button>
+
+      {user && <NotificationBell />}
 
       {user ? (
         <DropdownMenu>

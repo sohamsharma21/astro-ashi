@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/lib/auth';
 import { toast } from 'sonner';
 
-interface Notification {
+interface NotificationItem {
   id: string;
   title: string;
   body: string;
@@ -14,7 +14,7 @@ interface Notification {
 
 export const usePushNotifications = () => {
   const { user, language } = useAuth();
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [permission, setPermission] = useState<NotificationPermission>('default');
   const [isSupported, setIsSupported] = useState(false);
@@ -63,20 +63,25 @@ export const usePushNotifications = () => {
     if (!user) return;
 
     try {
-      // For browser-based notifications, we store a simple subscription record
-      const { error } = await supabase
-        .from('push_subscriptions')
-        .upsert({
-          user_id: user.id,
-          endpoint: `browser-${user.id}`,
-          subscribed_at: new Date().toISOString(),
-          preferences: {
-            daily_horoscope: true,
-            auspicious_timing: true,
-          }
-        }, { onConflict: 'user_id' });
-
-      if (error) throw error;
+      // Store subscription using direct API call since types aren't updated yet
+      const session = await supabase.auth.getSession();
+      await fetch(
+        `https://czpumlrofurdktvjtibl.supabase.co/rest/v1/push_subscriptions`,
+        {
+          method: 'POST',
+          headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cHVtbHJvZnVyZGt0dmp0aWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzAwNDIsImV4cCI6MjA2MTAwNjA0Mn0.V3pvJZpklLKv7qROSwXvubQADPsCJSZ4hUQK0FTYEUI',
+            'Authorization': `Bearer ${session.data.session?.access_token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates',
+          },
+          body: JSON.stringify({
+            user_id: user.id,
+            endpoint: `browser-${user.id}`,
+            preferences: { daily_horoscope: true, auspicious_timing: true }
+          })
+        }
+      );
     } catch (error) {
       console.error('Subscription registration error:', error);
     }
@@ -86,17 +91,22 @@ export const usePushNotifications = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('notifications')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(20);
+      // Use raw fetch since types aren't updated yet
+      const response = await fetch(
+        `https://czpumlrofurdktvjtibl.supabase.co/rest/v1/notifications?user_id=eq.${user.id}&order=created_at.desc&limit=20`,
+        {
+          headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cHVtbHJvZnVyZGt0dmp0aWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzAwNDIsImV4cCI6MjA2MTAwNjA0Mn0.V3pvJZpklLKv7qROSwXvubQADPsCJSZ4hUQK0FTYEUI',
+            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          }
+        }
+      );
 
-      if (error) throw error;
-
-      setNotifications(data || []);
-      setUnreadCount(data?.filter(n => !n.read).length || 0);
+      if (response.ok) {
+        const data = await response.json();
+        setNotifications(data || []);
+        setUnreadCount(data?.filter((n: NotificationItem) => !n.read).length || 0);
+      }
     } catch (error) {
       console.error('Fetch notifications error:', error);
     }
@@ -106,13 +116,19 @@ export const usePushNotifications = () => {
     if (!user) return;
 
     try {
-      const { error } = await supabase
-        .from('notifications')
-        .update({ read: true })
-        .eq('id', notificationId)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
+      await fetch(
+        `https://czpumlrofurdktvjtibl.supabase.co/rest/v1/notifications?id=eq.${notificationId}&user_id=eq.${user.id}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cHVtbHJvZnVyZGt0dmp0aWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzAwNDIsImV4cCI6MjA2MTAwNjA0Mn0.V3pvJZpklLKv7qROSwXvubQADPsCJSZ4hUQK0FTYEUI',
+            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({ read: true })
+        }
+      );
 
       setNotifications(prev =>
         prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
@@ -127,13 +143,19 @@ export const usePushNotifications = () => {
     if (!user) return;
 
     try {
-      const { error } = await supabase
-        .from('notifications')
-        .update({ read: true })
-        .eq('user_id', user.id)
-        .eq('read', false);
-
-      if (error) throw error;
+      await fetch(
+        `https://czpumlrofurdktvjtibl.supabase.co/rest/v1/notifications?user_id=eq.${user.id}&read=eq.false`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6cHVtbHJvZnVyZGt0dmp0aWJsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDU0MzAwNDIsImV4cCI6MjA2MTAwNjA0Mn0.V3pvJZpklLKv7qROSwXvubQADPsCJSZ4hUQK0FTYEUI',
+            'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal',
+          },
+          body: JSON.stringify({ read: true })
+        }
+      );
 
       setNotifications(prev => prev.map(n => ({ ...n, read: true })));
       setUnreadCount(0);
