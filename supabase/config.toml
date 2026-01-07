@@ -1,5 +1,14 @@
 project_id = "czpumlrofurdktvjtibl"
 
+[functions.generate-kundli]
+verify_jwt = false
+
+[functions.get-panchang]
+verify_jwt = false
+
+[functions.generate-personalized-prediction]
+verify_jwt = false
+
 [functions.generate-horoscope]
 verify_jwt = false
 

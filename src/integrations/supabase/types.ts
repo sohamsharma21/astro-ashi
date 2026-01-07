@@ -265,13 +265,85 @@ export type Database = {
         }
         Relationships: []
       }
+      panchang_cache: {
+        Row: {
+          abhijit_muhurat: Json | null
+          ashubh_muhurat: Json | null
+          created_at: string | null
+          date: string
+          id: string
+          karana: Json
+          latitude: number
+          location_name: string | null
+          longitude: number
+          nakshatra: Json
+          rahu_kaal: Json
+          shubh_muhurat: Json | null
+          sunrise: string
+          sunset: string
+          tithi: Json
+          updated_at: string | null
+          vaar: string
+          yoga: Json
+        }
+        Insert: {
+          abhijit_muhurat?: Json | null
+          ashubh_muhurat?: Json | null
+          created_at?: string | null
+          date: string
+          id?: string
+          karana: Json
+          latitude?: number
+          location_name?: string | null
+          longitude?: number
+          nakshatra: Json
+          rahu_kaal: Json
+          shubh_muhurat?: Json | null
+          sunrise: string
+          sunset: string
+          tithi: Json
+          updated_at?: string | null
+          vaar: string
+          yoga: Json
+        }
+        Update: {
+          abhijit_muhurat?: Json | null
+          ashubh_muhurat?: Json | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          karana?: Json
+          latitude?: number
+          location_name?: string | null
+          longitude?: number
+          nakshatra?: Json
+          rahu_kaal?: Json
+          shubh_muhurat?: Json | null
+          sunrise?: string
+          sunset?: string
+          tithi?: Json
+          updated_at?: string | null
+          vaar?: string
+          yoga?: Json
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           birth_date: string | null
           birth_place: string | null
+          birth_time: string | null
           created_at: string | null
           full_name: string | null
+          gender: string | null
           id: string
+          kundli_data: Json | null
+          kundli_generated: boolean | null
+          lagna: string | null
+          latitude: number | null
+          longitude: number | null
+          moon_sign: string | null
+          nakshatra: string | null
           nav_display_mode: string | null
           nav_icon_style: string
           preferred_language: string | null
@@ -280,9 +352,18 @@ export type Database = {
         Insert: {
           birth_date?: string | null
           birth_place?: string | null
+          birth_time?: string | null
           created_at?: string | null
           full_name?: string | null
+          gender?: string | null
           id: string
+          kundli_data?: Json | null
+          kundli_generated?: boolean | null
+          lagna?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          moon_sign?: string | null
+          nakshatra?: string | null
           nav_display_mode?: string | null
           nav_icon_style?: string
           preferred_language?: string | null
@@ -291,9 +372,18 @@ export type Database = {
         Update: {
           birth_date?: string | null
           birth_place?: string | null
+          birth_time?: string | null
           created_at?: string | null
           full_name?: string | null
+          gender?: string | null
           id?: string
+          kundli_data?: Json | null
+          kundli_generated?: boolean | null
+          lagna?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          moon_sign?: string | null
+          nakshatra?: string | null
           nav_display_mode?: string | null
           nav_icon_style?: string
           preferred_language?: string | null
@@ -327,6 +417,93 @@ export type Database = {
           content_type?: string
           id?: string
           read_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_mahadasha: {
+        Row: {
+          all_periods: Json | null
+          antardasha_end: string
+          antardasha_start: string
+          created_at: string | null
+          current_antardasha: string
+          current_mahadasha: string
+          id: string
+          mahadasha_end: string
+          mahadasha_start: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          all_periods?: Json | null
+          antardasha_end: string
+          antardasha_start: string
+          created_at?: string | null
+          current_antardasha: string
+          current_mahadasha: string
+          id?: string
+          mahadasha_end: string
+          mahadasha_start: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          all_periods?: Json | null
+          antardasha_end?: string
+          antardasha_start?: string
+          created_at?: string | null
+          current_antardasha?: string
+          current_mahadasha?: string
+          id?: string
+          mahadasha_end?: string
+          mahadasha_start?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_predictions: {
+        Row: {
+          content_en: string
+          content_hi: string
+          created_at: string | null
+          focus_areas: Json | null
+          id: string
+          kundli_factors: Json | null
+          panchang_factors: Json | null
+          prediction_date: string
+          prediction_type: string
+          transit_factors: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content_en: string
+          content_hi: string
+          created_at?: string | null
+          focus_areas?: Json | null
+          id?: string
+          kundli_factors?: Json | null
+          panchang_factors?: Json | null
+          prediction_date: string
+          prediction_type: string
+          transit_factors?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content_en?: string
+          content_hi?: string
+          created_at?: string | null
+          focus_areas?: Json | null
+          id?: string
+          kundli_factors?: Json | null
+          panchang_factors?: Json | null
+          prediction_date?: string
+          prediction_type?: string
+          transit_factors?: Json | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
