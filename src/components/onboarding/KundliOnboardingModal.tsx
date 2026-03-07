@@ -27,6 +27,10 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
     preferred_language: language || 'en',
     latitude: null as number | null,
     longitude: null as number | null,
+    religion: 'hindu',
+    country: '',
+    caste: '',
+    birth_time_known: true,
   });
 
   const translations = {
@@ -175,8 +179,8 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
     }
   };
 
-  const isStep1Valid = formData.full_name.trim() !== '';
-  const isStep2Valid = formData.birth_date !== '' && formData.birth_time !== '' && formData.birth_place.trim() !== '';
+  const isStep1Valid = formData.full_name.trim() !== '' && formData.religion !== '';
+  const isStep2Valid = formData.birth_date !== '' && (formData.birth_time !== '' || !formData.birth_time_known) && formData.birth_place.trim() !== '';
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
