@@ -46,7 +46,6 @@ const PredictionTabs = ({ userId }: PredictionTabsProps) => {
     try {
       const { data, error } = await supabase.functions.invoke('generate-personalized-prediction', {
         body: {
-          userId,
           predictionType: type,
           language
         }
