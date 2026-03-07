@@ -203,23 +203,16 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
           </DialogDescription>
         </DialogHeader>
 
-        {/* Progress Indicator */}
-        <div className="flex items-center justify-center gap-4 my-4">
-          <div className={`flex items-center gap-2 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-              1
+        {/* Progress Indicator - 3 steps */}
+        <div className="flex items-center justify-center gap-3 my-4">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${step >= s ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                {s}
+              </div>
+              {s < 3 && <div className="w-6 h-0.5 bg-muted"><div className={`h-full bg-primary transition-all ${step > s ? 'w-full' : 'w-0'}`} /></div>}
             </div>
-            <span className="text-sm hidden sm:inline">{t.step1}</span>
-          </div>
-          <div className="w-8 h-0.5 bg-muted">
-            <div className={`h-full bg-primary transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} />
-          </div>
-          <div className={`flex items-center gap-2 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-              2
-            </div>
-            <span className="text-sm hidden sm:inline">{t.step2}</span>
-          </div>
+          ))}
         </div>
 
         <div className="space-y-4 py-4">
