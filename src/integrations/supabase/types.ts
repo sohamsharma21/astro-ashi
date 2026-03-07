@@ -119,6 +119,30 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_events: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       booking_verifications: {
         Row: {
           booking_id: string
@@ -153,6 +177,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          sender_id: string
+          session_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          sender_id: string
+          session_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          sender_id?: string
+          session_id?: string
+        }
+        Relationships: []
       }
       consultation_bookings: {
         Row: {
@@ -232,6 +280,36 @@ export type Database = {
         }
         Relationships: []
       }
+      email_verifications: {
+        Row: {
+          created_at: string | null
+          email: string
+          expires_at: string
+          id: string
+          token: string
+          used: boolean | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          expires_at?: string
+          id?: string
+          token?: string
+          used?: boolean | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          expires_at?: string
+          id?: string
+          token?: string
+          used?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       kundli_data: {
         Row: {
           birth_date: string
@@ -266,6 +344,72 @@ export type Database = {
           latitude?: number | null
           longitude?: number | null
           name?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      kundli_reports: {
+        Row: {
+          ai_insights: Json | null
+          birth_details: Json
+          chart_data: Json
+          created_at: string | null
+          dasha_data: Json | null
+          generated_at: string | null
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_insights?: Json | null
+          birth_details?: Json
+          chart_data?: Json
+          created_at?: string | null
+          dasha_data?: Json | null
+          generated_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_insights?: Json | null
+          birth_details?: Json
+          chart_data?: Json
+          created_at?: string | null
+          dasha_data?: Json | null
+          generated_at?: string | null
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      live_sessions: {
+        Row: {
+          astrologer_id: string | null
+          created_at: string | null
+          id: string
+          room_metadata: Json | null
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          astrologer_id?: string | null
+          created_at?: string | null
+          id?: string
+          room_metadata?: Json | null
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          astrologer_id?: string | null
+          created_at?: string | null
+          id?: string
+          room_metadata?: Json | null
+          status?: string
           updated_at?: string | null
           user_id?: string
         }
