@@ -314,19 +314,43 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="birth_time" className="flex items-center gap-2">
-                  <Sun className="h-4 w-4 text-primary" />
-                  {t.birthTime} <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="birth_time"
-                  type="time"
-                  value={formData.birth_time}
-                  onChange={(e) => handleInputChange('birth_time', e.target.value)}
-                  className="bg-background/50 border-primary/20 focus:border-primary"
+              {/* Birth time known checkbox */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="birth_time_known"
+                  checked={!formData.birth_time_known}
+                  onChange={(e) => setFormData(prev => ({ ...prev, birth_time_known: !e.target.checked, birth_time: e.target.checked ? '' : prev.birth_time }))}
+                  className="rounded border-primary/20"
                 />
+                <Label htmlFor="birth_time_known" className="text-sm cursor-pointer">
+                  {language === 'hi' ? 'मुझे जन्म का समय नहीं पता' : "I don't know my birth time"}
+                </Label>
               </div>
+
+              {formData.birth_time_known && (
+                <div className="space-y-2">
+                  <Label htmlFor="birth_time" className="flex items-center gap-2">
+                    <Sun className="h-4 w-4 text-primary" />
+                    {t.birthTime} <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="birth_time"
+                    type="time"
+                    value={formData.birth_time}
+                    onChange={(e) => handleInputChange('birth_time', e.target.value)}
+                    className="bg-background/50 border-primary/20 focus:border-primary"
+                  />
+                </div>
+              )}
+
+              {!formData.birth_time_known && (
+                <p className="text-xs text-amber-400 bg-amber-500/10 p-2 rounded-lg">
+                  {language === 'hi'
+                    ? 'बिना जन्म समय के कुंडली सूर्योदय (6:00 AM) के आधार पर बनाई जाएगी।'
+                    : 'Without birth time, your Kundli will be calculated using sunrise (6:00 AM) as default.'}
+                </p>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="birth_place" className="flex items-center gap-2">
@@ -342,22 +366,42 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
                 />
               </div>
 
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setStep(1)} className="flex-1" disabled={loading}>
+                  {t.back}
+                </Button>
+                <Button onClick={() => setStep(3)} disabled={!isStep2Valid} className="flex-1 cosmic-button">
+                  {t.next}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
+              <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3">
+                <h3 className="font-semibold text-sm">
+                  {language === 'hi' ? 'सहमति और गोपनीयता' : 'Consent & Privacy'}
+                </h3>
+                <ul className="text-xs text-muted-foreground space-y-2">
+                  <li>• {language === 'hi' ? 'आपका डेटा सुरक्षित रूप से संग्रहीत किया जाएगा।' : 'Your data will be stored securely.'}</li>
+                  <li>• {language === 'hi' ? 'आपकी कुंडली केवल आपके लिए दृश्य होगी।' : 'Your Kundli will only be visible to you.'}</li>
+                  <li>• {language === 'hi' ? 'आप किसी भी समय अपना डेटा निर्यात या हटा सकते हैं।' : 'You can export or delete your data at any time.'}</li>
+                  <li>• {language === 'hi' ? 'हम आपके डेटा को तृतीय पक्ष के साथ साझा नहीं करेंगे।' : 'We will not share your data with third parties.'}</li>
+                </ul>
+              </div>
+
               <p className="text-xs text-muted-foreground text-center italic">
                 {t.whyNeeded}
               </p>
 
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                  className="flex-1"
-                  disabled={loading}
-                >
+                <Button variant="outline" onClick={() => setStep(2)} className="flex-1" disabled={loading}>
                   {t.back}
                 </Button>
                 <Button
                   onClick={handleSubmit}
-                  disabled={!isStep2Valid || loading}
+                  disabled={loading}
                   className="flex-1 cosmic-button"
                 >
                   {loading ? (
