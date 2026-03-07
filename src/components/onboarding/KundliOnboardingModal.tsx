@@ -135,7 +135,7 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
         .update({
           full_name: formData.full_name,
           birth_date: formData.birth_date,
-          birth_time: formData.birth_time,
+          birth_time: formData.birth_time_known ? formData.birth_time : '12:00',
           birth_place: formData.birth_place,
           gender: formData.gender,
           preferred_language: formData.preferred_language,
@@ -146,6 +146,10 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
           nakshatra: kundliData?.planets?.find((p: any) => p.name === 'Moon')?.nakshatra || 'Ashwini',
           kundli_generated: true,
           kundli_data: kundliData,
+          religion: formData.religion,
+          country: formData.country,
+          caste: formData.caste || null,
+          birth_time_known: formData.birth_time_known,
         })
         .eq('id', user.id);
 
