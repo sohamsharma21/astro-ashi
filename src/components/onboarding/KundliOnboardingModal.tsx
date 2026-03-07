@@ -27,6 +27,10 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
     preferred_language: language || 'en',
     latitude: null as number | null,
     longitude: null as number | null,
+    religion: 'hindu',
+    country: '',
+    caste: '',
+    birth_time_known: true,
   });
 
   const translations = {
@@ -131,7 +135,7 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
         .update({
           full_name: formData.full_name,
           birth_date: formData.birth_date,
-          birth_time: formData.birth_time,
+          birth_time: formData.birth_time_known ? formData.birth_time : '12:00',
           birth_place: formData.birth_place,
           gender: formData.gender,
           preferred_language: formData.preferred_language,
@@ -142,6 +146,10 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
           nakshatra: kundliData?.planets?.find((p: any) => p.name === 'Moon')?.nakshatra || 'Ashwini',
           kundli_generated: true,
           kundli_data: kundliData,
+          religion: formData.religion,
+          country: formData.country,
+          caste: formData.caste || null,
+          birth_time_known: formData.birth_time_known,
         })
         .eq('id', user.id);
 
@@ -175,8 +183,8 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
     }
   };
 
-  const isStep1Valid = formData.full_name.trim() !== '';
-  const isStep2Valid = formData.birth_date !== '' && formData.birth_time !== '' && formData.birth_place.trim() !== '';
+  const isStep1Valid = formData.full_name.trim() !== '' && formData.religion !== '';
+  const isStep2Valid = formData.birth_date !== '' && (formData.birth_time !== '' || !formData.birth_time_known) && formData.birth_place.trim() !== '';
 
   return (
     <Dialog open={open} onOpenChange={() => {}}>
@@ -195,23 +203,16 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
           </DialogDescription>
         </DialogHeader>
 
-        {/* Progress Indicator */}
-        <div className="flex items-center justify-center gap-4 my-4">
-          <div className={`flex items-center gap-2 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-              1
+        {/* Progress Indicator - 3 steps */}
+        <div className="flex items-center justify-center gap-3 my-4">
+          {[1, 2, 3].map((s) => (
+            <div key={s} className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${step >= s ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
+                {s}
+              </div>
+              {s < 3 && <div className="w-6 h-0.5 bg-muted"><div className={`h-full bg-primary transition-all ${step > s ? 'w-full' : 'w-0'}`} /></div>}
             </div>
-            <span className="text-sm hidden sm:inline">{t.step1}</span>
-          </div>
-          <div className="w-8 h-0.5 bg-muted">
-            <div className={`h-full bg-primary transition-all ${step >= 2 ? 'w-full' : 'w-0'}`} />
-          </div>
-          <div className={`flex items-center gap-2 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-              2
-            </div>
-            <span className="text-sm hidden sm:inline">{t.step2}</span>
-          </div>
+          ))}
         </div>
 
         <div className="space-y-4 py-4">
@@ -259,6 +260,34 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
                 </Select>
               </div>
 
+              {/* Religion */}
+              <div className="space-y-2">
+                <Label>{language === 'hi' ? 'धर्म' : 'Religion'} <span className="text-destructive">*</span></Label>
+                <Select value={formData.religion} onValueChange={(val) => handleInputChange('religion', val)}>
+                  <SelectTrigger className="bg-background/50 border-primary/20"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hindu">{language === 'hi' ? 'हिन्दू' : 'Hindu'}</SelectItem>
+                    <SelectItem value="muslim">{language === 'hi' ? 'मुस्लिम' : 'Muslim'}</SelectItem>
+                    <SelectItem value="christian">{language === 'hi' ? 'ईसाई' : 'Christian'}</SelectItem>
+                    <SelectItem value="jain">{language === 'hi' ? 'जैन' : 'Jain'}</SelectItem>
+                    <SelectItem value="buddhist">{language === 'hi' ? 'बौद्ध' : 'Buddhist'}</SelectItem>
+                    <SelectItem value="sikh">{language === 'hi' ? 'सिख' : 'Sikh'}</SelectItem>
+                    <SelectItem value="other">{language === 'hi' ? 'अन्य' : 'Other'}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Country */}
+              <div className="space-y-2">
+                <Label>{language === 'hi' ? 'देश' : 'Country'}</Label>
+                <Input
+                  placeholder={language === 'hi' ? 'भारत' : 'India'}
+                  value={formData.country}
+                  onChange={(e) => handleInputChange('country', e.target.value)}
+                  className="bg-background/50 border-primary/20"
+                />
+              </div>
+
               <Button
                 onClick={() => setStep(2)}
                 disabled={!isStep1Valid}
@@ -285,19 +314,43 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="birth_time" className="flex items-center gap-2">
-                  <Sun className="h-4 w-4 text-primary" />
-                  {t.birthTime} <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="birth_time"
-                  type="time"
-                  value={formData.birth_time}
-                  onChange={(e) => handleInputChange('birth_time', e.target.value)}
-                  className="bg-background/50 border-primary/20 focus:border-primary"
+              {/* Birth time known checkbox */}
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="birth_time_known"
+                  checked={!formData.birth_time_known}
+                  onChange={(e) => setFormData(prev => ({ ...prev, birth_time_known: !e.target.checked, birth_time: e.target.checked ? '' : prev.birth_time }))}
+                  className="rounded border-primary/20"
                 />
+                <Label htmlFor="birth_time_known" className="text-sm cursor-pointer">
+                  {language === 'hi' ? 'मुझे जन्म का समय नहीं पता' : "I don't know my birth time"}
+                </Label>
               </div>
+
+              {formData.birth_time_known && (
+                <div className="space-y-2">
+                  <Label htmlFor="birth_time" className="flex items-center gap-2">
+                    <Sun className="h-4 w-4 text-primary" />
+                    {t.birthTime} <span className="text-destructive">*</span>
+                  </Label>
+                  <Input
+                    id="birth_time"
+                    type="time"
+                    value={formData.birth_time}
+                    onChange={(e) => handleInputChange('birth_time', e.target.value)}
+                    className="bg-background/50 border-primary/20 focus:border-primary"
+                  />
+                </div>
+              )}
+
+              {!formData.birth_time_known && (
+                <p className="text-xs text-amber-400 bg-amber-500/10 p-2 rounded-lg">
+                  {language === 'hi'
+                    ? 'बिना जन्म समय के कुंडली सूर्योदय (6:00 AM) के आधार पर बनाई जाएगी।'
+                    : 'Without birth time, your Kundli will be calculated using sunrise (6:00 AM) as default.'}
+                </p>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="birth_place" className="flex items-center gap-2">
@@ -313,22 +366,42 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
                 />
               </div>
 
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setStep(1)} className="flex-1" disabled={loading}>
+                  {t.back}
+                </Button>
+                <Button onClick={() => setStep(3)} disabled={!isStep2Valid} className="flex-1 cosmic-button">
+                  {t.next}
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
+              <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3">
+                <h3 className="font-semibold text-sm">
+                  {language === 'hi' ? 'सहमति और गोपनीयता' : 'Consent & Privacy'}
+                </h3>
+                <ul className="text-xs text-muted-foreground space-y-2">
+                  <li>• {language === 'hi' ? 'आपका डेटा सुरक्षित रूप से संग्रहीत किया जाएगा।' : 'Your data will be stored securely.'}</li>
+                  <li>• {language === 'hi' ? 'आपकी कुंडली केवल आपके लिए दृश्य होगी।' : 'Your Kundli will only be visible to you.'}</li>
+                  <li>• {language === 'hi' ? 'आप किसी भी समय अपना डेटा निर्यात या हटा सकते हैं।' : 'You can export or delete your data at any time.'}</li>
+                  <li>• {language === 'hi' ? 'हम आपके डेटा को तृतीय पक्ष के साथ साझा नहीं करेंगे।' : 'We will not share your data with third parties.'}</li>
+                </ul>
+              </div>
+
               <p className="text-xs text-muted-foreground text-center italic">
                 {t.whyNeeded}
               </p>
 
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                  className="flex-1"
-                  disabled={loading}
-                >
+                <Button variant="outline" onClick={() => setStep(2)} className="flex-1" disabled={loading}>
                   {t.back}
                 </Button>
                 <Button
                   onClick={handleSubmit}
-                  disabled={!isStep2Valid || loading}
+                  disabled={loading}
                   className="flex-1 cosmic-button"
                 >
                   {loading ? (

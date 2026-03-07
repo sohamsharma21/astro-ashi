@@ -21,6 +21,12 @@ export type UserProfile = {
   nakshatra?: string | null;
   kundli_generated?: boolean;
   kundli_data?: any;
+  // V2 fields
+  religion?: string;
+  caste?: string | null;
+  country?: string | null;
+  email_verified?: boolean;
+  birth_time_known?: boolean;
 };
 
 export type AuthContextType = {

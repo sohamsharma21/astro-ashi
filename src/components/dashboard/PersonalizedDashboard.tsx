@@ -7,7 +7,9 @@ import PersonalDailyPrediction from './PersonalDailyPrediction';
 import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
+import FaithDashboardModule from './FaithDashboardModule';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Religion } from '@/lib/faithModules';
 
 interface DashboardData {
   profile: any;
@@ -101,6 +103,15 @@ const PersonalizedDashboard = () => {
           mahadasha={dashboardData?.mahadasha}
           panchang={dashboardData?.panchang}
         />
+      </motion.div>
+
+      {/* Faith-Based Module */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
+      >
+        <FaithDashboardModule religion={(dashboardData?.profile?.religion as Religion) || 'hindu'} />
       </motion.div>
 
       {/* Panchang & Daily Prediction Row */}
