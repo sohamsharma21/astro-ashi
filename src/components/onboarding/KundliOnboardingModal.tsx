@@ -260,6 +260,34 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
                 </Select>
               </div>
 
+              {/* Religion */}
+              <div className="space-y-2">
+                <Label>{language === 'hi' ? 'धर्म' : 'Religion'} <span className="text-destructive">*</span></Label>
+                <Select value={formData.religion} onValueChange={(val) => handleInputChange('religion', val)}>
+                  <SelectTrigger className="bg-background/50 border-primary/20"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="hindu">{language === 'hi' ? 'हिन्दू' : 'Hindu'}</SelectItem>
+                    <SelectItem value="muslim">{language === 'hi' ? 'मुस्लिम' : 'Muslim'}</SelectItem>
+                    <SelectItem value="christian">{language === 'hi' ? 'ईसाई' : 'Christian'}</SelectItem>
+                    <SelectItem value="jain">{language === 'hi' ? 'जैन' : 'Jain'}</SelectItem>
+                    <SelectItem value="buddhist">{language === 'hi' ? 'बौद्ध' : 'Buddhist'}</SelectItem>
+                    <SelectItem value="sikh">{language === 'hi' ? 'सिख' : 'Sikh'}</SelectItem>
+                    <SelectItem value="other">{language === 'hi' ? 'अन्य' : 'Other'}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Country */}
+              <div className="space-y-2">
+                <Label>{language === 'hi' ? 'देश' : 'Country'}</Label>
+                <Input
+                  placeholder={language === 'hi' ? 'भारत' : 'India'}
+                  value={formData.country}
+                  onChange={(e) => handleInputChange('country', e.target.value)}
+                  className="bg-background/50 border-primary/20"
+                />
+              </div>
+
               <Button
                 onClick={() => setStep(2)}
                 disabled={!isStep1Valid}
