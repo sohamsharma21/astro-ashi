@@ -1,12 +1,31 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from 'npm:resend@2.0.0';
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { checkRateLimit } from "../_shared/security.ts";
 
 const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
+
+// Allowed domains for actionUrl to prevent phishing
+const ALLOWED_DOMAINS = [
+  'astroashi-24419.lovable.app',
+  'astroashi.lovable.app',
+  'localhost',
+  'czpumlrofurdktvjtibl.supabase.co',
+];
+
+function isAllowedUrl(url: string): boolean {
+  try {
+    const parsed = new URL(url);
+    return ALLOWED_DOMAINS.some(domain => parsed.hostname === domain || parsed.hostname.endsWith('.' + domain));
+  } catch {
+    return false;
+  }
+}
 
 interface AuthEmailRequest {
   email: string;
@@ -152,9 +171,61 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // 1. Require JWT authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    const userId = claimsData.claims.sub as string;
+
+    // 2. Rate limit: 3 requests per hour per user
+    const rateLimitResult = checkRateLimit(userId, { maxRequests: 3, windowMs: 60 * 60 * 1000 });
+    if (!rateLimitResult.allowed) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+        { status: 429, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     const { email, type, actionUrl, userName, language = 'en' }: AuthEmailRequest = await req.json();
 
-    console.log(`Sending ${type} email to ${email}`);
+    // 3. Validate actionUrl against allowed domains
+    if (!isAllowedUrl(actionUrl)) {
+      console.error('Blocked disallowed actionUrl:', actionUrl);
+      return new Response(
+        JSON.stringify({ error: 'Invalid action URL' }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // 4. Validate email type
+    if (!['password_reset', 'email_verification', 'magic_link'].includes(type)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid email type' }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    console.log(`Sending ${type} email to ${email} (requested by user ${userId})`);
 
     const t = translations[language];
     const content = t[type as keyof typeof t] as any;
@@ -184,7 +255,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error in send-auth-email function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'Failed to send email' }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
