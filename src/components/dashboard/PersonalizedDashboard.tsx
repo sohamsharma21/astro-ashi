@@ -53,7 +53,6 @@ const PersonalizedDashboard = () => {
       // Generate personalized prediction
       const { data: predictionData } = await supabase.functions.invoke('generate-personalized-prediction', {
         body: {
-          userId: user.id,
           predictionType: 'daily',
           language
         }
