@@ -27,6 +27,9 @@ import Help from "./pages/Help";
 import VerifyBooking from "./pages/VerifyBooking";
 import Panchang from "./pages/Panchang";
 import FloatingPlanets from "./components/FloatingPlanets";
+import LiveConsultation from "./pages/LiveConsultation";
+import Predictions from "./pages/Predictions";
+import Settings from "./pages/Settings";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -99,6 +102,21 @@ const App = () => (
             } />
             <Route path="/help" element={<Help />} />
             <Route path="/panchang" element={<Panchang />} />
+            <Route path="/live-consultation" element={
+              <ProtectedRoute>
+                <LiveConsultation />
+              </ProtectedRoute>
+            } />
+            <Route path="/predictions" element={
+              <ProtectedRoute>
+                <Predictions />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
             <Route path="/verify-booking" element={<VerifyBooking />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
