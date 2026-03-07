@@ -158,6 +158,8 @@ export type Database = {
         Row: {
           booking_date: string
           booking_time: string
+          confirmed_at: string | null
+          confirmed_via: string | null
           created_at: string
           id: string
           package_id: string
@@ -171,6 +173,8 @@ export type Database = {
         Insert: {
           booking_date: string
           booking_time: string
+          confirmed_at?: string | null
+          confirmed_via?: string | null
           created_at?: string
           id?: string
           package_id: string
@@ -184,6 +188,8 @@ export type Database = {
         Update: {
           booking_date?: string
           booking_time?: string
+          confirmed_at?: string | null
+          confirmed_via?: string | null
           created_at?: string
           id?: string
           package_id?: string
@@ -360,10 +366,15 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           birth_date: string | null
           birth_place: string | null
           birth_time: string | null
+          birth_time_known: boolean | null
+          caste: string | null
+          country: string | null
           created_at: string | null
+          email_verified: boolean | null
           full_name: string | null
           gender: string | null
           id: string
@@ -377,13 +388,19 @@ export type Database = {
           nav_display_mode: string | null
           nav_icon_style: string
           preferred_language: string | null
+          religion: string | null
           updated_at: string | null
         }
         Insert: {
+          avatar_url?: string | null
           birth_date?: string | null
           birth_place?: string | null
           birth_time?: string | null
+          birth_time_known?: boolean | null
+          caste?: string | null
+          country?: string | null
           created_at?: string | null
+          email_verified?: boolean | null
           full_name?: string | null
           gender?: string | null
           id: string
@@ -397,13 +414,19 @@ export type Database = {
           nav_display_mode?: string | null
           nav_icon_style?: string
           preferred_language?: string | null
+          religion?: string | null
           updated_at?: string | null
         }
         Update: {
+          avatar_url?: string | null
           birth_date?: string | null
           birth_place?: string | null
           birth_time?: string | null
+          birth_time_known?: boolean | null
+          caste?: string | null
+          country?: string | null
           created_at?: string | null
+          email_verified?: boolean | null
           full_name?: string | null
           gender?: string | null
           id?: string
@@ -417,6 +440,7 @@ export type Database = {
           nav_display_mode?: string | null
           nav_icon_style?: string
           preferred_language?: string | null
+          religion?: string | null
           updated_at?: string | null
         }
         Relationships: []
