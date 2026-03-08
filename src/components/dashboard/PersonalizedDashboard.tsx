@@ -194,11 +194,20 @@ const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Reli
   const daysUntil = nextFestival ? getDaysUntil(nextFestival.date) : null;
 
   const shortcuts = [
+    { icon: '⭐', label: language === 'hi' ? 'राशिफल' : 'Horoscope', path: '/daily-horoscope' },
+    { icon: '🔮', label: language === 'hi' ? 'कुंडली' : 'Kundli', path: '/kundli-generator' },
+    { icon: '💕', label: language === 'hi' ? 'संगतता' : 'Match', path: '/compatibility' },
+    { icon: '🤖', label: language === 'hi' ? 'AI गाइड' : 'AI Guide', path: '/spiritual-guide' },
     { icon: '🧘', label: language === 'hi' ? 'ध्यान' : 'Meditate', path: '/meditation' },
+    { icon: '🎵', label: language === 'hi' ? 'संगीत' : 'Music', path: '/devotional-music' },
+    { icon: '🌙', label: language === 'hi' ? 'नींद' : 'Sleep', path: '/sleep-relaxation' },
+    { icon: '🙏', label: language === 'hi' ? 'सद्कर्म' : 'Karma', path: '/karma-tracker' },
     { icon: '📝', label: language === 'hi' ? 'कृतज्ञता' : 'Gratitude', path: '/gratitude-journal' },
-    { icon: '✨', label: language === 'hi' ? 'प्रेरणा' : 'Inspiration', path: '/daily-inspiration' },
-    { icon: '🙏', label: language === 'hi' ? 'दिनचर्या' : 'Routine', path: '/spiritual-routine' },
+    { icon: '✨', label: language === 'hi' ? 'प्रेरणा' : 'Inspire', path: '/daily-inspiration' },
+    { icon: '📋', label: language === 'hi' ? 'दिनचर्या' : 'Routine', path: '/spiritual-routine' },
     { icon: '📅', label: language === 'hi' ? 'त्योहार' : 'Festivals', path: '/sacred-calendar' },
+    { icon: '💬', label: language === 'hi' ? 'समुदाय' : 'Community', path: '/community' },
+    { icon: '📖', label: language === 'hi' ? 'जर्नल' : 'Journal', path: '/cosmic-journal' },
   ];
 
   return (
