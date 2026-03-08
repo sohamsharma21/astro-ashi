@@ -19,7 +19,7 @@ import ContactUs from "./pages/ContactUs";
 import KundliGenerator from "./pages/KundliGenerator";
 import Compatibility from "./pages/Compatibility";
 import AstroLove from "./pages/AstroLove";
-import AskAstro from "./pages/AskAstro";
+
 import CosmicJournal from "./pages/CosmicJournal";
 import Profile from "./pages/Profile";
 import Help from "./pages/Help";
