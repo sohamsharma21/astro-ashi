@@ -12,6 +12,10 @@ import {
   TrendingUp,
   ListChecks,
   Star,
+  Music,
+  Moon,
+  Users,
+  HandHeart,
   type LucideIcon 
 } from 'lucide-react';
 
