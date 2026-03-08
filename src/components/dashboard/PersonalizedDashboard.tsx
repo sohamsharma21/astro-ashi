@@ -187,4 +187,50 @@ const PersonalizedDashboard = () => {
   );
 };
 
+// Spiritual Quick Access Component
+const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Religion; language: 'en' | 'hi'; navigate: any }) => {
+  const quote = getDailyInspiration(religion);
+  const nextFestival = getUpcomingFestivals(religion, 1)[0];
+  const daysUntil = nextFestival ? getDaysUntil(nextFestival.date) : null;
+
+  const shortcuts = [
+    { icon: '🧘', label: language === 'hi' ? 'ध्यान' : 'Meditate', path: '/meditation' },
+    { icon: '📝', label: language === 'hi' ? 'कृतज्ञता' : 'Gratitude', path: '/gratitude-journal' },
+    { icon: '✨', label: language === 'hi' ? 'प्रेरणा' : 'Inspiration', path: '/daily-inspiration' },
+    { icon: '🙏', label: language === 'hi' ? 'दिनचर्या' : 'Routine', path: '/spiritual-routine' },
+    { icon: '📅', label: language === 'hi' ? 'त्योहार' : 'Festivals', path: '/sacred-calendar' },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {/* Shortcut buttons */}
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        {shortcuts.map(s => (
+          <button key={s.path} onClick={() => navigate(s.path)}
+            className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 transition-all min-w-[64px] shrink-0">
+            <span className="text-xl">{s.icon}</span>
+            <span className="text-[10px] font-medium text-muted-foreground">{s.label}</span>
+          </button>
+        ))}
+      </div>
+
+      {/* Daily Quote + Next Festival mini cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <Card className="p-3 cursor-pointer hover:border-primary/30 transition-all" onClick={() => navigate('/daily-inspiration')}>
+          <p className="text-[10px] text-muted-foreground mb-1">✨ {language === 'hi' ? 'आज की प्रेरणा' : "Today's Inspiration"}</p>
+          <p className="text-xs text-foreground italic line-clamp-2">"{quote.quote[language]}"</p>
+          <p className="text-[10px] text-primary mt-1">— {quote.source[language]}</p>
+        </Card>
+        {nextFestival && (
+          <Card className="p-3 cursor-pointer hover:border-primary/30 transition-all" onClick={() => navigate('/sacred-calendar')}>
+            <p className="text-[10px] text-muted-foreground mb-1">📅 {language === 'hi' ? 'आगामी त्योहार' : 'Upcoming Festival'}</p>
+            <p className="text-xs font-semibold text-foreground">{nextFestival.name[language]}</p>
+            <p className="text-[10px] text-primary mt-1">{daysUntil === 0 ? '🎉 Today!' : `${daysUntil} ${language === 'hi' ? 'दिन बाकी' : 'days away'}`}</p>
+          </Card>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default PersonalizedDashboard;
