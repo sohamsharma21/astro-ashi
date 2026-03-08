@@ -145,7 +145,8 @@ export type NavDisplayMode = 'icons' | 'text' | 'both';
 export const getFilteredNavItems = (isAuthenticated: boolean): NavItem[] => {
   return navigationConfig.filter(item => {
     if (isAuthenticated) {
-      return !item.showWhenLoggedOut || item.requiresAuth;
+      // Show all items when logged in, except hide public-only pages like About/Contact to reduce clutter
+      return item.requiresAuth || item.path === '/' || item.path === '/panchang';
     }
     return item.showWhenLoggedOut;
   });
