@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import DOMPurify from 'dompurify';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
@@ -212,7 +213,7 @@ const CosmicJournal = () => {
               <div 
                 className="text-white prose prose-invert prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ 
-                  __html: language === 'en' ? selectedArticle.content_en : selectedArticle.content_hi 
+                  __html: DOMPurify.sanitize(language === 'en' ? selectedArticle.content_en : selectedArticle.content_hi)
                 }}
               />
             </div>
