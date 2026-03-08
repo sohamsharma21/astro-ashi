@@ -65,7 +65,7 @@ const Community = () => {
     const query = supabase.from('community_posts_safe' as any).select('*')
       .eq('group_name', activeGroup).order('created_at', { ascending: false }).limit(50);
     const { data } = await query;
-    setPosts((data as Post[]) || []);
+    setPosts((data as unknown as Post[]) || []);
     setLoading(false);
   };
 
