@@ -38,7 +38,7 @@ serve(async (req) => {
     }
     const userId = claimsData.claims.sub as string;
 
-    const { question, language = 'en' } = await req.json();
+    const { question, language = 'en', conversationHistory = [] } = await req.json();
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
       return new Response(JSON.stringify({ error: 'Question is required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -104,6 +104,7 @@ serve(async (req) => {
 ${langInstruction}
 
 You have access to the user's birth chart (Kundli), current Mahadasha/Antardasha periods, today's Panchang, and planetary transits.
+You remember the full conversation history and can refer back to previous questions and answers.
 
 ASTROLOGICAL CONTEXT:
 ${contextParts.join('\n')}
@@ -119,7 +120,33 @@ Give actionable, specific advice grounded in Vedic astrology. Include remedies (
 ## ${language === 'hi' ? '⚠️ क्या न करें (What to Avoid)' : '⚠️ What to Avoid'}
 List specific things the user should avoid during this period based on their chart and current transits.
 
+ALSO at the very end, add a section:
+## ${language === 'hi' ? '🔮 आगे पूछें (Follow-up Questions)' : '🔮 Follow-up Questions'}
+Suggest exactly 3 relevant follow-up questions the user might want to ask, as a numbered list.
+
 Be compassionate, wise, and specific. Never give generic advice — always tie guidance to the user's actual astrological data.`;
+
+    // Build messages array with conversation history for RAG-like context
+    const messages: Array<{role: string; content: string}> = [
+      { role: 'system', content: systemPrompt },
+    ];
+
+    // Add previous conversation (last 10 exchanges max to stay within context limits)
+    const recentHistory = Array.isArray(conversationHistory) 
+      ? conversationHistory.slice(-20) // last 10 pairs
+      : [];
+    
+    for (const msg of recentHistory) {
+      if (msg.role === 'user' || msg.role === 'assistant') {
+        messages.push({ 
+          role: msg.role, 
+          content: typeof msg.content === 'string' ? msg.content.substring(0, 2000) : '' 
+        });
+      }
+    }
+
+    // Add current question
+    messages.push({ role: 'user', content: question });
 
     // Call AI
     const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -130,10 +157,7 @@ Be compassionate, wise, and specific. Never give generic advice — always tie g
       },
       body: JSON.stringify({
         model: 'google/gemini-3-flash-preview',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: question },
-        ],
+        messages,
       }),
     });
 
@@ -155,17 +179,27 @@ Be compassionate, wise, and specific. Never give generic advice — always tie g
     const aiData = await aiResponse.json();
     const responseContent = aiData.choices?.[0]?.message?.content || 'Unable to generate response.';
 
+    // Extract follow-up suggestions from response
+    const followUpMatch = responseContent.match(/## (?:🔮 (?:Follow-up Questions|आगे पूछें.*?))\n([\s\S]*?)(?:\n## |$)/);
+    const followUpSection = followUpMatch ? followUpMatch[1].trim() : '';
+    const followUpQuestions = followUpSection
+      .split('\n')
+      .filter((line: string) => line.match(/^\d+\.\s/))
+      .map((line: string) => line.replace(/^\d+\.\s*/, '').trim())
+      .slice(0, 3);
+
     // Store in database
     await serviceClient.from('ai_questions').insert({
       user_id: userId,
       question: question.substring(0, 2000),
-      ai_response: { content: responseContent, language, model: 'gemini-3-flash-preview' },
+      ai_response: { content: responseContent, language, model: 'gemini-3-flash-preview', followUpQuestions },
       language,
     });
 
     return new Response(JSON.stringify({
       response: responseContent,
       language,
+      followUpQuestions,
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
