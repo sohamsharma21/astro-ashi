@@ -4,6 +4,7 @@ import { NavLogo } from './navigation/NavLogo';
 import { DesktopNav } from './navigation/DesktopNav';
 import { NavActions } from './navigation/NavActions';
 import { BottomTabBar } from './navigation/BottomTabBar';
+import { BackButton } from './navigation/BackButton';
 
 const Navigation = () => {
   const location = useLocation();
@@ -25,7 +26,10 @@ const Navigation = () => {
       }`}>
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-14 lg:h-16">
-            <NavLogo />
+            <div className="flex items-center gap-1">
+              <BackButton />
+              <NavLogo />
+            </div>
             <DesktopNav />
             <NavActions />
           </div>
