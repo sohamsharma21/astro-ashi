@@ -163,7 +163,7 @@
    ========================================== */
 
 .cosmic-card {
-  @apply relative overflow-hidden rounded-2xl backdrop-blur-sm transition-all duration-400;
+  @apply relative overflow-hidden rounded-2xl backdrop-blur-sm transition-all duration-500;
   background: linear-gradient(
     160deg,
     hsla(255, 22%, 14%, 0.5),
