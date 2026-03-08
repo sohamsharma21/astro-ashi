@@ -4,14 +4,17 @@ import {
   Sparkles, 
   Heart, 
   HeartHandshake, 
-  MessageSquare, 
   BotMessageSquare,
   BookOpen, 
   Info, 
   Mail,
   CalendarDays,
   TrendingUp,
-  Settings,
+  Flower2,
+  BookHeart,
+  Quote,
+  ListChecks,
+  CalendarHeart,
   type LucideIcon 
 } from 'lucide-react';
 
