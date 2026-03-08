@@ -48,8 +48,8 @@ serve(async (req) => {
 
     // Fetch user context in parallel: profile/kundli, panchang, mahadasha
     const [profileRes, mahadashaRes, panchangRes] = await Promise.all([
-      serviceClient.from('profiles').select('*').eq('id', user.id).single(),
-      serviceClient.from('user_mahadasha').select('*').eq('user_id', user.id).maybeSingle(),
+      serviceClient.from('profiles').select('*').eq('id', userId).single(),
+      serviceClient.from('user_mahadasha').select('*').eq('user_id', userId).maybeSingle(),
       serviceClient.from('panchang_cache').select('*')
         .eq('date', new Date().toISOString().split('T')[0])
         .maybeSingle(),
