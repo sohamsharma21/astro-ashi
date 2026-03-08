@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import DOMPurify from 'dompurify';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
