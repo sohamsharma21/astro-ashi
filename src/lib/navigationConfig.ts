@@ -112,7 +112,7 @@ export const navigationConfig: NavItem[] = [
     path: '/gratitude-journal',
     labelEn: 'Gratitude',
     labelHi: 'कृतज्ञता',
-    icon: BookHeart,
+    icon: BookOpenCheck,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
