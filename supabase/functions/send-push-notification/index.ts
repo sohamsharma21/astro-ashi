@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 interface PushNotificationRequest {
-  userId?: string;
   type: 'daily_horoscope' | 'auspicious_timing' | 'custom';
   title?: string;
   body?: string;
@@ -43,11 +42,39 @@ serve(async (req) => {
   }
 
   try {
-    const { userId, type, title, body, language = 'en' }: PushNotificationRequest = await req.json();
+    // Verify JWT authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+    // Verify the caller's identity
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims?.sub) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const userId = claimsData.claims.sub as string;
+
+    const { type, title, body, language = 'en' }: PushNotificationRequest = await req.json();
+
+    // Use service role client for writing notifications
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get notification content
     let notificationTitle = title;
@@ -58,62 +85,51 @@ serve(async (req) => {
       notificationBody = notificationTemplates[language][type].body;
     }
 
-    // Get user's push subscription if userId provided
-    let subscriptions: any[] = [];
-    
-    if (userId) {
-      const { data } = await supabase
-        .from('push_subscriptions')
-        .select('*')
-        .eq('user_id', userId);
-      subscriptions = data || [];
-    } else {
-      // Get all subscriptions for broadcast
-      const { data } = await supabase
-        .from('push_subscriptions')
-        .select('*');
-      subscriptions = data || [];
+    if (!notificationTitle || !notificationBody) {
+      return new Response(
+        JSON.stringify({ error: 'Missing notification title or body' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    // For now, we'll store notifications in a queue table
-    // In production, you'd integrate with Firebase Cloud Messaging or similar
-    const notifications = subscriptions.map(sub => ({
-      user_id: sub.user_id,
-      title: notificationTitle,
-      body: notificationBody,
-      type,
-      read: false,
-      created_at: new Date().toISOString(),
-    }));
+    // Only send notification to the authenticated user — no broadcast
+    const { error: insertError } = await supabase
+      .from('notifications')
+      .insert({
+        user_id: userId,
+        title: notificationTitle,
+        body: notificationBody,
+        type,
+        read: false,
+        created_at: new Date().toISOString(),
+      });
 
-    if (notifications.length > 0) {
-      const { error: insertError } = await supabase
-        .from('notifications')
-        .insert(notifications);
-
-      if (insertError) {
-        console.error('Failed to insert notifications:', insertError);
-      }
+    if (insertError) {
+      console.error('Failed to insert notification:', insertError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to send notification' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
-    console.log(`Push notification queued for ${subscriptions.length} users`);
+    console.log(`Push notification sent to user ${userId}`);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        message: `Notification sent to ${subscriptions.length} subscribers`,
+      JSON.stringify({
+        success: true,
+        message: 'Notification sent',
         notification: {
           title: notificationTitle,
           body: notificationBody,
           type,
-        }
+        },
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Push notification error:', error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error' }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
