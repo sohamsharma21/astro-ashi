@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { Target, Plus, CheckCircle2, Circle, Trash2, Sparkles } from 'lucide-react';
+import { Plus, CheckCircle2, Circle, Trash2, Sparkles } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
