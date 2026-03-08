@@ -1,5 +1,5 @@
 
-import { Star, Moon, Sun, Users, MessageCircle, Book, BotMessageSquare } from 'lucide-react';
+import { Star, Moon, Users, MessageCircle, Book, BotMessageSquare } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 

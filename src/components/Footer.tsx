@@ -1,5 +1,5 @@
 
-import { Heart, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Mail, Instagram, Facebook, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
 

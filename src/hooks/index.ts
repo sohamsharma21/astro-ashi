@@ -5,7 +5,6 @@ export * from './useAstroChat';
 export * from './useAstroLove';
 export * from './useAvatarUpload';
 export * from './useCompatibility';
-export * from './useConsultationBooking';
 export * from './useHoroscope';
 export * from './useKundli';
 export * from './useReadingHistory';
