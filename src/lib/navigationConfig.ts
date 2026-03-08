@@ -120,7 +120,7 @@ export const navigationConfig: NavItem[] = [
     path: '/daily-inspiration',
     labelEn: 'Inspiration',
     labelHi: 'प्रेरणा',
-    icon: Quote,
+    icon: MessageSquareQuote,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
