@@ -8,162 +8,108 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-cosmic-deep-space border-t border-cosmic-gold border-opacity-20 mt-20">
+    <footer className="border-t border-border/30 mt-20 relative z-10">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo and About */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+          {/* Brand */}
           <div className="col-span-1">
-            <Link to="/" className="flex items-center">
-              <div className="h-12 w-12 rounded-full overflow-hidden border border-cosmic-gold/30">
+            <Link to="/" className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full overflow-hidden border border-primary/20">
                 <img
                   src="/lovable-uploads/6118717f-8111-4495-bfb2-9b576cb27629.png"
                   alt="AstroAshi Logo"
-                  className="h-full w-full object-cover glow-effect"
+                  className="h-full w-full object-cover"
                 />
               </div>
-              <span className="ml-3 text-2xl font-bold text-cosmic-gold font-cinzel">AstroAshi</span>
+              <span className="text-xl font-display font-bold text-gradient-gold">AstroAshi</span>
             </Link>
-            <p className="mt-4 text-sm text-gray-300">
+            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
               {language === 'en' 
-                ? 'Decode your destiny through the stars. AstroAshi provides personalized Vedic readings, cosmic compatibility, and emotional alignment — all in one sacred space.'
-                : 'तारों के माध्यम से अपने भाग्य को समझें। AstroAshi व्यक्तिगत वैदिक पठन, ब्रह्मांडीय संगतता और भावनात्मक संरेखण प्रदान करता है — सभी एक पवित्र स्थान पर।'}
+                ? 'AI-powered Vedic astrology and spiritual guidance platform. Your cosmic journey starts here.'
+                : 'AI-संचालित वैदिक ज्योतिष और आध्यात्मिक मार्गदर्शन मंच।'}
             </p>
           </div>
 
           {/* Quick Links */}
           <div className="col-span-1">
-            <h3 className="text-lg font-bold text-cosmic-gold mb-4">
+            <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
               {language === 'en' ? 'Quick Links' : 'त्वरित लिंक'}
             </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/about-us" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'About Us' : 'हमारे बारे में'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/daily-horoscope" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Daily Horoscope' : 'दैनिक राशिफल'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/kundli-generator" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Kundli Generator' : 'कुंडली जनरेटर'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/compatibility" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Compatibility' : 'कुंडली मिलान'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact-us" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Contact Us' : 'संपर्क करें'}
-                </Link>
-              </li>
+            <ul className="space-y-2.5">
+              {[
+                { to: '/about-us', en: 'About Us', hi: 'हमारे बारे में' },
+                { to: '/daily-horoscope', en: 'Daily Horoscope', hi: 'दैनिक राशिफल' },
+                { to: '/kundli-generator', en: 'Kundli Generator', hi: 'कुंडली जनरेटर' },
+                { to: '/compatibility', en: 'Compatibility', hi: 'संगतता' },
+                { to: '/contact-us', en: 'Contact Us', hi: 'संपर्क करें' },
+              ].map(link => (
+                <li key={link.to}>
+                  <Link to={link.to} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+                    {language === 'en' ? link.en : link.hi}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Services */}
+          {/* AI Services */}
           <div className="col-span-1">
-            <h3 className="text-lg font-bold text-cosmic-gold mb-4">
-              {language === 'en' ? 'Our Services' : 'हमारी सेवाएँ'}
+            <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
+              {language === 'en' ? 'AI Services' : 'AI सेवाएँ'}
             </h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/daily-horoscope" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Personal Horoscopes' : 'व्यक्तिगत राशिफल'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/kundli-generator" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Birth Chart Analysis' : 'जन्म कुंडली विश्लेषण'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/compatibility" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Relationship Compatibility' : 'रिश्तों की संगतता'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/daily-horoscope" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Transit Predictions' : 'ग्रह संक्रमण भविष्यवाणी'}
-                </Link>
-              </li>
-              <li>
-                <Link to="/ask-astroashi" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'AstroAshi AI' : 'AstroAshi AI'}
-                </Link>
-              </li>
+            <ul className="space-y-2.5">
+              {[
+                { to: '/ask-astroashi', en: 'AstroAshi AI', hi: 'AstroAshi AI' },
+                { to: '/predictions', en: 'Predictions', hi: 'भविष्यफल' },
+                { to: '/panchang', en: 'Panchang', hi: 'पंचांग' },
+                { to: '/ask-astro', en: 'Ask Astro', hi: 'एस्ट्रो से पूछें' },
+              ].map(link => (
+                <li key={link.to}>
+                  <Link to={link.to} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+                    {language === 'en' ? link.en : link.hi}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
           {/* Contact */}
           <div className="col-span-1">
-            <h3 className="text-lg font-bold text-cosmic-gold mb-4">
-              {language === 'en' ? 'Get In Touch' : 'संपर्क में रहें'}
+            <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
+              {language === 'en' ? 'Connect' : 'जुड़ें'}
             </h3>
-            <div className="space-y-4">
-              <div className="flex items-center">
-                <Mail size={18} className="text-cosmic-gold mr-2" />
-                <a href="mailto:info@astroashi.com" className="text-gray-300 hover:text-cosmic-gold">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Mail size={14} className="text-muted-foreground" />
+                <a href="mailto:info@astroashi.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   info@astroashi.com
                 </a>
               </div>
-              <div className="flex space-x-4">
-                <a
-                  href="https://www.instagram.com/astro.ashi/"
-                  className="text-gray-300 hover:text-cosmic-gold"
-                  aria-label="Instagram"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Instagram size={20} />
+              <div className="flex gap-3 mt-4">
+                <a href="https://www.instagram.com/astro.ashi/" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                  <Instagram size={18} />
                 </a>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-cosmic-gold"
-                  aria-label="Facebook"
-                >
-                  <Facebook size={20} />
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook">
+                  <Facebook size={18} />
                 </a>
-                <a
-                  href="#"
-                  className="text-gray-300 hover:text-cosmic-gold"
-                  aria-label="Twitter"
-                >
-                  <Twitter size={20} />
+                <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
+                  <Twitter size={18} />
                 </a>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="border-t border-gray-800 mt-12 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
+        <div className="border-t border-border/20 mt-10 pt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-muted-foreground">
               © {currentYear} AstroAshi. {language === 'en' ? 'All rights reserved.' : 'सर्वाधिकार सुरक्षित।'}
             </p>
-            <div className="mt-4 md:mt-0">
-              <ul className="flex space-x-6 text-sm">
-                <li>
-                  <Link to="/privacy-policy" className="text-gray-400 hover:text-cosmic-gold">
-                    {language === 'en' ? 'Privacy Policy' : 'गोपनीयता नीति'}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/terms-of-service" className="text-gray-400 hover:text-cosmic-gold">
-                    {language === 'en' ? 'Terms of Service' : 'सेवा की शर्तें'}
-                  </Link>
-                </li>
-                <li>
-                  <Link to="/sitemap" className="text-gray-400 hover:text-cosmic-gold">
-                    {language === 'en' ? 'Sitemap' : 'साइट मैप'}
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            <ul className="flex gap-6 text-xs">
+              <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">{language === 'en' ? 'Privacy' : 'गोपनीयता'}</Link></li>
+              <li><Link to="/terms-of-service" className="text-muted-foreground hover:text-primary transition-colors">{language === 'en' ? 'Terms' : 'शर्तें'}</Link></li>
+              <li><Link to="/sitemap" className="text-muted-foreground hover:text-primary transition-colors">{language === 'en' ? 'Sitemap' : 'साइटमैप'}</Link></li>
+            </ul>
           </div>
         </div>
       </div>
