@@ -7,6 +7,7 @@ import { useReadingHistory } from '@/hooks/useReadingHistory';
 import ChatMessage from '@/components/ask-astro/ChatMessage';
 import ChatInput from '@/components/ask-astro/ChatInput';
 import { getAstrologicalInsight } from '@/services/geminiService';
+import { BotMessageSquare } from 'lucide-react';
 
 interface AstroChatProps {
   conversation: ChatMessageType[];
@@ -33,7 +34,6 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
     setConversation(prev => [...prev, userMessage]);
     setLoading(true);
     
-    // Get AI response
     try {
       const response = await getAstrologicalInsight(query, language, userProfile);
       
@@ -46,7 +46,6 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
       
       setConversation(prev => [...prev, astrologerMessage]);
       
-      // Record the reading history
       if (user) {
         recordReading('ai-chat', Date.now().toString(), 
           language === 'en' ? 'Astrology Consultation' : 'ज्योतिष परामर्श',
@@ -60,7 +59,6 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
     }
   };
 
-  // Scroll to bottom when new messages are added
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -68,8 +66,42 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
   }, [conversation]);
 
   return (
-    <div className="bg-cosmic-deep-space bg-opacity-80 backdrop-blur-lg rounded-lg border border-cosmic-gold border-opacity-20 h-[600px] flex flex-col">
-      <div className="flex-1 overflow-y-auto p-6">
+    <div className="cosmic-card-glow h-[calc(100vh-12rem)] md:h-[600px] flex flex-col rounded-2xl overflow-hidden">
+      {/* Chat header */}
+      <div className="flex items-center gap-3 px-5 py-3.5 border-b border-border/30">
+        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <BotMessageSquare className="w-4 h-4 text-primary" />
+        </div>
+        <div>
+          <h3 className="text-sm font-heading font-bold text-foreground">AstroAshi AI</h3>
+          <p className="text-[10px] text-muted-foreground">
+            {language === 'en' ? 'Vedic astrology assistant' : 'वैदिक ज्योतिष सहायक'}
+          </p>
+        </div>
+        <div className="ml-auto flex items-center gap-1.5">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[10px] text-emerald-500/80">{language === 'en' ? 'Online' : 'ऑनलाइन'}</span>
+        </div>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4">
+        {conversation.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-full text-center px-4">
+            <div className="w-14 h-14 rounded-2xl bg-primary/[0.06] border border-primary/10 flex items-center justify-center mb-4">
+              <BotMessageSquare className="w-6 h-6 text-primary/60" />
+            </div>
+            <h3 className="text-base font-heading font-bold text-foreground mb-1.5">
+              {language === 'en' ? 'Ask AstroAshi AI' : 'AstroAshi AI से पूछें'}
+            </h3>
+            <p className="text-xs text-muted-foreground max-w-xs leading-relaxed">
+              {language === 'en' 
+                ? 'Ask about your Kundli, career, relationships, health, or any spiritual guidance.' 
+                : 'अपनी कुंडली, करियर, रिश्ते, स्वास्थ्य या किसी भी आध्यात्मिक मार्गदर्शन के बारे में पूछें।'}
+            </p>
+          </div>
+        )}
+
         {conversation.map((message) => (
           <ChatMessage 
             key={message.id}
@@ -80,18 +112,15 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
         ))}
         
         {loading && (
-          <div className="flex gap-4 mb-6">
-            <div className="h-10 w-10 border border-cosmic-gold rounded-full flex items-center justify-center">
-              <div className="h-8 w-8 border border-cosmic-gold rounded-full flex items-center justify-center">
-                <div className="h-6 w-6 bg-cosmic-gold rounded-full animate-ping"></div>
-              </div>
+          <div className="flex gap-3 mb-5">
+            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+              <BotMessageSquare className="w-4 h-4 text-primary" />
             </div>
-            
-            <div className="bg-cosmic-violet bg-opacity-30 border border-cosmic-gold border-opacity-20 p-4 rounded-lg">
-              <div className="flex space-x-2">
-                <div className="w-2 h-2 rounded-full bg-cosmic-gold animate-pulse"></div>
-                <div className="w-2 h-2 rounded-full bg-cosmic-gold animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-2 h-2 rounded-full bg-cosmic-gold animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            <div className="chat-bubble-ai px-4 py-3.5">
+              <div className="flex gap-1.5">
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+                <span className="typing-dot" />
               </div>
             </div>
           </div>
@@ -99,7 +128,8 @@ const AstroChat = ({ conversation, setConversation, loading, setLoading }: Astro
         <div ref={messagesEndRef} />
       </div>
       
-      <div className="border-t border-cosmic-gold border-opacity-20 p-4">
+      {/* Input */}
+      <div className="border-t border-border/30 p-3.5">
         <ChatInput 
           onSendMessage={handleSendMessage}
           loading={loading}

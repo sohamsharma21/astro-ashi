@@ -5,46 +5,41 @@ import { useAuth } from '@/lib/auth';
 
 const Footer = () => {
   const { language } = useAuth();
-  const currentYear = new Date().getFullYear();
+  const y = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border/30 mt-20 relative z-10 lg:pb-0 pb-20">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+    <footer className="border-t border-border/20 mt-16 relative z-10 lg:pb-0 pb-20">
+      <div className="container mx-auto px-4 py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="col-span-1">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full overflow-hidden border border-primary/20">
-                <img
-                  src="/lovable-uploads/6118717f-8111-4495-bfb2-9b576cb27629.png"
-                  alt="AstroAshi Logo"
-                  className="h-full w-full object-cover"
-                />
+          <div className="col-span-2 md:col-span-1">
+            <Link to="/" className="flex items-center gap-2.5">
+              <div className="h-9 w-9 rounded-xl overflow-hidden border border-primary/15">
+                <img src="/lovable-uploads/6118717f-8111-4495-bfb2-9b576cb27629.png" alt="AstroAshi" className="h-full w-full object-cover" />
               </div>
-              <span className="text-xl font-display font-bold text-gradient-gold">AstroAshi</span>
+              <span className="text-lg font-heading font-extrabold text-gradient-gold">AstroAshi</span>
             </Link>
-            <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+            <p className="mt-3 text-xs text-muted-foreground leading-relaxed max-w-xs">
               {language === 'en' 
-                ? 'AI-powered Vedic astrology and spiritual guidance platform. Your cosmic journey starts here.'
-                : 'AI-संचालित वैदिक ज्योतिष और आध्यात्मिक मार्गदर्शन मंच।'}
+                ? 'AI-powered Vedic astrology and spiritual guidance platform.'
+                : 'AI-संचालित वैदिक ज्योतिष और आध्यात्मिक मार्गदर्शन।'}
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div className="col-span-1">
-            <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
+          {/* Links */}
+          <div>
+            <h3 className="text-[11px] font-bold text-foreground mb-3 uppercase tracking-wider font-heading">
               {language === 'en' ? 'Quick Links' : 'त्वरित लिंक'}
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {[
-                { to: '/about-us', en: 'About Us', hi: 'हमारे बारे में' },
-                { to: '/daily-horoscope', en: 'Daily Horoscope', hi: 'दैनिक राशिफल' },
-                { to: '/kundli-generator', en: 'Kundli Generator', hi: 'कुंडली जनरेटर' },
-                { to: '/compatibility', en: 'Compatibility', hi: 'संगतता' },
-                { to: '/contact-us', en: 'Contact Us', hi: 'संपर्क करें' },
+                { to: '/about-us', en: 'About', hi: 'हमारे बारे में' },
+                { to: '/daily-horoscope', en: 'Horoscope', hi: 'राशिफल' },
+                { to: '/kundli-generator', en: 'Kundli', hi: 'कुंडली' },
+                { to: '/contact-us', en: 'Contact', hi: 'संपर्क' },
               ].map(link => (
                 <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+                  <Link to={link.to} className="text-xs text-muted-foreground hover:text-primary transition-colors">
                     {language === 'en' ? link.en : link.hi}
                   </Link>
                 </li>
@@ -53,19 +48,18 @@ const Footer = () => {
           </div>
 
           {/* AI Services */}
-          <div className="col-span-1">
-            <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
+          <div>
+            <h3 className="text-[11px] font-bold text-foreground mb-3 uppercase tracking-wider font-heading">
               {language === 'en' ? 'AI Services' : 'AI सेवाएँ'}
             </h3>
-            <ul className="space-y-2.5">
+            <ul className="space-y-2">
               {[
                 { to: '/ask-astroashi', en: 'AstroAshi AI', hi: 'AstroAshi AI' },
                 { to: '/predictions', en: 'Predictions', hi: 'भविष्यफल' },
                 { to: '/panchang', en: 'Panchang', hi: 'पंचांग' },
-                { to: '/ask-astro', en: 'Ask Astro', hi: 'एस्ट्रो से पूछें' },
               ].map(link => (
                 <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-muted-foreground hover:text-primary transition-colors duration-200">
+                  <Link to={link.to} className="text-xs text-muted-foreground hover:text-primary transition-colors">
                     {language === 'en' ? link.en : link.hi}
                   </Link>
                 </li>
@@ -74,35 +68,31 @@ const Footer = () => {
           </div>
 
           {/* Contact */}
-          <div className="col-span-1">
-            <h3 className="text-sm font-semibold text-foreground mb-4 uppercase tracking-wider">
+          <div>
+            <h3 className="text-[11px] font-bold text-foreground mb-3 uppercase tracking-wider font-heading">
               {language === 'en' ? 'Connect' : 'जुड़ें'}
             </h3>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Mail size={14} className="text-muted-foreground" />
-                <a href="mailto:astroashi@gmail.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  astroashi@gmail.com
-                </a>
-              </div>
-              <div className="flex gap-3 mt-4">
-                <a href="https://www.instagram.com/astro.ashi/" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
-                  <Instagram size={18} />
-                </a>
-              </div>
+            <div className="space-y-2">
+              <a href="mailto:astroashi@gmail.com" className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors">
+                <Mail size={12} />
+                astroashi@gmail.com
+              </a>
+              <a href="https://www.instagram.com/astro.ashi/" className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors" target="_blank" rel="noopener noreferrer">
+                <Instagram size={12} />
+                @astro.ashi
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-border/20 mt-10 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-muted-foreground">
-              © {currentYear} AstroAshi. {language === 'en' ? 'All rights reserved.' : 'सर्वाधिकार सुरक्षित।'}
+        <div className="border-t border-border/15 mt-8 pt-5">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3">
+            <p className="text-[10px] text-muted-foreground/60">
+              © {y} AstroAshi. {language === 'en' ? 'All rights reserved.' : 'सर्वाधिकार सुरक्षित।'}
             </p>
-            <ul className="flex gap-6 text-xs">
-              <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-primary transition-colors">{language === 'en' ? 'Privacy' : 'गोपनीयता'}</Link></li>
-              <li><Link to="/terms-of-service" className="text-muted-foreground hover:text-primary transition-colors">{language === 'en' ? 'Terms' : 'शर्तें'}</Link></li>
-              <li><Link to="/sitemap" className="text-muted-foreground hover:text-primary transition-colors">{language === 'en' ? 'Sitemap' : 'साइटमैप'}</Link></li>
+            <ul className="flex gap-5 text-[10px]">
+              <li><Link to="/privacy-policy" className="text-muted-foreground/60 hover:text-primary transition-colors">{language === 'en' ? 'Privacy' : 'गोपनीयता'}</Link></li>
+              <li><Link to="/terms-of-service" className="text-muted-foreground/60 hover:text-primary transition-colors">{language === 'en' ? 'Terms' : 'शर्तें'}</Link></li>
             </ul>
           </div>
         </div>

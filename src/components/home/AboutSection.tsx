@@ -1,30 +1,60 @@
 
 import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
+import { Zap, Shield, Globe } from 'lucide-react';
 
 export const AboutSection = () => {
   const { language } = useAuth();
 
+  const features = [
+    { icon: Zap, en: 'Real-time AI Analysis', hi: 'रीयल-टाइम AI विश्लेषण' },
+    { icon: Shield, en: 'Vedic Accuracy', hi: 'वैदिक सटीकता' },
+    { icon: Globe, en: 'Multi-Faith Support', hi: 'बहु-धार्मिक सहायता' },
+  ];
+
   return (
-    <section className="py-20 relative">
+    <section className="py-24 relative">
       <div className="container mx-auto px-4">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="max-w-2xl mx-auto text-center"
         >
-          <p className="text-xs uppercase tracking-[0.3em] text-primary/60 mb-4 font-medium">
+          <p className="text-[11px] uppercase tracking-[0.25em] text-primary/50 mb-3 font-semibold">
             {language === 'en' ? 'About AstroAshi' : 'AstroAshi के बारे में'}
           </p>
-          <h2 className={`text-3xl md:text-4xl font-bold mb-6 text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-display'}`}>
+          <h2 className={`text-3xl md:text-4xl font-extrabold mb-5 text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
             {language === 'en' ? 'Ancient Wisdom, Modern AI' : 'प्राचीन ज्ञान, आधुनिक AI'}
           </h2>
-          <p className={`text-base md:text-lg text-muted-foreground leading-relaxed ${language === 'hi' ? 'font-hindi' : ''}`}>
+          <p className={`text-sm md:text-base text-muted-foreground leading-relaxed mb-10 ${language === 'hi' ? 'font-hindi' : ''}`}>
             {language === 'en'
               ? 'AstroAshi combines thousands of years of Vedic astrology with cutting-edge AI to deliver deeply personalized spiritual guidance. From Kundli analysis to real-time Panchang — your cosmic journey starts here.'
-              : 'AstroAshi हज़ारों वर्षों की वैदिक ज्योतिष विद्या को अत्याधुनिक AI के साथ जोड़कर गहन व्यक्तिगत आध्यात्मिक मार्गदर्शन प्रदान करता है। कुंडली विश्लेषण से लेकर रीयल-टाइम पंचांग तक — आपकी ब्रह्मांडीय यात्रा यहाँ से शुरू होती है।'}
+              : 'AstroAshi हज़ारों वर्षों की वैदिक ज्योतिष विद्या को अत्याधुनिक AI के साथ जोड़कर गहन व्यक्तिगत आध्यात्मिक मार्गदर्शन प्रदान करता है।'}
           </p>
+
+          <div className="flex items-center justify-center gap-8">
+            {features.map((f, i) => {
+              const Icon = f.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 8 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex flex-col items-center gap-2"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-primary/[0.08] border border-primary/10 flex items-center justify-center">
+                    <Icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <span className="text-[11px] text-muted-foreground font-medium">
+                    {language === 'en' ? f.en : f.hi}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
         </motion.div>
       </div>
     </section>
