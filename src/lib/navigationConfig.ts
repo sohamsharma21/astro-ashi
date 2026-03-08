@@ -10,9 +10,6 @@ import {
   Mail,
   CalendarDays,
   TrendingUp,
-  Leaf,
-  BookOpenCheck,
-  MessageSquareQuote,
   ListChecks,
   Star,
   type LucideIcon 
