@@ -1,9 +1,7 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, BookOpen, Calendar, MessageSquare, Settings, BotMessageSquare } from 'lucide-react';
+import { LogOut, BookOpen, Settings, Settings2 as SettingsIcon } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
   DropdownMenu, 
@@ -15,11 +13,6 @@ import {
 import { getTranslation } from '@/lib/translations';
 import { supabase } from '@/integrations/supabase/client';
 import NotificationBell from '@/components/notifications/NotificationBell';
-
-interface NavActionsProps {
-  menuOpen: boolean;
-  onMenuToggle: () => void;
-}
 
 export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
   const { user, language, setLanguage, userProfile } = useAuth();
