@@ -39,6 +39,10 @@ import KarmaTracker from "./pages/KarmaTracker";
 import DevotionalMusic from "./pages/DevotionalMusic";
 import SleepRelaxation from "./pages/SleepRelaxation";
 import Community from "./pages/Community";
+import SpiritualProgress from "./pages/SpiritualProgress";
+import WorshipPlaces from "./pages/WorshipPlaces";
+import LifePathPlanner from "./pages/LifePathPlanner";
+import SpiritualKnowledge from "./pages/SpiritualKnowledge";
 // Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
