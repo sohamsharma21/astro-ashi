@@ -42,7 +42,7 @@ const lineIcon = (name: string) => {
 };
 
 const PalmReadingPage = () => {
-  const { user, language } = useAuth();
+  const { language } = useAuth();
   const [phase, setPhase] = useState<Phase>('instructions');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [reading, setReading] = useState<PalmReading | null>(null);
