@@ -510,6 +510,48 @@ export type Database = {
         }
         Relationships: []
       }
+      life_goals: {
+        Row: {
+          category: string
+          completed: boolean
+          created_at: string
+          description: string
+          id: string
+          milestones: Json
+          progress: number
+          religion_guidance: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string
+          completed?: boolean
+          created_at?: string
+          description?: string
+          id?: string
+          milestones?: Json
+          progress?: number
+          religion_guidance?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          completed?: boolean
+          created_at?: string
+          description?: string
+          id?: string
+          milestones?: Json
+          progress?: number
+          religion_guidance?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string
@@ -767,6 +809,51 @@ export type Database = {
           religion?: string
           saved_at?: string
           source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      spiritual_badges: {
+        Row: {
+          badge_key: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_key: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_key?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      spiritual_growth_logs: {
+        Row: {
+          activity_type: string
+          completed_date: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          completed_date?: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          completed_date?: string
+          created_at?: string
+          id?: string
           user_id?: string
         }
         Relationships: []
