@@ -12,7 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { badgeDefinitions } from '@/lib/spiritualBadgesData';
-import { format, subDays, differenceInCalendarDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
 
 const SpiritualProgress = () => {
   const { user, language } = useAuth();
