@@ -176,7 +176,7 @@ const AskAstroAshi = () => {
         if (event.results[i].isFinal) {
           finalTranscript += transcript;
         } else {
-          interimTranscript += transcript;
+          _interimTranscript += transcript;
         }
       }
       if (finalTranscript) {
