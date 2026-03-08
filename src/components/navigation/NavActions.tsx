@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { LogOut, BookOpen, Settings, Settings2 as SettingsIcon } from 'lucide-react';
+import { LogOut, BookOpen, User } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
@@ -48,17 +48,11 @@ export const NavActions = () => {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="glass border-border/50 min-w-[200px] mr-2 p-1.5">
+          <DropdownMenuContent className="glass border-border/50 min-w-[180px] mr-2 p-1.5">
             <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
               <Link to="/profile" className="flex items-center w-full gap-2">
-                <Settings className="h-4 w-4 text-muted-foreground" />
+                <User className="h-4 w-4 text-muted-foreground" />
                 <span>{language === 'en' ? 'Profile' : 'प्रोफ़ाइल'}</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
-              <Link to="/settings" className="flex items-center w-full gap-2">
-                <SettingsIcon className="h-4 w-4 text-muted-foreground" />
-                <span>{language === 'en' ? 'Settings' : 'सेटिंग्स'}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
