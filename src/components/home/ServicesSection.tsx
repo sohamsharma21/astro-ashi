@@ -1,6 +1,6 @@
 
 
-import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar } from 'lucide-react';
+import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
