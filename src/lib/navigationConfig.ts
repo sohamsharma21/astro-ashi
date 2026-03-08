@@ -20,6 +20,9 @@ import {
   MapPin,
   Target,
   Library,
+  Brain,
+  Trophy,
+  FlaskConical,
   type LucideIcon 
 } from 'lucide-react';
 
