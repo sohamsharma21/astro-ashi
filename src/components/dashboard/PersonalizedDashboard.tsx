@@ -8,6 +8,7 @@ import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
+import EmailVerificationBanner from './EmailVerificationBanner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
 
@@ -92,6 +93,9 @@ const PersonalizedDashboard = () => {
       animate={{ opacity: 1 }}
       className="space-y-6 p-4 max-w-7xl mx-auto"
     >
+      {/* Email Verification Banner */}
+      <EmailVerificationBanner />
+
       {/* User Snapshot Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
