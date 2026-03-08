@@ -84,11 +84,7 @@ const App = () => (
                 <AstroLove />
               </ProtectedRoute>
             } />
-            <Route path="/ask-astro" element={
-              <ProtectedRoute>
-                <AskAstro />
-              </ProtectedRoute>
-            } />
+            <Route path="/ask-astro" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/cosmic-journal" element={
               <ProtectedRoute>
                 <CosmicJournal />

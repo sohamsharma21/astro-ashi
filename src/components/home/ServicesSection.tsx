@@ -39,14 +39,6 @@ const serviceFeatures = [
     path: "/compatibility"
   },
   {
-    icon: MessageCircle,
-    titleEn: "Ask Astro",
-    titleHi: "एस्ट्रो से पूछें",
-    descEn: "Get answers to specific astrological questions.",
-    descHi: "ज्योतिषीय प्रश्नों के उत्तर प्राप्त करें।",
-    path: "/ask-astro"
-  },
-  {
     icon: Book,
     titleEn: "Cosmic Journal",
     titleHi: "कॉस्मिक जर्नल",
