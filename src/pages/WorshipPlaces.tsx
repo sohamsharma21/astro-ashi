@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Search, Navigation as NavIcon, Star, Clock, ExternalLink } from 'lucide-react';
+import { MapPin, Search, Navigation as NavIcon } from 'lucide-react';
 import NavigationComponent from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';

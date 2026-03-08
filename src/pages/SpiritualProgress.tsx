@@ -95,7 +95,7 @@ const SpiritualProgress = () => {
         if (badge.category === 'karma' && badge.thresholdType === 'total') earned = totalKarma >= badge.threshold;
         if (badge.category === 'gratitude' && badge.thresholdType === 'total') earned = totalGratitude >= badge.threshold;
         if (earned) {
-          await supabase.from('spiritual_badges').insert({ user_id: user.id, badge_key: badge.key }).onConflict('user_id,badge_key' as any).select();
+          await supabase.from('spiritual_badges').upsert({ user_id: user.id, badge_key: badge.key }, { onConflict: 'user_id,badge_key' });
           setEarnedBadges(prev => [...prev, badge.key]);
         }
       }

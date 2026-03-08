@@ -34,7 +34,7 @@ const LifePathPlanner = () => {
   const { toast } = useToast();
   const religion = (userProfile?.religion as Religion) || 'hindu';
   const [goals, setGoals] = useState<LifeGoal[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [_loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');
