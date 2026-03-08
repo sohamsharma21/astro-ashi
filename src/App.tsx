@@ -29,6 +29,11 @@ import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import VerifyEmail from "./pages/VerifyEmail";
 import AskAstroAshi from "./pages/AskAstroAshi";
+import Meditation from "./pages/Meditation";
+import GratitudeJournal from "./pages/GratitudeJournal";
+import DailyInspiration from "./pages/DailyInspiration";
+import SpiritualRoutine from "./pages/SpiritualRoutine";
+import SacredCalendar from "./pages/SacredCalendar";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
