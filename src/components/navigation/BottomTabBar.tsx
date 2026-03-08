@@ -39,18 +39,29 @@ export const BottomTabBar = () => {
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
-                <Icon
-                  className={`h-5 w-5 transition-colors duration-200 ${
-                    isActive ? 'text-primary' : 'text-muted-foreground group-active:text-foreground'
-                  }`}
-                />
-                <span
-                  className={`text-[10px] mt-0.5 font-medium transition-colors duration-200 ${
-                    isActive ? 'text-primary' : 'text-muted-foreground'
-                  }`}
+                <motion.div
+                  whileTap={{ scale: 0.75, y: -2 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 15, mass: 0.5 }}
+                  className="flex flex-col items-center"
                 >
-                  {label}
-                </span>
+                  <motion.div
+                    animate={isActive ? { scale: [1, 1.2, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
+                  >
+                    <Icon
+                      className={`h-5 w-5 transition-colors duration-200 ${
+                        isActive ? 'text-primary' : 'text-muted-foreground group-active:text-foreground'
+                      }`}
+                    />
+                  </motion.div>
+                  <span
+                    className={`text-[10px] mt-0.5 font-medium transition-colors duration-200 ${
+                      isActive ? 'text-primary' : 'text-muted-foreground'
+                    }`}
+                  >
+                    {label}
+                  </span>
+                </motion.div>
               </Link>
             );
           })}
