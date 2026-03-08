@@ -130,7 +130,7 @@ const handler = async (req: Request): Promise<Response> => {
     logger.error('Error in get-astro-insight function', error);
     return new Response(
       JSON.stringify({ 
-        error: error.message || 'Internal server error',
+        error: 'An error occurred processing your request',
         requestId 
       }),
       {

@@ -109,7 +109,7 @@ serve(async (req) => {
   } catch (error: any) {
     console.error('Error generating insights:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'An error occurred generating insights' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

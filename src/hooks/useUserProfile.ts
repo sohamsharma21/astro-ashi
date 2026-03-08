@@ -108,8 +108,8 @@ export const useUserProfile = (userId: string | undefined, language: 'en' | 'hi'
       console.error('Error updating profile:', err);
       toast.error(
         language === 'en'
-          ? `Failed to update profile: ${err.message}`
-          : `प्रोफ़ाइल अपडेट करने में विफल: ${err.message}`
+          ? 'Failed to update profile. Please try again.'
+          : 'प्रोफ़ाइल अपडेट करने में विफल। कृपया पुनः प्रयास करें।'
       );
       throw err;
     }

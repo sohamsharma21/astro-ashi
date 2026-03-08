@@ -213,7 +213,7 @@ const CosmicJournal = () => {
               <div 
                 className="text-white prose prose-invert prose-lg max-w-none"
                 dangerouslySetInnerHTML={{ 
-                  __html: language === 'en' ? selectedArticle.content_en : selectedArticle.content_hi 
+                  __html: DOMPurify.sanitize(language === 'en' ? selectedArticle.content_en : selectedArticle.content_hi)
                 }}
               />
             </div>
