@@ -6,7 +6,7 @@ import Navigation from '@/components/Navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { getSleepContent, typeLabels, type SleepContent as SleepItem } from '@/lib/sleepStoriesData';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 import { toast } from '@/hooks/use-toast';
 
 const TIMER_OPTIONS = [10, 15, 20, 30, 45, 60];
