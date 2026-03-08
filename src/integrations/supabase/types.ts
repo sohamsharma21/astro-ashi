@@ -834,6 +834,48 @@ export type Database = {
         }
         Relationships: []
       }
+      spiritual_challenges_progress: {
+        Row: {
+          challenge_key: string
+          completed: boolean
+          completed_at: string | null
+          completed_days: Json
+          created_at: string
+          current_streak: number
+          id: string
+          longest_streak: number
+          started_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          challenge_key: string
+          completed?: boolean
+          completed_at?: string | null
+          completed_days?: Json
+          created_at?: string
+          current_streak?: number
+          id?: string
+          longest_streak?: number
+          started_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          challenge_key?: string
+          completed?: boolean
+          completed_at?: string | null
+          completed_days?: Json
+          created_at?: string
+          current_streak?: number
+          id?: string
+          longest_streak?: number
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       spiritual_growth_logs: {
         Row: {
           activity_type: string
@@ -854,6 +896,36 @@ export type Database = {
           completed_date?: string
           created_at?: string
           id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      spiritual_personality_results: {
+        Row: {
+          answers: Json
+          created_at: string
+          id: string
+          personality_type: string
+          scores: Json
+          taken_at: string
+          user_id: string
+        }
+        Insert: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          personality_type: string
+          scores?: Json
+          taken_at?: string
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          personality_type?: string
+          scores?: Json
+          taken_at?: string
           user_id?: string
         }
         Relationships: []
