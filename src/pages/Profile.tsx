@@ -1,6 +1,5 @@
 
 import Navigation from '@/components/Navigation';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
 import { useAuth } from '@/lib/auth';
