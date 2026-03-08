@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Send, Sparkles, Trash2, History, Bot, User } from 'lucide-react';
+import { Send, Sparkles, Trash2, History, Bot, User, Mic, MicOff, Copy, Share2, Volume2, VolumeX, CheckCheck } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -16,6 +16,7 @@ interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  followUpQuestions?: string[];
 }
 
 const SUGGESTED_QUESTIONS_EN = [
@@ -23,12 +24,16 @@ const SUGGESTED_QUESTIONS_EN = [
   '❤️ What does my chart say about love and marriage?',
   '💰 Is this a good time for financial investments?',
   '🧘 What remedies can improve my health?',
+  '🏠 Should I buy property this year?',
+  '✈️ Is foreign travel in my stars?',
 ];
 const SUGGESTED_QUESTIONS_HI = [
   '💼 इस वर्ष मेरा करियर कैसा रहेगा?',
   '❤️ प्रेम और विवाह के बारे में कुंडली क्या कहती है?',
   '💰 क्या यह वित्तीय निवेश का अच्छा समय है?',
   '🧘 स्वास्थ्य सुधार के लिए कौन से उपाय करें?',
+  '🏠 क्या इस साल प्रॉपर्टी खरीदनी चाहिए?',
+  '✈️ क्या विदेश यात्रा का योग है?',
 ];
 
 const AskAstroAshi = () => {
@@ -38,9 +43,14 @@ const AskAstroAshi = () => {
   const [loading, setLoading] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [history, setHistory] = useState<any[]>([]);
+  const [isListening, setIsListening] = useState(false);
+  const [speakingMsgId, setSpeakingMsgId] = useState<string | null>(null);
+  const [copiedMsgId, setCopiedMsgId] = useState<string | null>(null);
   const scrollEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const synthRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const isHindi = language === 'hi';
   const suggestions = isHindi ? SUGGESTED_QUESTIONS_HI : SUGGESTED_QUESTIONS_EN;
@@ -58,6 +68,14 @@ const AskAstroAshi = () => {
     }
   }, [input]);
 
+  // Cleanup speech on unmount
+  useEffect(() => {
+    return () => {
+      window.speechSynthesis?.cancel();
+      recognitionRef.current?.stop();
+    };
+  }, []);
+
   const loadHistory = async () => {
     if (!user) return;
     const { data } = await supabase
@@ -69,6 +87,14 @@ const AskAstroAshi = () => {
     setHistory(data || []);
     setShowHistory(true);
   };
+
+  // Build conversation history for RAG context
+  const getConversationHistory = useCallback(() => {
+    return messages.map(msg => ({
+      role: msg.role,
+      content: msg.content,
+    }));
+  }, [messages]);
 
   const sendMessage = async (question: string) => {
     if (!question.trim() || loading) return;
@@ -85,7 +111,11 @@ const AskAstroAshi = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke('ask-astroashi', {
-        body: { question: question.trim(), language },
+        body: { 
+          question: question.trim(), 
+          language,
+          conversationHistory: getConversationHistory(),
+        },
       });
 
       if (error) throw error;
@@ -95,6 +125,7 @@ const AskAstroAshi = () => {
         role: 'assistant',
         content: data.response,
         timestamp: new Date(),
+        followUpQuestions: data.followUpQuestions || [],
       };
       setMessages(prev => [...prev, aiMsg]);
     } catch (err: any) {
@@ -114,7 +145,120 @@ const AskAstroAshi = () => {
 
   const clearChat = () => {
     setMessages([]);
+    window.speechSynthesis?.cancel();
+    setSpeakingMsgId(null);
   };
+
+  // ===== Voice Input (Speech-to-Text) =====
+  const toggleVoiceInput = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error(isHindi ? 'आपका ब्राउज़र वॉइस इनपुट सपोर्ट नहीं करता' : 'Your browser does not support voice input');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = isHindi ? 'hi-IN' : 'en-IN';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onresult = (event: any) => {
+      let finalTranscript = '';
+      let interimTranscript = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      if (finalTranscript) {
+        setInput(prev => prev + finalTranscript);
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error('Speech recognition error:', event.error);
+      setIsListening(false);
+      if (event.error === 'not-allowed') {
+        toast.error(isHindi ? 'माइक्रोफ़ोन की अनुमति दें' : 'Please allow microphone access');
+      }
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsListening(true);
+    toast.success(isHindi ? '🎤 बोलना शुरू करें...' : '🎤 Start speaking...');
+  }, [isListening, isHindi]);
+
+  // ===== Text-to-Speech =====
+  const toggleSpeak = useCallback((msgId: string, text: string) => {
+    if (speakingMsgId === msgId) {
+      window.speechSynthesis.cancel();
+      setSpeakingMsgId(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    
+    // Strip markdown for cleaner speech
+    const cleanText = text
+      .replace(/#{1,3}\s/g, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1')
+      .replace(/\*(.*?)\*/g, '$1')
+      .replace(/- /g, '')
+      .replace(/\d+\.\s/g, '');
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = isHindi ? 'hi-IN' : 'en-IN';
+    utterance.rate = 0.9;
+    utterance.onend = () => setSpeakingMsgId(null);
+    utterance.onerror = () => setSpeakingMsgId(null);
+    
+    synthRef.current = utterance;
+    window.speechSynthesis.speak(utterance);
+    setSpeakingMsgId(msgId);
+  }, [speakingMsgId, isHindi]);
+
+  // ===== Copy to Clipboard =====
+  const copyMessage = useCallback(async (msgId: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedMsgId(msgId);
+      toast.success(isHindi ? 'कॉपी हो गया!' : 'Copied!');
+      setTimeout(() => setCopiedMsgId(null), 2000);
+    } catch {
+      toast.error(isHindi ? 'कॉपी नहीं हो सका' : 'Failed to copy');
+    }
+  }, [isHindi]);
+
+  // ===== Share =====
+  const shareMessage = useCallback(async (text: string) => {
+    const shareText = `🔮 AstroAshi AI ${isHindi ? 'का उत्तर' : 'Response'}:\n\n${text.substring(0, 500)}...\n\n${isHindi ? 'अपनी कुंडली का विश्लेषण पाएं:' : 'Get your Kundli analysis at:'} ${window.location.origin}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: 'AstroAshi AI', text: shareText });
+      } catch {
+        // User cancelled share
+      }
+    } else {
+      // Fallback to WhatsApp
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
+      window.open(whatsappUrl, '_blank');
+    }
+  }, [isHindi]);
 
   return (
     <>
@@ -145,8 +289,8 @@ const AskAstroAshi = () => {
             </div>
             <p className="text-muted-foreground max-w-2xl mx-auto text-sm">
               {isHindi
-                ? 'अपनी कुंडली और ग्रह स्थिति के आधार पर जीवन के प्रश्नों का उत्तर पाएं'
-                : 'Get personalized guidance based on your Kundli, planetary transits, and current Panchang'}
+                ? 'अपनी कुंडली और ग्रह स्थिति के आधार पर जीवन के प्रश्नों का उत्तर पाएं — बातचीत की याद रखने वाला AI'
+                : 'Get personalized guidance based on your Kundli — AI that remembers your conversation context'}
             </p>
           </motion.div>
 
@@ -177,7 +321,7 @@ const AskAstroAshi = () => {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="flex flex-col items-center justify-center py-12 space-y-6"
+                  className="flex flex-col items-center justify-center py-8 space-y-6"
                 >
                   <div className="relative">
                     <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center">
@@ -187,21 +331,36 @@ const AskAstroAshi = () => {
                   </div>
                   <div className="text-center space-y-2">
                     <h2 className="text-xl font-semibold text-foreground">
-                      {isHindi ? 'नमस्ते! मैं AstroAshi AI हूं' : 'Namaste! I am AstroAshi AI'}
+                      {isHindi ? 'नमस्ते! मैं AstroAshi AI हूं 🙏' : 'Namaste! I am AstroAshi AI 🙏'}
                     </h2>
                     <p className="text-muted-foreground text-sm max-w-md">
                       {isHindi
-                        ? 'करियर, रिश्ते, वित्त या जीवन के किसी भी विषय पर प्रश्न पूछें'
-                        : 'Ask me about career, relationships, finance, or any life topic'}
+                        ? 'मैं आपकी पूरी बातचीत याद रखता हूं। वॉइस से बोलें या टाइप करें!'
+                        : 'I remember your full conversation. Speak via voice or type your question!'}
                     </p>
                   </div>
+
+                  {/* Feature Pills */}
+                  <div className="flex flex-wrap gap-2 justify-center max-w-md">
+                    {[
+                      { icon: '🎤', text: isHindi ? 'वॉइस इनपुट' : 'Voice Input' },
+                      { icon: '🧠', text: isHindi ? 'बातचीत की याद' : 'Conversation Memory' },
+                      { icon: '🔊', text: isHindi ? 'जवाब सुनें' : 'Listen to Answers' },
+                      { icon: '📤', text: isHindi ? 'शेयर करें' : 'Share Responses' },
+                    ].map((f, i) => (
+                      <span key={i} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                        {f.icon} {f.text}
+                      </span>
+                    ))}
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg">
                     {suggestions.map((q, i) => (
                       <motion.div
                         key={i}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 }}
+                        transition={{ delay: i * 0.08 }}
                       >
                         <Button
                           variant="outline"
@@ -239,7 +398,7 @@ const AskAstroAshi = () => {
                         onClick={() => {
                           setMessages([
                             { id: '1', role: 'user', content: item.question, timestamp: new Date(item.created_at) },
-                            { id: '2', role: 'assistant', content: item.ai_response?.content || '', timestamp: new Date(item.created_at) },
+                            { id: '2', role: 'assistant', content: item.ai_response?.content || '', timestamp: new Date(item.created_at), followUpQuestions: item.ai_response?.followUpQuestions },
                           ]);
                           setShowHistory(false);
                         }}
@@ -273,31 +432,88 @@ const AskAstroAshi = () => {
                         ? 'bg-primary text-primary-foreground'
                         : 'bg-primary/15 text-primary border border-primary/30'
                     }`}>
-                      {msg.role === 'user' ? (
-                        <User className="h-4 w-4" />
-                      ) : (
-                        <Bot className="h-4 w-4" />
-                      )}
+                      {msg.role === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                     </div>
 
                     {/* Bubble */}
-                    <div
-                      className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${
-                        msg.role === 'user'
-                          ? 'bg-primary text-primary-foreground rounded-tr-sm'
-                          : 'bg-secondary/50 border border-border text-foreground rounded-tl-sm'
-                      }`}
-                    >
-                      {msg.role === 'assistant' ? (
-                        <div className="prose prose-sm prose-invert max-w-none [&_h2]:text-primary [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-3 [&_h2]:mb-1.5 [&_h3]:text-primary [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:text-foreground [&_p]:text-sm [&_p]:leading-relaxed [&_li]:text-foreground [&_li]:text-sm [&_strong]:text-primary [&_ul]:my-1 [&_ol]:my-1">
-                          <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    <div className="max-w-[80%] space-y-2">
+                      <div
+                        className={`rounded-2xl px-4 py-3 shadow-sm ${
+                          msg.role === 'user'
+                            ? 'bg-primary text-primary-foreground rounded-tr-sm'
+                            : 'bg-secondary/50 border border-border text-foreground rounded-tl-sm'
+                        }`}
+                      >
+                        {msg.role === 'assistant' ? (
+                          <div className="prose prose-sm prose-invert max-w-none [&_h2]:text-primary [&_h2]:text-base [&_h2]:font-semibold [&_h2]:mt-3 [&_h2]:mb-1.5 [&_h3]:text-primary [&_h3]:text-sm [&_h3]:font-semibold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:text-foreground [&_p]:text-sm [&_p]:leading-relaxed [&_li]:text-foreground [&_li]:text-sm [&_strong]:text-primary [&_ul]:my-1 [&_ol]:my-1">
+                            <ReactMarkdown>{msg.content}</ReactMarkdown>
+                          </div>
+                        ) : (
+                          <p className="text-sm leading-relaxed">{msg.content}</p>
+                        )}
+                        <p className={`text-[10px] mt-2 ${msg.role === 'user' ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
+                          {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+
+                      {/* Action buttons for assistant messages */}
+                      {msg.role === 'assistant' && (
+                        <div className="flex items-center gap-1 pl-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-primary"
+                            onClick={() => copyMessage(msg.id, msg.content)}
+                            title={isHindi ? 'कॉपी करें' : 'Copy'}
+                          >
+                            {copiedMsgId === msg.id ? <CheckCheck className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-primary"
+                            onClick={() => toggleSpeak(msg.id, msg.content)}
+                            title={isHindi ? 'सुनें' : 'Listen'}
+                          >
+                            {speakingMsgId === msg.id ? <VolumeX className="h-3.5 w-3.5 text-primary" /> : <Volume2 className="h-3.5 w-3.5" />}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-primary"
+                            onClick={() => shareMessage(msg.content)}
+                            title={isHindi ? 'शेयर करें' : 'Share'}
+                          >
+                            <Share2 className="h-3.5 w-3.5" />
+                          </Button>
                         </div>
-                      ) : (
-                        <p className="text-sm leading-relaxed">{msg.content}</p>
                       )}
-                      <p className={`text-[10px] mt-2 ${msg.role === 'user' ? 'text-primary-foreground/50' : 'text-muted-foreground/70'}`}>
-                        {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </p>
+
+                      {/* Follow-up Questions */}
+                      {msg.role === 'assistant' && msg.followUpQuestions && msg.followUpQuestions.length > 0 && index === messages.length - 1 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.3 }}
+                          className="flex flex-col gap-1.5 mt-2"
+                        >
+                          <p className="text-xs text-muted-foreground font-medium pl-1">
+                            {isHindi ? '🔮 आगे पूछें:' : '🔮 Follow-up:'}
+                          </p>
+                          {msg.followUpQuestions.map((q, i) => (
+                            <Button
+                              key={i}
+                              variant="outline"
+                              size="sm"
+                              className="text-left text-xs h-auto py-2 px-3 border-border hover:bg-primary/10 hover:border-primary/30 whitespace-normal justify-start"
+                              onClick={() => sendMessage(q)}
+                              disabled={loading}
+                            >
+                              {q}
+                            </Button>
+                          ))}
+                        </motion.div>
+                      )}
                     </div>
                   </motion.div>
                 ))}
@@ -331,13 +547,42 @@ const AskAstroAshi = () => {
 
             {/* Input Area */}
             <div className="border-t border-border p-3 md:p-4 bg-card/50">
+              {/* Voice Recording Indicator */}
+              {isListening && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-destructive/10 border border-destructive/20"
+                >
+                  <div className="w-3 h-3 rounded-full bg-destructive animate-pulse" />
+                  <span className="text-xs text-destructive font-medium">
+                    {isHindi ? '🎤 सुन रहा हूं... बोलें' : '🎤 Listening... speak now'}
+                  </span>
+                  <Button variant="ghost" size="sm" onClick={toggleVoiceInput} className="ml-auto h-6 text-xs text-destructive">
+                    {isHindi ? 'रोकें' : 'Stop'}
+                  </Button>
+                </motion.div>
+              )}
+
               <div className="flex gap-2 items-end">
+                {/* Voice Input Button */}
+                <Button
+                  variant={isListening ? 'destructive' : 'outline'}
+                  size="icon"
+                  className={`shrink-0 h-11 w-11 rounded-xl transition-all duration-200 ${isListening ? 'animate-pulse' : ''}`}
+                  onClick={toggleVoiceInput}
+                  title={isHindi ? 'वॉइस इनपुट' : 'Voice Input'}
+                >
+                  {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                </Button>
+
                 <textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={isHindi ? 'अपना प्रश्न यहाँ लिखें...' : 'Type your question here...'}
+                  placeholder={isHindi ? 'अपना प्रश्न यहाँ लिखें या 🎤 बोलें...' : 'Type your question or 🎤 speak...'}
                   className="flex-1 min-h-[44px] max-h-[120px] resize-none rounded-xl bg-muted border border-border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary/40 transition-all disabled:opacity-50"
                   rows={1}
                   disabled={loading}
@@ -356,7 +601,7 @@ const AskAstroAshi = () => {
               <p className="text-[10px] text-muted-foreground/60 mt-2 text-center">
                 {isHindi
                   ? 'AI-आधारित मार्गदर्शन। महत्वपूर्ण निर्णयों के लिए पेशेवर ज्योतिषी से परामर्श करें।'
-                  : 'AI-powered guidance. Consult a professional astrologer for important decisions.'}
+                  : 'AI-powered guidance with conversation memory. Consult a professional astrologer for important decisions.'}
               </p>
             </div>
           </Card>
