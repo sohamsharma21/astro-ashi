@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 import { 
   User, MapPin, Calendar, Star, Settings, LogOut, ChevronRight, 
-  Camera, Shield, Bell, Loader2, Moon
+  Camera, Shield, Bell, Loader2, Moon, Globe, BookOpen, Trash2
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -94,31 +94,13 @@ const Profile = () => {
   }
 
   const quickStats = [
-    {
-      icon: Star,
-      label: language === 'en' ? 'Zodiac' : 'राशि',
-      value: getZodiacLabel(userProfile?.primary_zodiac_sign),
-    },
-    {
-      icon: MapPin,
-      label: language === 'en' ? 'Birth Place' : 'जन्म स्थान',
-      value: userProfile?.birth_place || (language === 'en' ? 'Not set' : 'सेट नहीं'),
-    },
-    {
-      icon: Calendar,
-      label: language === 'en' ? 'Birth Date' : 'जन्म तिथि',
-      value: userProfile?.birth_date 
-        ? new Date(userProfile.birth_date).toLocaleDateString(language === 'en' ? 'en-IN' : 'hi-IN', { day: 'numeric', month: 'short', year: 'numeric' })
-        : (language === 'en' ? 'Not set' : 'सेट नहीं'),
-    },
-    {
-      icon: Moon,
-      label: language === 'en' ? 'Moon Sign' : 'चंद्र राशि',
-      value: userProfile?.moon_sign || (language === 'en' ? 'Not set' : 'सेट नहीं'),
-    },
+    { icon: Star, label: language === 'en' ? 'Zodiac' : 'राशि', value: getZodiacLabel(userProfile?.primary_zodiac_sign) },
+    { icon: MapPin, label: language === 'en' ? 'Birth Place' : 'जन्म स्थान', value: userProfile?.birth_place || (language === 'en' ? 'Not set' : 'सेट नहीं') },
+    { icon: Calendar, label: language === 'en' ? 'Birth Date' : 'जन्म तिथि', value: userProfile?.birth_date ? new Date(userProfile.birth_date).toLocaleDateString(language === 'en' ? 'en-IN' : 'hi-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : (language === 'en' ? 'Not set' : 'सेट नहीं') },
+    { icon: Moon, label: language === 'en' ? 'Moon Sign' : 'चंद्र राशि', value: userProfile?.moon_sign || (language === 'en' ? 'Not set' : 'सेट नहीं') },
   ];
 
-  const menuItems = [
+  const profileMenuItems = [
     {
       icon: User,
       label: language === 'en' ? 'Edit Profile' : 'प्रोफ़ाइल संपादित करें',
@@ -126,8 +108,21 @@ const Profile = () => {
       isActive: activeSection === 'edit',
     },
     {
-      icon: Settings,
-      label: language === 'en' ? 'Settings' : 'सेटिंग्स',
+      icon: BookOpen,
+      label: language === 'en' ? 'Reading History' : 'पठन इतिहास',
+      action: () => navigate('/reading-history'),
+    },
+  ];
+
+  const settingsMenuItems = [
+    {
+      icon: Globe,
+      label: language === 'en' ? 'Language & Preferences' : 'भाषा और प्राथमिकताएं',
+      action: () => navigate('/settings'),
+    },
+    {
+      icon: Bell,
+      label: language === 'en' ? 'Notifications' : 'सूचनाएँ',
       action: () => navigate('/settings'),
     },
     {
@@ -136,11 +131,54 @@ const Profile = () => {
       action: () => navigate('/privacy-policy'),
     },
     {
-      icon: Bell,
-      label: language === 'en' ? 'Notifications' : 'सूचनाएँ',
+      icon: Trash2,
+      label: language === 'en' ? 'Data & Account' : 'डेटा और खाता',
       action: () => navigate('/settings'),
+      destructive: true,
     },
   ];
+
+  const renderMenuGroup = (title: string, items: typeof profileMenuItems) => (
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-4"
+    >
+      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2 px-1">
+        {title}
+      </p>
+      <div className="cosmic-card rounded-2xl overflow-hidden">
+        {items.map((item, i) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={i}
+              onClick={item.action}
+              className={`w-full flex items-center gap-3.5 px-4 py-3.5 transition-colors hover:bg-primary/5 active:bg-primary/10 ${
+                i < items.length - 1 ? 'border-b border-border/20' : ''
+              } ${'isActive' in item && item.isActive ? 'bg-primary/5' : ''}`}
+            >
+              <div className={`h-8 w-8 rounded-xl flex items-center justify-center shrink-0 ${
+                'destructive' in item && item.destructive 
+                  ? 'bg-destructive/10 text-destructive' 
+                  : 'bg-primary/10 text-primary'
+              }`}>
+                <Icon className="h-4 w-4" />
+              </div>
+              <span className={`text-sm font-medium flex-1 text-left ${
+                'destructive' in item && item.destructive ? 'text-destructive' : 'text-foreground'
+              }`}>
+                {item.label}
+              </span>
+              <ChevronRight className={`h-4 w-4 text-muted-foreground/50 transition-transform ${
+                'isActive' in item && item.isActive ? 'rotate-90' : ''
+              }`} />
+            </button>
+          );
+        })}
+      </div>
+    </motion.div>
+  );
 
   return (
     <div className="cosmic-bg min-h-screen pb-24">
@@ -149,129 +187,77 @@ const Profile = () => {
       <Navigation />
 
       <main className="pt-20 px-4 max-w-lg mx-auto">
-        {/* Avatar & Name Section */}
+        {/* Avatar & Name */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center pt-8 pb-6"
         >
           <div className="relative mb-4">
-            <Avatar className="h-28 w-28 border-[3px] border-primary shadow-lg shadow-primary/20">
+            <Avatar className="h-24 w-24 border-2 border-primary/40 shadow-lg shadow-primary/10">
               <AvatarImage src={userProfile?.avatar_url || ''} alt="Profile" />
-              <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+              <AvatarFallback className="bg-primary/15 text-primary text-xl font-bold">
                 {getUserInitials()}
               </AvatarFallback>
             </Avatar>
             <label
               htmlFor="avatar-input"
-              className="absolute bottom-0 right-0 h-9 w-9 rounded-full bg-primary text-primary-foreground flex items-center justify-center cursor-pointer shadow-lg hover:scale-105 transition-transform"
+              className="absolute bottom-0 right-0 h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center cursor-pointer shadow-md hover:scale-105 transition-transform"
             >
-              {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+              {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Camera className="h-3.5 w-3.5" />}
             </label>
-            <input
-              id="avatar-input"
-              type="file"
-              className="sr-only"
-              accept="image/jpeg,image/png,image/gif,image/webp"
-              onChange={handleAvatarChange}
-              disabled={uploading}
-            />
+            <input id="avatar-input" type="file" className="sr-only" accept="image/jpeg,image/png,image/gif,image/webp" onChange={handleAvatarChange} disabled={uploading} />
           </div>
-
-          <h1 className="text-2xl font-bold text-foreground">
+          <h1 className="text-xl font-heading font-bold text-foreground">
             {userProfile?.full_name || (language === 'en' ? 'Your Name' : 'आपका नाम')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">{user?.email}</p>
+          <p className="text-xs text-muted-foreground mt-1">{user?.email}</p>
         </motion.div>
 
-        {/* Quick Stats Grid */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid grid-cols-2 gap-3 mb-6"
-        >
+        {/* Quick Stats */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }} className="grid grid-cols-2 gap-2.5 mb-6">
           {quickStats.map((stat, i) => {
             const Icon = stat.icon;
             return (
-              <div
-                key={i}
-                className="cosmic-card p-4 rounded-2xl flex flex-col gap-1.5"
-              >
+              <div key={i} className="cosmic-card p-3.5 rounded-xl flex flex-col gap-1">
                 <div className="flex items-center gap-2">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Icon className="h-4 w-4 text-primary" />
+                  <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Icon className="h-3.5 w-3.5 text-primary" />
                   </div>
-                  <span className="text-[11px] text-muted-foreground font-medium uppercase tracking-wider">
-                    {stat.label}
-                  </span>
+                  <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider">{stat.label}</span>
                 </div>
-                <p className="text-sm font-semibold text-foreground truncate pl-10">
-                  {stat.value}
-                </p>
+                <p className="text-[13px] font-semibold text-foreground truncate pl-9">{stat.value}</p>
               </div>
             );
           })}
         </motion.div>
 
-        {/* Menu Items */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="cosmic-card rounded-2xl overflow-hidden mb-4"
-        >
-          {menuItems.map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={i}
-                onClick={item.action}
-                className={`w-full flex items-center gap-4 px-5 py-4 transition-colors hover:bg-primary/5 active:bg-primary/10 ${
-                  i < menuItems.length - 1 ? 'border-b border-border/30' : ''
-                } ${item.isActive ? 'bg-primary/5' : ''}`}
-              >
-                <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <Icon className="h-4.5 w-4.5 text-primary" />
-                </div>
-                <span className="text-sm font-medium text-foreground flex-1 text-left">
-                  {item.label}
-                </span>
-                <ChevronRight className={`h-4 w-4 text-muted-foreground transition-transform ${item.isActive ? 'rotate-90' : ''}`} />
-              </button>
-            );
-          })}
-        </motion.div>
+        {/* Profile Section */}
+        {renderMenuGroup(language === 'en' ? 'Profile' : 'प्रोफ़ाइल', profileMenuItems)}
 
         {/* Edit Profile Expandable */}
         {activeSection === 'edit' && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
             className="cosmic-card rounded-2xl p-5 mb-4"
           >
             <ProfileSection />
           </motion.div>
         )}
 
-        {/* Logout Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+        {/* Settings Section */}
+        {renderMenuGroup(language === 'en' ? 'Settings' : 'सेटिंग्स', settingsMenuItems)}
+
+        {/* Logout */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <Button
             variant="ghost"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="w-full py-4 h-auto rounded-2xl text-destructive hover:text-destructive hover:bg-destructive/10 font-medium"
+            className="w-full py-3.5 h-auto rounded-2xl text-destructive hover:text-destructive hover:bg-destructive/10 font-medium text-sm"
           >
-            {isLoggingOut ? (
-              <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            ) : (
-              <LogOut className="h-4 w-4 mr-2" />
-            )}
+            {isLoggingOut ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <LogOut className="h-4 w-4 mr-2" />}
             {language === 'en' ? 'Sign Out' : 'साइन आउट'}
           </Button>
         </motion.div>
