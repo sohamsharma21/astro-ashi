@@ -34,7 +34,11 @@ import GratitudeJournal from "./pages/GratitudeJournal";
 import DailyInspiration from "./pages/DailyInspiration";
 import SpiritualRoutine from "./pages/SpiritualRoutine";
 import SacredCalendar from "./pages/SacredCalendar";
-
+import SpiritualGuide from "./pages/SpiritualGuide";
+import KarmaTracker from "./pages/KarmaTracker";
+import DevotionalMusic from "./pages/DevotionalMusic";
+import SleepRelaxation from "./pages/SleepRelaxation";
+import Community from "./pages/Community";
 // Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
