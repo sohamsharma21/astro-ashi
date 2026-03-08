@@ -46,8 +46,8 @@ export const useUserProfile = (userId: string | undefined, language: 'en' | 'hi'
       setError(err);
       toast.error(
         language === 'en'
-          ? `Failed to load profile: ${err.message}`
-          : `प्रोफ़ाइल लोड करने में विफल: ${err.message}`
+          ? 'Failed to load profile. Please try again.'
+          : 'प्रोफ़ाइल लोड करने में विफल। कृपया पुनः प्रयास करें।'
       );
     } finally {
       setLoading(false);
