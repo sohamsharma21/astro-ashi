@@ -12,7 +12,7 @@ export const DesktopNav = () => {
   const navItems = getFilteredNavItems(!!user);
 
   return (
-    <div className="hidden lg:flex space-x-1">
+    <div className="hidden lg:flex items-center gap-0.5">
       {navItems.map((item) => (
         <IconNavLink
           key={item.path}

@@ -13,9 +13,9 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: '2rem',
+			padding: '1.5rem',
 			screens: {
-				'2xl': '1400px'
+				'2xl': '1320px'
 			}
 		},
 		extend: {
@@ -54,14 +54,15 @@ export default {
 					foreground: 'hsl(var(--card-foreground))'
 				},
 				cosmic: {
-					'indigo': '#1a0b2e',
-					'violet': '#321c5c',
+					'indigo': 'hsl(240 20% 4%)',
+					'violet': 'hsl(260 25% 14%)',
 					'gold': 'hsl(var(--cosmic-gold))',
-					'silver': '#c0c0c0',
-					'star': '#ffffff',
-					'deep-space': '#070217',
+					'silver': 'hsl(220 10% 75%)',
+					'star': 'hsl(220 20% 95%)',
+					'deep-space': 'hsl(240 20% 4%)',
 					'purple': 'hsl(var(--cosmic-purple))',
 					'pink': 'hsl(var(--cosmic-pink))',
+					'blue': 'hsl(var(--cosmic-blue))',
 				},
 				'love-pink': 'hsl(var(--love-pink))',
 				'love-purple': 'hsl(var(--love-purple))',
@@ -79,44 +80,50 @@ export default {
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				sm: 'calc(var(--radius) - 4px)',
+				'2xl': '1.25rem',
+				'3xl': '1.5rem',
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				},
 				'float': {
 					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-10px)' },
+					'50%': { transform: 'translateY(-8px)' },
 				},
 				'glow': {
 					'0%, 100%': { opacity: '1' },
-					'50%': { opacity: '0.6' },
+					'50%': { opacity: '0.7' },
 				},
 				'spin-slow': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' },
 				},
 				'fade-in': {
-					'0%': { opacity: '0', transform: 'translateY(10px)' },
+					'0%': { opacity: '0', transform: 'translateY(8px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' },
+				},
+				'fade-in-up': {
+					'0%': { opacity: '0', transform: 'translateY(16px)' },
 					'100%': { opacity: '1', transform: 'translateY(0)' },
 				},
 				'scale-in': {
-					'0%': { opacity: '0', transform: 'scale(0.9)' },
+					'0%': { opacity: '0', transform: 'scale(0.95)' },
 					'100%': { opacity: '1', transform: 'scale(1)' },
+				},
+				'slide-up': {
+					'0%': { opacity: '0', transform: 'translateY(20px)' },
+					'100%': { opacity: '1', transform: 'translateY(0)' },
+				},
+				'shimmer': {
+					'0%': { backgroundPosition: '-200% 0' },
+					'100%': { backgroundPosition: '200% 0' },
 				},
 			},
 			animation: {
@@ -125,20 +132,30 @@ export default {
 				'float': 'float 6s ease-in-out infinite',
 				'glow': 'glow 3s ease-in-out infinite',
 				'spin-slow': 'spin-slow 20s linear infinite',
-				'fade-in': 'fade-in 1s ease-out forwards',
-				'scale-in': 'scale-in 0.5s ease-out forwards',
+				'fade-in': 'fade-in 0.6s ease-out forwards',
+				'fade-in-up': 'fade-in-up 0.8s ease-out forwards',
+				'scale-in': 'scale-in 0.4s ease-out forwards',
+				'slide-up': 'slide-up 0.6s ease-out forwards',
+				'shimmer': 'shimmer 2s linear infinite',
 			},
 			fontFamily: {
-				'cinzel': ['"Cinzel Decorative"', 'cursive'],
-				'lora': ['Lora', 'serif'],
-				'cormorant': ['"Cormorant Garamont"', 'serif'],
+				'sans': ['Inter', 'sans-serif'],
+				'display': ['"Playfair Display"', 'serif'],
+				'cinzel': ['"Playfair Display"', 'serif'],
+				'lora': ['Inter', 'sans-serif'],
+				'cormorant': ['"Playfair Display"', 'serif'],
 				'noto-sans': ['"Noto Sans"', 'sans-serif'],
 				'noto-devanagari': ['"Noto Sans Devanagari"', 'sans-serif'],
-				'playfair': ['Playfair Display', 'serif'],
+				'playfair': ['"Playfair Display"', 'serif'],
 			},
 			backgroundImage: {
-				'cosmic-gradient': 'linear-gradient(to right bottom, var(--tw-gradient-stops))',
-				'star-field': 'radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
+				'cosmic-gradient': 'linear-gradient(165deg, var(--tw-gradient-stops))',
+				'star-field': 'radial-gradient(circle, hsla(220, 20%, 95%, 0.05) 1px, transparent 1px)',
+				'glass-gradient': 'linear-gradient(135deg, hsla(260, 25%, 14%, 0.4), hsla(240, 20%, 6%, 0.6))',
+			},
+			spacing: {
+				'18': '4.5rem',
+				'22': '5.5rem',
 			},
 		}
 	},
