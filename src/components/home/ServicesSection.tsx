@@ -89,7 +89,7 @@ export const ServicesSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.06 }}
-                className={`group text-left rounded-2xl p-5 transition-all duration-400 border ${
+                className={`group text-left rounded-2xl p-5 transition-all duration-300 border ${
                   feature.highlight 
                     ? 'bg-primary/[0.06] border-primary/15 hover:border-primary/30' 
                     : 'bg-card/40 border-border/40 hover:border-primary/15'
