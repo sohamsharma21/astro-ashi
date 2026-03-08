@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_questions: {
+        Row: {
+          ai_response: Json
+          created_at: string
+          id: string
+          language: string
+          question: string
+          user_id: string
+        }
+        Insert: {
+          ai_response?: Json
+          created_at?: string
+          id?: string
+          language?: string
+          question: string
+          user_id: string
+        }
+        Update: {
+          ai_response?: Json
+          created_at?: string
+          id?: string
+          language?: string
+          question?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           category: string
