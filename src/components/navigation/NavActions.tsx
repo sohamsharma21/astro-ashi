@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, LogOut, BookOpen, Calendar, MessageSquare, Settings } from 'lucide-react';
+import { Menu, X, LogOut, BookOpen, Calendar, MessageSquare, Settings, BotMessageSquare } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -25,7 +25,6 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
   const { user, language, setLanguage, userProfile } = useAuth();
   const isMobile = useIsMobile();
 
-  // Function to get user initials for avatar fallback
   const getUserInitials = () => {
     if (!userProfile?.full_name) return 'U';
     return userProfile.full_name
@@ -42,14 +41,14 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
   };
 
   return (
-    <div className="flex items-center space-x-3">
+    <div className="flex items-center gap-2">
       <Button
         variant="ghost"
         size="sm"
         onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-        className="text-cosmic-gold hover:bg-cosmic-deep-space hover:bg-opacity-50"
+        className="text-muted-foreground hover:text-foreground hover:bg-muted/50 text-xs font-medium rounded-full px-3"
       >
-        {language === 'en' ? 'हिंदी' : 'EN'}
+        {language === 'en' ? 'हिं' : 'EN'}
       </Button>
 
       {user && <NotificationBell />}
@@ -57,47 +56,42 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="p-0 rounded-full">
-              <Avatar className="h-9 w-9 cursor-pointer border border-cosmic-gold border-opacity-40 hover:border-opacity-100 transition-all duration-300">
+            <Button variant="ghost" className="p-0 rounded-full hover:ring-2 hover:ring-primary/30 transition-all">
+              <Avatar className="h-8 w-8 cursor-pointer border border-border hover:border-primary/50 transition-all duration-300">
                 <AvatarImage src={userProfile?.avatar_url || ""} alt={userProfile?.full_name || 'User'} />
-                <AvatarFallback className="bg-cosmic-violet text-white">
+                <AvatarFallback className="bg-secondary text-secondary-foreground text-xs">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
-              {!isMobile && (
-                <span className="ml-2 text-cosmic-gold">
-                  {userProfile?.full_name?.split(' ')[0] || (language === 'en' ? 'Profile' : 'प्रोफाइल')}
-                </span>
-              )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-cosmic-deep-space border border-cosmic-gold text-white min-w-[220px] mr-2">
-            <DropdownMenuItem className="hover:bg-cosmic-violet hover:bg-opacity-20 cursor-pointer">
-              <Link to="/profile" className="flex items-center w-full">
-                <Settings className="mr-2 h-4 w-4" />
-                {language === 'en' ? 'Settings' : 'सेटिंग्स'}
+          <DropdownMenuContent className="glass border-border/50 min-w-[200px] mr-2 p-1.5">
+            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
+              <Link to="/profile" className="flex items-center w-full gap-2">
+                <Settings className="h-4 w-4 text-muted-foreground" />
+                <span>{language === 'en' ? 'Settings' : 'सेटिंग्स'}</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-cosmic-violet hover:bg-opacity-20 cursor-pointer">
-              <Link to="/reading-history" className="flex items-center w-full">
-                <BookOpen className="mr-2 h-4 w-4" />
-                {language === 'en' ? 'Reading History' : 'पठन इतिहास'}
+            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
+              <Link to="/ask-astroashi" className="flex items-center w-full gap-2">
+                <BotMessageSquare className="h-4 w-4 text-muted-foreground" />
+                <span>AstroAshi AI</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-cosmic-violet hover:bg-opacity-20 cursor-pointer">
-              <Link to="/daily-horoscope" className="flex items-center w-full">
-                <Calendar className="mr-2 h-4 w-4" />
-                {language === 'en' ? 'Daily Horoscope' : 'दैनिक राशिफल'}
+            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
+              <Link to="/reading-history" className="flex items-center w-full gap-2">
+                <BookOpen className="h-4 w-4 text-muted-foreground" />
+                <span>{language === 'en' ? 'History' : 'इतिहास'}</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-cosmic-violet hover:bg-opacity-20 cursor-pointer">
-              <Link to="/ask-astro" className="flex items-center w-full">
-                <MessageSquare className="mr-2 h-4 w-4" />
-                {language === 'en' ? 'Ask Astro' : 'एस्ट्रो से पूछें'}
+            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
+              <Link to="/daily-horoscope" className="flex items-center w-full gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>{language === 'en' ? 'Horoscope' : 'राशिफल'}</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuSeparator className="bg-cosmic-gold bg-opacity-20" />
-            <DropdownMenuItem className="hover:bg-cosmic-violet hover:bg-opacity-20 cursor-pointer" onClick={handleSignOut}>
+            <DropdownMenuSeparator className="bg-border/30 my-1" />
+            <DropdownMenuItem className="hover:bg-destructive/10 cursor-pointer rounded-lg text-destructive" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
               {getTranslation('navItems', 'signout', language)}
             </DropdownMenuItem>
@@ -115,9 +109,9 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
         variant="ghost"
         size="sm"
         onClick={onMenuToggle}
-        className="lg:hidden text-cosmic-gold hover:bg-cosmic-deep-space hover:bg-opacity-50"
+        className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full"
       >
-        {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
       </Button>
     </div>
   );
