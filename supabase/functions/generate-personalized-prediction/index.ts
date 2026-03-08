@@ -28,17 +28,17 @@ serve(async (req) => {
     });
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: userError } = await authClient.auth.getUser(token);
+    const { data, error: claimsError } = await authClient.auth.getClaims(token);
     
-    if (userError || !user) {
-      console.error('Auth error:', userError?.message);
+    if (claimsError || !data?.claims) {
+      console.error('Auth error:', claimsError?.message);
       return new Response(
         JSON.stringify({ error: 'Unauthorized' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    const userId = user.id;
+    const userId = data.claims.sub as string;
     const { predictionType, language } = await req.json();
     
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
