@@ -101,7 +101,7 @@ export const navigationConfig: NavItem[] = [
     path: '/meditation',
     labelEn: 'Meditation',
     labelHi: 'ध्यान',
-    icon: Leaf,
+    icon: Heart,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
