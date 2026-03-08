@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
