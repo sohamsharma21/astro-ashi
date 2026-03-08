@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 import { 
   User, MapPin, Calendar, Star, Settings, LogOut, ChevronRight, 
-  Camera, Shield, Bell, Loader2, Moon, Sun
+  Camera, Shield, Bell, Loader2, Moon
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
