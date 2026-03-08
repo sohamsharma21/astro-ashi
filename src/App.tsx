@@ -19,7 +19,7 @@ import ContactUs from "./pages/ContactUs";
 import KundliGenerator from "./pages/KundliGenerator";
 import Compatibility from "./pages/Compatibility";
 import AstroLove from "./pages/AstroLove";
-import AskAstro from "./pages/AskAstro";
+
 import CosmicJournal from "./pages/CosmicJournal";
 import Profile from "./pages/Profile";
 import Help from "./pages/Help";
@@ -84,11 +84,7 @@ const App = () => (
                 <AstroLove />
               </ProtectedRoute>
             } />
-            <Route path="/ask-astro" element={
-              <ProtectedRoute>
-                <AskAstro />
-              </ProtectedRoute>
-            } />
+            <Route path="/ask-astro" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/cosmic-journal" element={
               <ProtectedRoute>
                 <CosmicJournal />
