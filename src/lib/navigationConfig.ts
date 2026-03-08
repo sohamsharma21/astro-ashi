@@ -136,7 +136,7 @@ export const navigationConfig: NavItem[] = [
     path: '/sacred-calendar',
     labelEn: 'Festivals',
     labelHi: 'त्योहार',
-    icon: CalendarHeart,
+    icon: Star,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
