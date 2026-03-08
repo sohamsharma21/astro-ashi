@@ -108,7 +108,7 @@ const PersonalizedDashboard = () => {
       >
         <Button
           onClick={() => navigate('/ask-astroashi')}
-          className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-primary to-amber-600 hover:from-primary/90 hover:to-amber-600/90 text-primary-foreground shadow-lg"
+          className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
           size="lg"
         >
           <BotMessageSquare className="h-6 w-6 mr-2" />
