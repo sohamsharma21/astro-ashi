@@ -203,6 +203,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       community_likes: {
@@ -230,6 +237,13 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -307,10 +321,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "community_reports_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "community_comments_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "community_reports_post_id_fkey"
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_reports_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -1067,10 +1095,97 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      community_comments_safe: {
+        Row: {
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          post_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          post_id?: string | null
+          user_id?: never
+        }
+        Update: {
+          content?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          post_id?: string | null
+          user_id?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_posts_safe: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string | null
+          group_name: string | null
+          id: string | null
+          is_anonymous: boolean | null
+          likes_count: number | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          group_name?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          likes_count?: number | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string | null
+          group_name?: string | null
+          id?: string | null
+          is_anonymous?: boolean | null
+          likes_count?: number | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      award_spiritual_badge: {
+        Args: { _badge_key: string; _user_id: string }
+        Returns: boolean
+      }
+      record_karma_deed: {
+        Args: { _deed_key: string; _points?: number; _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       zodiac_sign:
