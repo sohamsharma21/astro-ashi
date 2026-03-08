@@ -1,5 +1,6 @@
 
-import { Star, Moon, Users, MessageCircle, Book, BotMessageSquare } from 'lucide-react';
+
+import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -37,6 +38,46 @@ const serviceFeatures = [
     descEn: "Discover celestial compatibility with your partner.",
     descHi: "अपने साथी के साथ आकाशीय संगतता जानें।",
     path: "/compatibility"
+  },
+  {
+    icon: Heart,
+    titleEn: "Meditation",
+    titleHi: "ध्यान",
+    descEn: "Guided meditation with ambient sounds like rain, ocean & temple bells.",
+    descHi: "बारिश, समुद्र और मंदिर की घंटियों के साथ ध्यान करें।",
+    path: "/meditation"
+  },
+  {
+    icon: BookOpen,
+    titleEn: "Gratitude Journal",
+    titleHi: "कृतज्ञता डायरी",
+    descEn: "Daily gratitude practice with mood tracking and streaks.",
+    descHi: "मूड ट्रैकिंग के साथ दैनिक कृतज्ञता अभ्यास।",
+    path: "/gratitude-journal"
+  },
+  {
+    icon: Sparkles,
+    titleEn: "Daily Inspiration",
+    titleHi: "दैनिक प्रेरणा",
+    descEn: "Spiritual quotes and wisdom from all faiths, updated daily.",
+    descHi: "सभी धर्मों से आध्यात्मिक उद्धरण और ज्ञान।",
+    path: "/daily-inspiration"
+  },
+  {
+    icon: ListChecks,
+    titleEn: "Spiritual Routine",
+    titleHi: "आध्यात्मिक दिनचर्या",
+    descEn: "Build your daily spiritual practice with personalized routines.",
+    descHi: "व्यक्तिगत दिनचर्या के साथ दैनिक आध्यात्मिक अभ्यास बनाएं।",
+    path: "/spiritual-routine"
+  },
+  {
+    icon: Calendar,
+    titleEn: "Sacred Calendar",
+    titleHi: "पवित्र कैलेंडर",
+    descEn: "Festivals, fasts & auspicious dates for your faith tradition.",
+    descHi: "आपकी धार्मिक परंपरा के त्योहार, व्रत और शुभ तिथियां।",
+    path: "/sacred-calendar"
   },
   {
     icon: Book,
