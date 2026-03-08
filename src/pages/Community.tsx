@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { MessageSquare, Heart, Flag, Plus, Send, User, Users } from 'lucide-react';
+import { Heart, Flag, Plus, Send, User, Users } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
