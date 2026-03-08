@@ -23,6 +23,7 @@ import {
   Brain,
   Trophy,
   FlaskConical,
+  Hand,
   type LucideIcon 
 } from 'lucide-react';
 
@@ -241,6 +242,14 @@ export const navigationConfig: NavItem[] = [
     labelEn: 'Personality',
     labelHi: 'व्यक्तित्व',
     icon: FlaskConical,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/palm-reading',
+    labelEn: 'Palm Reading',
+    labelHi: 'हस्तरेखा',
+    icon: Hand,
     requiresAuth: true,
     showWhenLoggedOut: false
   },

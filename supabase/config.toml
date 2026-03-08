@@ -47,3 +47,6 @@ verify_jwt = false
 
 [functions.ai-life-insights]
 verify_jwt = false
+
+[functions.palm-reading]
+verify_jwt = false

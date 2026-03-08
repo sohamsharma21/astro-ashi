@@ -46,6 +46,7 @@ import SpiritualKnowledge from "./pages/SpiritualKnowledge";
 import AILifeInsights from "./pages/AILifeInsights";
 import SpiritualChallenges from "./pages/SpiritualChallenges";
 import SpiritualPersonalityTest from "./pages/SpiritualPersonalityTest";
+import PalmReading from "./pages/PalmReading";
 // Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -206,6 +207,11 @@ const App = () => (
             <Route path="/personality-test" element={
               <ProtectedRoute>
                 <SpiritualPersonalityTest />
+              </ProtectedRoute>
+            } />
+            <Route path="/palm-reading" element={
+              <ProtectedRoute>
+                <PalmReading />
               </ProtectedRoute>
             } />
             {/* Redirect old booking URLs */}
