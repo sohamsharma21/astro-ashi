@@ -24,6 +24,7 @@ interface DashboardData {
 
 const PersonalizedDashboard = () => {
   const { user, language } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
 
