@@ -5,6 +5,7 @@ import {
   Heart, 
   HeartHandshake, 
   MessageSquare, 
+  BotMessageSquare,
   Phone, 
   BookOpen, 
   Info, 
