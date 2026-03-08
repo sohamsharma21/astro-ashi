@@ -108,8 +108,19 @@ const Settings = () => {
 
   const handleDelete = async () => {
     if (!confirm(tr.deleteConfirm)) return;
-    // In production, this would call an edge function that uses service_role to delete user
-    toast.error('Account deletion requires admin approval. Please contact support.');
+    try {
+      const { error } = await supabase.functions.invoke('delete-account', {
+        body: { confirmation: 'DELETE_MY_ACCOUNT' },
+      });
+      if (error) throw error;
+      toast.success(language === 'hi' ? 'खाता हटा दिया गया' : 'Account deleted');
+      // Sign out after deletion
+      await supabase.auth.signOut();
+      window.location.href = '/';
+    } catch (err) {
+      console.error('Delete error:', err);
+      toast.error(language === 'hi' ? 'खाता हटाने में विफल' : 'Failed to delete account');
+    }
   };
 
   return (
