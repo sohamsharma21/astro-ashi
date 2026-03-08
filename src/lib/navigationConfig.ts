@@ -101,6 +101,46 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/meditation',
+    labelEn: 'Meditation',
+    labelHi: 'ध्यान',
+    icon: Flower2,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/gratitude-journal',
+    labelEn: 'Gratitude',
+    labelHi: 'कृतज्ञता',
+    icon: BookHeart,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/daily-inspiration',
+    labelEn: 'Inspiration',
+    labelHi: 'प्रेरणा',
+    icon: Quote,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/spiritual-routine',
+    labelEn: 'Routine',
+    labelHi: 'दिनचर्या',
+    icon: ListChecks,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/sacred-calendar',
+    labelEn: 'Festivals',
+    labelHi: 'त्योहार',
+    icon: CalendarHeart,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',
