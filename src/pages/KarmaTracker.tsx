@@ -7,8 +7,8 @@ import Navigation from '@/components/Navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
-import { getDailyDeeds, categoryLabels } from '@/lib/karmaData';
-import SEOHead from '@/components/SEOHead';
+import { getDailyDeeds } from '@/lib/karmaData';
+import { SEOHead } from '@/components/SEOHead';
 
 const KarmaTracker = () => {
   const { user, language, profile } = useAuth();
