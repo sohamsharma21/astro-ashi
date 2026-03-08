@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, RotateCcw, Timer, Sparkles, Wind } from 'lucide-react';
+import { Play, Pause, RotateCcw, Timer, Sparkles, Wind, Volume2, VolumeX } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
@@ -9,19 +9,24 @@ import { useAuth } from '@/lib/auth';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { meditations, getRecommendedMeditations, MeditationSession } from '@/lib/meditationData';
+import { Slider } from '@/components/ui/slider';
+import { meditations, MeditationSession } from '@/lib/meditationData';
 import { Religion } from '@/lib/faithModules';
+import { ambientSounds, getAmbientEngine } from '@/lib/ambientSoundEngine';
 
 const Meditation = () => {
   const { userProfile, language } = useAuth();
   const religion = (userProfile?.religion as Religion) || 'hindu';
-  const recommended = getRecommendedMeditations(religion);
-  
+
   const [activeSession, setActiveSession] = useState<MeditationSession | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Ambient sound state
+  const [activeAmbient, setActiveAmbient] = useState<string | null>(null);
+  const [ambientVolume, setAmbientVolume] = useState(50);
+  const engineRef = useRef(getAmbientEngine());
 
   const totalSeconds = activeSession ? activeSession.duration * 60 : 0;
   const progress = totalSeconds > 0 ? (elapsed / totalSeconds) * 100 : 0;
@@ -52,13 +57,58 @@ const Meditation = () => {
     setElapsed(0);
   };
 
-  useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
+  // Ambient controls
+  const toggleAmbient = (soundId: string) => {
+    const engine = engineRef.current;
+    if (activeAmbient === soundId) {
+      engine.stop();
+      setActiveAmbient(null);
+    } else {
+      engine.setVolume(ambientVolume / 100);
+      engine.play(soundId);
+      setActiveAmbient(soundId);
+    }
+  };
+
+  const handleVolumeChange = (val: number[]) => {
+    const v = val[0];
+    setAmbientVolume(v);
+    engineRef.current.setVolume(v / 100);
+  };
+
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      engineRef.current.stop();
+    };
+  }, []);
+
+  // Stop ambient when session completes
+  useEffect(() => {
+    if (progress >= 100 && activeAmbient) {
+      // Fade out after completion
+      const engine = engineRef.current;
+      const fadeOut = setInterval(() => {
+        const cur = engine.getVolume();
+        if (cur <= 0.02) {
+          engine.stop();
+          setActiveAmbient(null);
+          clearInterval(fadeOut);
+          engine.setVolume(ambientVolume / 100); // restore
+        } else {
+          engine.setVolume(cur - 0.02);
+        }
+      }, 100);
+      return () => clearInterval(fadeOut);
+    }
+  }, [progress >= 100]);
 
   const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
 
   const t = {
-    en: { title: 'Meditation & Mindfulness', recommended: 'Recommended for You', all: 'All Meditations', playing: 'Now Playing', complete: 'Session Complete! 🎉', start: 'Start', breathe: 'Breathe in... hold... breathe out...' },
-    hi: { title: 'ध्यान और सतर्कता', recommended: 'आपके लिए अनुशंसित', all: 'सभी ध्यान', playing: 'अभी चल रहा है', complete: 'सत्र पूर्ण! 🎉', start: 'शुरू करें', breathe: 'सांस अंदर... रोकें... सांस बाहर...' }
+    en: { title: 'Meditation & Mindfulness', recommended: 'Recommended for You', all: 'All Meditations', playing: 'Now Playing', complete: 'Session Complete! 🎉', start: 'Start', breathe: 'Breathe in... hold... breathe out...', ambient: 'Ambient Sounds', ambientDesc: 'Tap to play calming background sounds', volume: 'Volume' },
+    hi: { title: 'ध्यान और सतर्कता', recommended: 'आपके लिए अनुशंसित', all: 'सभी ध्यान', playing: 'अभी चल रहा है', complete: 'सत्र पूर्ण! 🎉', start: 'शुरू करें', breathe: 'सांस अंदर... रोकें... सांस बाहर...', ambient: 'परिवेशी ध्वनियाँ', ambientDesc: 'शांत पृष्ठभूमि ध्वनि के लिए टैप करें', volume: 'वॉल्यूम' }
   };
   const tr = t[language] || t.en;
 
@@ -67,7 +117,7 @@ const Meditation = () => {
 
   return (
     <>
-      <SEOHead title="Meditation & Mindfulness - AstroAshi" description="Guided meditation and mindfulness exercises for inner peace." canonical="/meditation" />
+      <SEOHead title="Meditation & Mindfulness - AstroAshi" description="Guided meditation with ambient sounds — rain, ocean, temple bells, and more." canonical="/meditation" />
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={100} />
         <Navigation />
@@ -75,6 +125,55 @@ const Meditation = () => {
           <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">
             🧘 {tr.title}
           </motion.h1>
+
+          {/* Ambient Sound Mixer */}
+          <motion.section initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="mb-8">
+            <Card className="p-5 border-primary/10 bg-gradient-to-br from-muted/60 to-secondary/40">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  <Volume2 className="w-5 h-5 text-primary" /> {tr.ambient}
+                </h2>
+                {activeAmbient && (
+                  <Button size="sm" variant="ghost" onClick={() => { engineRef.current.stop(); setActiveAmbient(null); }} className="text-xs gap-1">
+                    <VolumeX className="w-3 h-3" /> Stop
+                  </Button>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mb-4">{tr.ambientDesc}</p>
+
+              {/* Sound grid */}
+              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 mb-4">
+                {ambientSounds.map(sound => {
+                  const isActive = activeAmbient === sound.id;
+                  return (
+                    <button
+                      key={sound.id}
+                      onClick={() => toggleAmbient(sound.id)}
+                      className={`flex flex-col items-center gap-1 p-2.5 rounded-xl border transition-all duration-200
+                        ${isActive
+                          ? 'bg-primary/15 border-primary/40 shadow-lg shadow-primary/10 scale-105'
+                          : 'bg-muted/30 border-border/30 hover:border-primary/20 hover:bg-muted/50'}`}
+                    >
+                      <span className={`text-xl transition-transform ${isActive ? 'animate-pulse' : ''}`}>{sound.icon}</span>
+                      <span className={`text-[10px] font-medium leading-tight text-center ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+                        {sound.label[language]}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Volume slider */}
+              {activeAmbient && (
+                <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="flex items-center gap-3">
+                  <VolumeX className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <Slider value={[ambientVolume]} onValueChange={handleVolumeChange} max={100} step={1} className="flex-1" />
+                  <Volume2 className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <span className="text-xs text-muted-foreground w-8 text-right">{ambientVolume}%</span>
+                </motion.div>
+              )}
+            </Card>
+          </motion.section>
 
           {/* Active Session Player */}
           <AnimatePresence>
@@ -97,6 +196,14 @@ const Meditation = () => {
                       <span className="text-2xl font-mono font-bold text-foreground">{formatTime(elapsed)}</span>
                       <span className="text-xs text-muted-foreground">/ {formatTime(totalSeconds)}</span>
                     </div>
+                    {/* Breathing ring animation when playing */}
+                    {isPlaying && (
+                      <motion.div
+                        className="absolute inset-[-8px] rounded-full border-2 border-primary/20"
+                        animate={{ scale: [1, 1.08, 1], opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+                      />
+                    )}
                   </div>
 
                   {progress >= 100 ? (
@@ -106,6 +213,13 @@ const Meditation = () => {
                       {tr.breathe}
                     </motion.p>
                   ) : null}
+
+                  {/* Active ambient indicator */}
+                  {activeAmbient && (
+                    <p className="text-xs text-muted-foreground mb-3">
+                      🔊 {ambientSounds.find(s => s.id === activeAmbient)?.label[language]}
+                    </p>
+                  )}
 
                   <div className="flex justify-center gap-3">
                     {!isPlaying ? (
