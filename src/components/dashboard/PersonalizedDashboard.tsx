@@ -8,6 +8,7 @@ import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
+import EmailVerificationBanner from './EmailVerificationBanner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
 
