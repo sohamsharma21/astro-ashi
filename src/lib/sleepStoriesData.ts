@@ -8,23 +8,38 @@ export interface SleepContent {
   religion: string;
   duration: string;
   icon: string;
+  ambientId?: string; // maps to ambientSoundEngine preset
+  audioUrl?: string;  // archive.org or external URL
 }
 
 export const sleepContent: SleepContent[] = [
-  // Guided meditation
-  { id: 'g1', titleEn: 'Body Scan Relaxation', titleHi: 'शरीर स्कैन विश्राम', descEn: 'Progressive body relaxation for deep sleep', descHi: 'गहरी नींद के लिए शरीर विश्राम', type: 'guided', religion: 'other', duration: '15 min', icon: '🧘' },
-  { id: 'g2', titleEn: 'Breathing into Sleep', titleHi: 'नींद की सांसें', descEn: 'Gentle breathing exercises for restful sleep', descHi: 'आरामदायक नींद के लिए श्वास व्यायाम', type: 'guided', religion: 'other', duration: '10 min', icon: '🌬️' },
-  // Nature sounds
-  { id: 'n1', titleEn: 'Rain on Leaves', titleHi: 'पत्तों पर बारिश', descEn: 'Gentle rainfall on a forest canopy', descHi: 'जंगल में कोमल बारिश', type: 'nature', religion: 'other', duration: '30 min', icon: '🌧️' },
-  { id: 'n2', titleEn: 'Ocean Waves', titleHi: 'समुद्र की लहरें', descEn: 'Rhythmic ocean waves on a moonlit beach', descHi: 'चांदनी रात में समुद्र की लहरें', type: 'nature', religion: 'other', duration: '30 min', icon: '🌊' },
-  { id: 'n3', titleEn: 'Mountain Stream', titleHi: 'पहाड़ी नदी', descEn: 'Flowing water through a peaceful valley', descHi: 'शांत घाटी में बहता पानी', type: 'nature', religion: 'other', duration: '30 min', icon: '🏔️' },
-  // Spiritual stories
-  { id: 's1', titleEn: 'The Peaceful Garden (Buddhist)', titleHi: 'शांत बगीचा (बौद्ध)', descEn: 'A journey through a calm Buddhist garden', descHi: 'शांत बौद्ध बगीचे की यात्रा', type: 'story', religion: 'buddhist', duration: '12 min', icon: '🌸' },
-  { id: 's2', titleEn: 'The Good Shepherd (Christian)', titleHi: 'अच्छा चरवाहा (ईसाई)', descEn: 'A peaceful biblical bedtime reading', descHi: 'शांतिपूर्ण बाइबल कहानी', type: 'story', religion: 'christian', duration: '10 min', icon: '✝️' },
-  { id: 's3', titleEn: 'Krishna\'s Flute (Hindu)', titleHi: 'कृष्ण की बांसुरी (हिंदू)', descEn: 'A soothing tale of Krishna playing his flute by the river', descHi: 'नदी किनारे कृष्ण की बांसुरी की मधुर कहानी', type: 'story', religion: 'hindu', duration: '12 min', icon: '🪈' },
-  { id: 's4', titleEn: 'Sufi Wisdom Tale (Muslim)', titleHi: 'सूफी ज्ञान कथा (मुस्लिम)', descEn: 'A gentle Sufi parable about trust and peace', descHi: 'विश्वास और शांति पर सूफी कहानी', type: 'story', religion: 'muslim', duration: '10 min', icon: '🌙' },
-  { id: 's5', titleEn: 'The Guru\'s Garden (Sikh)', titleHi: 'गुरु का बगीचा (सिख)', descEn: 'A calming story from Sikh tradition', descHi: 'सिख परंपरा से शांत कहानी', type: 'story', religion: 'sikh', duration: '10 min', icon: '☬' },
-  { id: 's6', titleEn: 'Path of Ahimsa (Jain)', titleHi: 'अहिंसा का मार्ग (जैन)', descEn: 'A peaceful story about compassion and non-violence', descHi: 'करुणा और अहिंसा की शांत कहानी', type: 'story', religion: 'jain', duration: '10 min', icon: '☸️' },
+  // Guided meditation — ambient engine
+  { id: 'g1', titleEn: 'Om Drone Deep Sleep', titleHi: 'ॐ ध्वनि गहरी नींद', descEn: 'Continuous Om vibration for deep relaxation', descHi: 'गहरी नींद के लिए ॐ ध्वनि', type: 'guided', religion: 'other', duration: '∞', icon: '🕉️', ambientId: 'om' },
+  { id: 'g2', titleEn: 'Singing Bowl Sleep', titleHi: 'सिंगिंग बाउल नींद', descEn: 'Tibetan singing bowl tones for restful sleep', descHi: 'आरामदायक नींद के लिए सिंगिंग बाउल', type: 'guided', religion: 'other', duration: '∞', icon: '🥣', ambientId: 'singing-bowl' },
+  { id: 'g3', titleEn: 'Temple Bells Lullaby', titleHi: 'मंदिर घंटी लोरी', descEn: 'Gentle temple bell chimes for peaceful sleep', descHi: 'शांत नींद के लिए मंदिर घंटी', type: 'guided', religion: 'other', duration: '∞', icon: '🔔', ambientId: 'bells' },
+
+  // Nature sounds — ambient engine (no external URLs needed)
+  { id: 'n1', titleEn: 'Rain on Leaves', titleHi: 'पत्तों पर बारिश', descEn: 'Gentle rainfall on a forest canopy', descHi: 'जंगल में कोमल बारिश', type: 'nature', religion: 'other', duration: '∞', icon: '🌧️', ambientId: 'rain' },
+  { id: 'n2', titleEn: 'Ocean Waves', titleHi: 'समुद्र की लहरें', descEn: 'Rhythmic ocean waves on a moonlit beach', descHi: 'चांदनी रात में समुद्र की लहरें', type: 'nature', religion: 'other', duration: '∞', icon: '🌊', ambientId: 'ocean' },
+  { id: 'n3', titleEn: 'Forest Wind', titleHi: 'वन की हवा', descEn: 'Whispering wind through tall trees', descHi: 'ऊँचे पेड़ों से गुज़रती हवा', type: 'nature', religion: 'other', duration: '∞', icon: '🌿', ambientId: 'wind' },
+  { id: 'n4', titleEn: 'Crackling Campfire', titleHi: 'जलती लकड़ी', descEn: 'Warm crackling fire for cozy nights', descHi: 'आरामदायक रातों के लिए जलती आग', type: 'nature', religion: 'other', duration: '∞', icon: '🔥', ambientId: 'fire' },
+  { id: 'n5', titleEn: 'Night Crickets', titleHi: 'रात के झींगुर', descEn: 'Peaceful night cricket chorus', descHi: 'शांत रात के झींगुर', type: 'nature', religion: 'other', duration: '∞', icon: '🦗', ambientId: 'crickets' },
+
+  // Spiritual stories — archive.org audio where available
+  { id: 's1', titleEn: 'Tibetan Buddhist Chants', titleHi: 'तिब्बती बौद्ध मंत्र', descEn: 'Meditative sound of Buddhist chants for deep sleep', descHi: 'गहरी नींद के लिए बौद्ध मंत्र', type: 'story', religion: 'buddhist', duration: '55:00', icon: '🌸',
+    audioUrl: 'https://archive.org/download/jamendo-019797/01%20-%20Tibetan%20Incantations-The%20Meditative%20Sound%20Of%20Buddhist%20Chants%20-%20Track%2001.ogg' },
+  { id: 's2', titleEn: 'The Lord\'s Prayer', titleHi: 'प्रभु की प्रार्थना', descEn: 'Billy Graham\'s peaceful bedtime prayer', descHi: 'बिली ग्राहम की शांतिपूर्ण प्रार्थना', type: 'story', religion: 'christian', duration: '3:20', icon: '✝️',
+    audioUrl: 'https://archive.org/download/78_the-lords-prayer_billy-graham-greater-london-crusade-choir-albert-hay-malotte-clif_gbia0475704b/The%20Lord%27s%20Prayer%20-%20Billy%20Graham.mp3' },
+  { id: 's3', titleEn: 'Om Namah Shivaya Trance', titleHi: 'ॐ नमः शिवाय ट्रान्स', descEn: 'Soothing Shiva mantra with shamanic drums for sleep', descHi: 'नींद के लिए शिव मंत्र', type: 'story', religion: 'hindu', duration: '71:11', icon: '🪈',
+    audioUrl: 'https://archive.org/download/nvce_om-namah-shivaya-mantra-trance-with-shamanic-drums-powerful-shiv-mantra-meditation-music/OM%20NAMAH%20SHIVAYA%20%20%20Mantra%20Trance%20with%20Shamanic%20Drums%20%20%20Powerful%20Shiv%20Mantra%20Meditation%20Music.mp3' },
+  { id: 's4', titleEn: 'Surah Al-Fatiha Recitation', titleHi: 'सूरह अल-फ़ातिहा पाठ', descEn: 'Peaceful Quran recitation by Abdul Basit', descHi: 'अब्दुल बासित द्वारा शांत कुरान पाठ', type: 'story', religion: 'muslim', duration: '1:39', icon: '🌙',
+    audioUrl: 'https://archive.org/download/001-al-fatiha-surah-quran-by-abdul-basit-mujawwad-128kb-mp-3/001%20%20AlFatiha%20surah%20Quran%20by%20Abdul%20Basit%20%28%20Mujawwad%20%29%20%20128kb%20mp3.mp3' },
+  { id: 's5', titleEn: 'Shiva Stuti Chanting', titleHi: 'शिव स्तुति जाप', descEn: 'Ancient Shiva stuti for spiritual sleep', descHi: 'आध्यात्मिक नींद के लिए शिव स्तुति', type: 'story', religion: 'hindu', duration: '4:40', icon: '🔱',
+    audioUrl: 'https://archive.org/download/ShivaStotrasAndMantras/04Shiva%20Stuti.ogg' },
+  { id: 's6', titleEn: 'Om Mani Padme Hum', titleHi: 'ॐ मणि पद्मे हूँ', descEn: 'Buddhist mantra chanting for peaceful sleep', descHi: 'शांत नींद के लिए बौद्ध मंत्र', type: 'story', religion: 'buddhist', duration: '45:00', icon: '☸️',
+    audioUrl: 'https://archive.org/download/mantrachantingmeditation/01%20Om%20Mani%20Padme%20Hum.mp3' },
+  { id: 's7', titleEn: 'Waheguru Meditation', titleHi: 'वाहेगुरु ध्यान', descEn: 'Calming Waheguru vibration for sleep', descHi: 'नींद के लिए शांत वाहेगुरु ध्वनि', type: 'story', religion: 'sikh', duration: '∞', icon: '☬', ambientId: 'om' },
+  { id: 's8', titleEn: 'Navkar Mantra Drone', titleHi: 'णमोकार मंत्र ध्वनि', descEn: 'Meditative Om drone inspired by Jain tradition', descHi: 'जैन परंपरा से प्रेरित ॐ ध्वनि', type: 'story', religion: 'jain', duration: '∞', icon: '🙏', ambientId: 'om' },
 ];
 
 export const getSleepContent = (religion: string): SleepContent[] => {
