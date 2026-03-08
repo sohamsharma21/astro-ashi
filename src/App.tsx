@@ -119,6 +119,11 @@ const App = () => (
                 <Settings />
               </ProtectedRoute>
             } />
+            <Route path="/ask-astroashi" element={
+              <ProtectedRoute>
+                <AskAstroAshi />
+              </ProtectedRoute>
+            } />
             <Route path="/verify-booking" element={<VerifyBooking />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />

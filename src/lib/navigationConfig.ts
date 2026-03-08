@@ -84,6 +84,14 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/ask-astroashi',
+    labelEn: 'AstroAshi AI',
+    labelHi: 'AstroAshi AI',
+    icon: BotMessageSquare,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/consultations',
     labelEn: 'Consultations',
     labelHi: 'परामर्श',
