@@ -31,6 +31,7 @@ import LiveConsultation from "./pages/LiveConsultation";
 import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import VerifyEmail from "./pages/VerifyEmail";
+import AskAstroAshi from "./pages/AskAstroAshi";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
