@@ -11,10 +11,10 @@ import {
   CalendarDays,
   TrendingUp,
   Leaf,
-  BookHeart,
-  MessageCircleHeart,
+  BookOpenCheck,
+  MessageSquareQuote,
   ListChecks,
-  PartyPopper,
+  Star,
   type LucideIcon 
 } from 'lucide-react';
 
