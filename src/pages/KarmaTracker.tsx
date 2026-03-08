@@ -73,8 +73,9 @@ const KarmaTracker = () => {
       setWeeklyPoints(prev => prev - points);
     } else {
       // Add
-      const { error } = await supabase.from('karma_deeds').insert({
-        user_id: user.id, deed_key: deedKey, points, completed_date: today
+      // Use security definer function to prevent point manipulation
+      const { error } = await supabase.rpc('record_karma_deed', {
+        _user_id: user.id, _deed_key: deedKey, _points: points
       });
       if (error) { toast({ title: 'Error', description: error.message, variant: 'destructive' }); return; }
       setCompletedDeeds(prev => [...prev, deedKey]);
