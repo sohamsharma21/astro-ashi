@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { BotMessageSquare } from 'lucide-react';
 import UserSnapshotCard from './UserSnapshotCard';
 import PersonalDailyPrediction from './PersonalDailyPrediction';
 import FocusAreasGrid from './FocusAreasGrid';
@@ -10,6 +12,7 @@ import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
 import EmailVerificationBanner from './EmailVerificationBanner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { Religion } from '@/lib/faithModules';
 
 interface DashboardData {
