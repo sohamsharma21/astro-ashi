@@ -112,6 +112,31 @@ const App = () => (
                 <AskAstroAshi />
               </ProtectedRoute>
             } />
+            <Route path="/meditation" element={
+              <ProtectedRoute>
+                <Meditation />
+              </ProtectedRoute>
+            } />
+            <Route path="/gratitude-journal" element={
+              <ProtectedRoute>
+                <GratitudeJournal />
+              </ProtectedRoute>
+            } />
+            <Route path="/daily-inspiration" element={
+              <ProtectedRoute>
+                <DailyInspiration />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-routine" element={
+              <ProtectedRoute>
+                <SpiritualRoutine />
+              </ProtectedRoute>
+            } />
+            <Route path="/sacred-calendar" element={
+              <ProtectedRoute>
+                <SacredCalendar />
+              </ProtectedRoute>
+            } />
             {/* Redirect old booking URLs */}
             <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />
