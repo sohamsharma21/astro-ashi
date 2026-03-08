@@ -14,9 +14,8 @@ import { getTranslation } from '@/lib/translations';
 import { supabase } from '@/integrations/supabase/client';
 import NotificationBell from '@/components/notifications/NotificationBell';
 
-export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
-  const { user, language, setLanguage, userProfile } = useAuth();
-  const isMobile = useIsMobile();
+export const NavActions = () => {
+  const { user, language, userProfile } = useAuth();
 
   const getUserInitials = () => {
     if (!userProfile?.full_name) return 'U';
