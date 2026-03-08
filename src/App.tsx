@@ -30,6 +30,7 @@ import FloatingPlanets from "./components/FloatingPlanets";
 import LiveConsultation from "./pages/LiveConsultation";
 import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
+import VerifyEmail from "./pages/VerifyEmail";
 
 // Create a client for React Query
 const queryClient = new QueryClient({
@@ -118,6 +119,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             <Route path="/verify-booking" element={<VerifyBooking />} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/sitemap" element={<Sitemap />} />
