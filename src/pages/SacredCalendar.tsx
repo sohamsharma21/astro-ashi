@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CalendarHeart, ChevronRight, ArrowLeft, Sparkles } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Sparkles } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';

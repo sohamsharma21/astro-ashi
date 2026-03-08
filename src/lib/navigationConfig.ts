@@ -10,11 +10,8 @@ import {
   Mail,
   CalendarDays,
   TrendingUp,
-  Flower2,
-  BookHeart,
-  Quote,
   ListChecks,
-  CalendarHeart,
+  Star,
   type LucideIcon 
 } from 'lucide-react';
 
@@ -104,7 +101,7 @@ export const navigationConfig: NavItem[] = [
     path: '/meditation',
     labelEn: 'Meditation',
     labelHi: 'ध्यान',
-    icon: Flower2,
+    icon: Heart,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
@@ -112,7 +109,7 @@ export const navigationConfig: NavItem[] = [
     path: '/gratitude-journal',
     labelEn: 'Gratitude',
     labelHi: 'कृतज्ञता',
-    icon: BookHeart,
+    icon: BookOpen,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
@@ -120,7 +117,7 @@ export const navigationConfig: NavItem[] = [
     path: '/daily-inspiration',
     labelEn: 'Inspiration',
     labelHi: 'प्रेरणा',
-    icon: Quote,
+    icon: Sparkles,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
@@ -136,7 +133,7 @@ export const navigationConfig: NavItem[] = [
     path: '/sacred-calendar',
     labelEn: 'Festivals',
     labelHi: 'त्योहार',
-    icon: CalendarHeart,
+    icon: Star,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
