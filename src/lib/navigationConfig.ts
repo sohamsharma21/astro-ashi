@@ -23,6 +23,7 @@ import {
   Brain,
   Trophy,
   FlaskConical,
+  Hand,
   type LucideIcon 
 } from 'lucide-react';
 
