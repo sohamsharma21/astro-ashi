@@ -5,6 +5,9 @@ import { useAuth } from '@/lib/auth';
 import { AstroLoveForm } from '@/components/astro-love/AstroLoveForm';
 import { AstroLoveResultDisplay } from '@/components/astro-love/AstroLoveResult';
 import { useAstroLove } from '@/hooks/useAstroLove';
+import SEOHead from '@/components/SEOHead';
+import { motion } from 'framer-motion';
+import { Heart } from 'lucide-react';
 
 const AstroLove = () => {
   const { language } = useAuth();
@@ -12,20 +15,30 @@ const AstroLove = () => {
 
   return (
     <div className="cosmic-bg min-h-screen">
+      <SEOHead title="AstroLove Calculator | AstroAshi" description="Discover your love compatibility using zodiac, numerology, elements & planetary alignment." />
       <StarBackground starCount={200} />
       <Navigation />
-      
-      <main className="container mx-auto px-4 pt-32 pb-20">
-        <h1 className={`text-4xl md:text-6xl font-bold mb-4 text-center text-transparent bg-clip-text bg-gradient-to-r from-love-purple to-love-pink font-playfair`}>
-          {language === 'en' ? 'AstroLove Calculator' : 'एस्ट्रोलव कैलकुलेटर'}
-        </h1>
-        <p className={`text-center text-cosmic-gold mb-12 text-lg ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
-          {language === 'en' 
-            ? '✨ Because love isn\'t random — it\'s written in the stars ✨' 
-            : '✨ क्योंकि प्यार यादृच्छिक नहीं है — यह सितारों में लिखा है ✨'}
-        </p>
-        
-        <div className="max-w-4xl mx-auto">
+
+      <main className="container mx-auto px-4 pt-24 pb-28 lg:pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-8"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-xs font-medium text-pink-400 mb-4">
+            <Heart className="h-3 w-3" /> {language === 'en' ? '6-Dimension Love Analysis' : '6-आयामी प्रेम विश्लेषण'}
+          </div>
+          <h1 className={`text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+            {language === 'en' ? 'AstroLove Calculator' : 'एस्ट्रोलव कैलकुलेटर'}
+          </h1>
+          <p className={`text-muted-foreground mt-3 max-w-lg mx-auto ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+            {language === 'en'
+              ? 'Zodiac chemistry, element harmony, numerology, planetary love alignment & more'
+              : 'राशि केमिस्ट्री, तत्व सामंजस्य, अंकशास्त्र, ग्रहीय प्रेम और अधिक'}
+          </p>
+        </motion.div>
+
+        <div className="max-w-lg mx-auto">
           {!result ? (
             <AstroLoveForm onSubmit={calculateCompatibility} loading={loading} />
           ) : (
@@ -33,7 +46,7 @@ const AstroLove = () => {
           )}
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );
