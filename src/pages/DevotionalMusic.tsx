@@ -5,9 +5,8 @@ import { useAuth } from '@/lib/auth';
 import Navigation from '@/components/Navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { getMusicByReligion, categoryLabels, type MusicTrack } from '@/lib/devotionalMusicData';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 import { toast } from '@/hooks/use-toast';
 
 const DevotionalMusic = () => {
