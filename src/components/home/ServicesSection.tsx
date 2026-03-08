@@ -1,6 +1,6 @@
 
 
-import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle, BarChart3, MapPin, Target, Library } from 'lucide-react';
+import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle, BarChart3, MapPin, Target, Library, Brain, Trophy, FlaskConical } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -158,6 +158,31 @@ const serviceFeatures = [
     descEn: "Multi-faith library with sacred texts, teachings and stories.",
     descHi: "पवित्र ग्रंथ, शिक्षाएं और कथाओं की बहु-धार्मिक लाइब्रेरी।",
     path: "/spiritual-knowledge"
+  },
+  {
+    icon: Brain,
+    titleEn: "AI Life Insights",
+    titleHi: "AI जीवन अंतर्दृष्टि",
+    descEn: "Personalized career, relationship and spiritual guidance from AI.",
+    descHi: "AI से व्यक्तिगत करियर, संबंध और आध्यात्मिक मार्गदर्शन।",
+    path: "/ai-life-insights",
+    highlight: true
+  },
+  {
+    icon: Trophy,
+    titleEn: "Spiritual Challenges",
+    titleHi: "आध्यात्मिक चुनौतियां",
+    descEn: "7, 14, 21 and 30-day challenges with streaks and rewards.",
+    descHi: "7, 14, 21 और 30-दिवसीय चुनौतियां स्ट्रीक और पुरस्कारों के साथ।",
+    path: "/spiritual-challenges"
+  },
+  {
+    icon: FlaskConical,
+    titleEn: "Personality Test",
+    titleHi: "व्यक्तित्व परीक्षण",
+    descEn: "Discover your spiritual personality type with an interactive quiz.",
+    descHi: "इंटरैक्टिव क्विज़ से अपना आध्यात्मिक व्यक्तित्व खोजें।",
+    path: "/personality-test"
   }
 ];
 

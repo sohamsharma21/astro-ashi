@@ -11,8 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { Settings as SettingsIcon, Globe, Heart, Download, Trash2, Loader2 } from 'lucide-react';
+import { Settings as SettingsIcon, Globe, Download, Trash2, Loader2 } from 'lucide-react';
 import { Religion, getReligionLabel } from '@/lib/faithModules';
+import { languageNames, GlobalLanguage } from '@/lib/globalTranslations';
 
 const Settings = () => {
   const { user, language, setLanguage, userProfile, updateUserProfile } = useAuth();
@@ -20,37 +21,17 @@ const Settings = () => {
   const [saving, setSaving] = useState(false);
   const [exporting, setExporting] = useState(false);
 
-  const t = {
-    en: {
-      title: 'Settings',
-      language: 'Language',
-      religion: 'Religion',
-      save: 'Save Changes',
-      dataExport: 'Export My Data',
-      dataDelete: 'Delete My Account',
-      exportDesc: 'Download all your data as JSON.',
-      deleteDesc: 'Permanently delete your account and all data.',
-      deleteConfirm: 'Are you sure? This action cannot be undone.',
-      saved: 'Settings saved!',
-      exported: 'Data exported!',
-    },
-    hi: {
-      title: 'सेटिंग्स',
-      language: 'भाषा',
-      religion: 'धर्म',
-      save: 'परिवर्तन सहेजें',
-      dataExport: 'मेरा डेटा निर्यात करें',
-      dataDelete: 'मेरा खाता हटाएं',
-      exportDesc: 'अपना सारा डेटा JSON के रूप में डाउनलोड करें।',
-      deleteDesc: 'अपना खाता और सारा डेटा स्थायी रूप से हटाएं।',
-      deleteConfirm: 'क्या आप सुनिश्चित हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।',
-      saved: 'सेटिंग्स सहेजी गई!',
-      exported: 'डेटा निर्यात किया गया!',
-    },
+  const t: Record<string, Record<string, string>> = {
+    en: { title: 'Settings', language: 'Language', religion: 'Religion', save: 'Save Changes', dataExport: 'Export My Data', dataDelete: 'Delete My Account', exportDesc: 'Download all your data as JSON.', deleteDesc: 'Permanently delete your account and all data.', deleteConfirm: 'Are you sure? This action cannot be undone.', saved: 'Settings saved!', exported: 'Data exported!', dataManagement: 'Data Management' },
+    hi: { title: 'सेटिंग्स', language: 'भाषा', religion: 'धर्म', save: 'परिवर्तन सहेजें', dataExport: 'मेरा डेटा निर्यात करें', dataDelete: 'मेरा खाता हटाएं', exportDesc: 'अपना सारा डेटा JSON के रूप में डाउनलोड करें।', deleteDesc: 'अपना खाता और सारा डेटा स्थायी रूप से हटाएं।', deleteConfirm: 'क्या आप सुनिश्चित हैं? यह कार्रवाई पूर्ववत नहीं की जा सकती।', saved: 'सेटिंग्स सहेजी गई!', exported: 'डेटा निर्यात किया गया!', dataManagement: 'डेटा प्रबंधन' },
+    ar: { title: 'الإعدادات', language: 'اللغة', religion: 'الدين', save: 'حفظ التغييرات', dataExport: 'تصدير بياناتي', dataDelete: 'حذف حسابي', exportDesc: 'تحميل جميع بياناتك بصيغة JSON.', deleteDesc: 'حذف حسابك وجميع البيانات نهائيًا.', deleteConfirm: 'هل أنت متأكد؟ لا يمكن التراجع عن هذا الإجراء.', saved: 'تم حفظ الإعدادات!', exported: 'تم تصدير البيانات!', dataManagement: 'إدارة البيانات' },
+    es: { title: 'Configuración', language: 'Idioma', religion: 'Religión', save: 'Guardar Cambios', dataExport: 'Exportar Mis Datos', dataDelete: 'Eliminar Mi Cuenta', exportDesc: 'Descarga todos tus datos como JSON.', deleteDesc: 'Eliminar permanentemente tu cuenta y todos los datos.', deleteConfirm: '¿Estás seguro? Esta acción no se puede deshacer.', saved: '¡Configuración guardada!', exported: '¡Datos exportados!', dataManagement: 'Gestión de Datos' },
+    fr: { title: 'Paramètres', language: 'Langue', religion: 'Religion', save: 'Enregistrer les Modifications', dataExport: 'Exporter Mes Données', dataDelete: 'Supprimer Mon Compte', exportDesc: 'Téléchargez toutes vos données en JSON.', deleteDesc: 'Supprimer définitivement votre compte et toutes les données.', deleteConfirm: 'Êtes-vous sûr ? Cette action est irréversible.', saved: 'Paramètres enregistrés !', exported: 'Données exportées !', dataManagement: 'Gestion des Données' }
   };
   const tr = t[language] || t.en;
 
   const religions: Religion[] = ['hindu', 'muslim', 'christian', 'jain', 'buddhist', 'sikh', 'other'];
+  const supportedLanguages: GlobalLanguage[] = ['en', 'hi', 'ar', 'es', 'fr'];
 
   const handleSave = async () => {
     if (!user) return;
@@ -114,7 +95,6 @@ const Settings = () => {
       });
       if (error) throw error;
       toast.success(language === 'hi' ? 'खाता हटा दिया गया' : 'Account deleted');
-      // Sign out after deletion
       await supabase.auth.signOut();
       window.location.href = '/';
     } catch (err) {
@@ -146,11 +126,12 @@ const Settings = () => {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label>{tr.language}</Label>
-                  <Select value={language} onValueChange={(val: 'en' | 'hi') => setLanguage(val)}>
+                  <Select value={language} onValueChange={(val: string) => setLanguage(val as 'en' | 'hi')}>
                     <SelectTrigger className="bg-background/50 border-primary/20"><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="hi">हिंदी</SelectItem>
+                      {supportedLanguages.map(l => (
+                        <SelectItem key={l} value={l}>{languageNames[l]}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -177,7 +158,7 @@ const Settings = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 font-cinzel">
                   <SettingsIcon className="w-5 h-5 text-primary" />
-                  {language === 'hi' ? 'डेटा प्रबंधन' : 'Data Management'}
+                  {tr.dataManagement}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

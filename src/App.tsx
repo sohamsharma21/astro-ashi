@@ -43,6 +43,9 @@ import SpiritualProgress from "./pages/SpiritualProgress";
 import WorshipPlaces from "./pages/WorshipPlaces";
 import LifePathPlanner from "./pages/LifePathPlanner";
 import SpiritualKnowledge from "./pages/SpiritualKnowledge";
+import AILifeInsights from "./pages/AILifeInsights";
+import SpiritualChallenges from "./pages/SpiritualChallenges";
+import SpiritualPersonalityTest from "./pages/SpiritualPersonalityTest";
 // Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -188,6 +191,21 @@ const App = () => (
             <Route path="/spiritual-knowledge" element={
               <ProtectedRoute>
                 <SpiritualKnowledge />
+              </ProtectedRoute>
+            } />
+            <Route path="/ai-life-insights" element={
+              <ProtectedRoute>
+                <AILifeInsights />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-challenges" element={
+              <ProtectedRoute>
+                <SpiritualChallenges />
+              </ProtectedRoute>
+            } />
+            <Route path="/personality-test" element={
+              <ProtectedRoute>
+                <SpiritualPersonalityTest />
               </ProtectedRoute>
             } />
             {/* Redirect old booking URLs */}
