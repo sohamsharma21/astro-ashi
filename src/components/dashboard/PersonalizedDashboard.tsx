@@ -13,6 +13,9 @@ import FaithDashboardModule from './FaithDashboardModule';
 import EmailVerificationBanner from './EmailVerificationBanner';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
+import { getDailyInspiration } from '@/lib/inspirationData';
+import { getUpcomingFestivals, getDaysUntil } from '@/lib/festivalData';
+import { Card } from '@/components/ui/card';
 
 interface DashboardData {
   profile: any;
