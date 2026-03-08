@@ -10,6 +10,9 @@ import {
   Info, 
   Mail,
   CalendarDays,
+  TrendingUp,
+  Video,
+  Settings,
   type LucideIcon 
 } from 'lucide-react';
 
