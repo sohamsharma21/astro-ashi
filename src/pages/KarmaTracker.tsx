@@ -17,7 +17,7 @@ const KarmaTracker = () => {
   const [streak, setStreak] = useState(0);
   const [weeklyPoints, setWeeklyPoints] = useState(0);
 
-  const religion = (profile as any)?.religion || 'other';
+  const religion = (userProfile as any)?.religion || 'other';
   const dailyDeeds = useMemo(() => getDailyDeeds(religion), [religion]);
   const today = new Date().toISOString().split('T')[0];
 

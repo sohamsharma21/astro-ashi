@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { toast } from '@/hooks/use-toast';
 import ReactMarkdown from 'react-markdown';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 
 interface ChatMessage {
   id: string;

@@ -11,7 +11,7 @@ import { toast } from '@/hooks/use-toast';
 
 const DevotionalMusic = () => {
   const { language, userProfile } = useAuth();
-  const religion = (profile as any)?.religion || 'other';
+  const religion = (userProfile as any)?.religion || 'other';
   const tracks = getMusicByReligion(religion);
   const [playing, setPlaying] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());

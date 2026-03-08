@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 
 interface Post {
   id: string;

@@ -13,7 +13,7 @@ const TIMER_OPTIONS = [10, 15, 20, 30, 45, 60];
 
 const SleepRelaxation = () => {
   const { language, userProfile } = useAuth();
-  const religion = (profile as any)?.religion || 'other';
+  const religion = (userProfile as any)?.religion || 'other';
   const content = getSleepContent(religion);
   const [activeType, setActiveType] = useState<string>('all');
   const [sleepTimer, setSleepTimer] = useState<number | null>(null);
