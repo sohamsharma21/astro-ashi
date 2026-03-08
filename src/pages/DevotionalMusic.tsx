@@ -1,11 +1,13 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Play, Pause, Heart, Music } from 'lucide-react';
+import { Play, Pause, Heart, Music, Volume2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import Navigation from '@/components/Navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
 import { getMusicByReligion, categoryLabels, type MusicTrack } from '@/lib/devotionalMusicData';
+import { getAmbientEngine } from '@/lib/ambientSoundEngine';
 import { SEOHead } from '@/components/SEOHead';
 import { toast } from '@/hooks/use-toast';
 
@@ -16,26 +18,81 @@ const DevotionalMusic = () => {
   const [playing, setPlaying] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [activeCategory, setActiveCategory] = useState('all');
+  const [volume, setVolume] = useState(70);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const ambientTrackRef = useRef<string | null>(null);
 
   const filteredTracks = activeCategory === 'all' ? tracks : tracks.filter(t => t.category === activeCategory);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      if (ambientTrackRef.current) {
+        try { getAmbientEngine().stop(); } catch {}
+      }
+    };
+  }, []);
+
+  const stopAll = () => {
+    audioRef.current?.pause();
+    audioRef.current = null;
+    if (ambientTrackRef.current) {
+      try { getAmbientEngine().stop(); } catch {}
+      ambientTrackRef.current = null;
+    }
+  };
+
   const togglePlay = (track: MusicTrack) => {
-    if (!track.audioUrl) {
-      toast({ title: language === 'hi' ? 'जल्द आ रहा है' : 'Coming Soon',
-        description: language === 'hi' ? 'ऑडियो जल्द उपलब्ध होगा' : 'Audio will be available soon' });
+    // If same track, stop
+    if (playing === track.id) {
+      stopAll();
+      setPlaying(null);
       return;
     }
-    if (playing === track.id) {
-      audioRef.current?.pause();
-      setPlaying(null);
-    } else {
-      if (audioRef.current) audioRef.current.pause();
+
+    // Stop previous
+    stopAll();
+
+    // Ambient engine track
+    if (track.ambientId) {
+      try {
+        const engine = getAmbientEngine();
+        engine.play(track.ambientId);
+        engine.setVolume(volume / 100);
+        ambientTrackRef.current = track.ambientId;
+        setPlaying(track.id);
+      } catch {
+        toast({ title: language === 'hi' ? 'त्रुटि' : 'Error',
+          description: language === 'hi' ? 'ऑडियो शुरू नहीं हो सका' : 'Could not start audio' });
+      }
+      return;
+    }
+
+    // Archive.org / external URL
+    if (track.audioUrl) {
       const audio = new Audio(track.audioUrl);
-      audio.play();
+      audio.volume = volume / 100;
+      audio.play().catch(() => {
+        toast({ title: language === 'hi' ? 'त्रुटि' : 'Error',
+          description: language === 'hi' ? 'ऑडियो लोड नहीं हो सका' : 'Could not load audio' });
+      });
       audio.onended = () => setPlaying(null);
       audioRef.current = audio;
       setPlaying(track.id);
+      return;
+    }
+
+    toast({ title: language === 'hi' ? 'जल्द आ रहा है' : 'Coming Soon',
+      description: language === 'hi' ? 'ऑडियो जल्द उपलब्ध होगा' : 'Audio will be available soon' });
+  };
+
+  const handleVolume = (val: number[]) => {
+    const v = val[0];
+    setVolume(v);
+    if (audioRef.current) audioRef.current.volume = v / 100;
+    if (ambientTrackRef.current) {
+      try { getAmbientEngine().setVolume(v / 100); } catch {}
     }
   };
 
@@ -67,6 +124,15 @@ const DevotionalMusic = () => {
             </p>
           </motion.div>
 
+          {/* Volume control */}
+          <Card className="p-4 mb-4 bg-card/40 border-border/30">
+            <div className="flex items-center gap-3">
+              <Volume2 className="h-4 w-4 text-muted-foreground shrink-0" />
+              <Slider value={[volume]} onValueChange={handleVolume} max={100} step={1} className="flex-1" />
+              <span className="text-xs text-muted-foreground w-8 text-right">{volume}%</span>
+            </div>
+          </Card>
+
           {/* Category tabs */}
           <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide">
             {categories.map(cat => (
@@ -95,7 +161,10 @@ const DevotionalMusic = () => {
                       <p className="text-sm font-medium text-foreground truncate">
                         {language === 'hi' ? track.titleHi : track.titleEn}
                       </p>
-                      <p className="text-xs text-muted-foreground">{track.artist} · {track.duration}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {track.artist} · {track.duration}
+                        {track.ambientId && <span className="ml-1 text-primary/70">⚡ Generated</span>}
+                      </p>
                     </div>
                     <Button variant="ghost" size="icon" onClick={() => toggleFav(track.id)}
                       className={favorites.has(track.id) ? 'text-red-500' : 'text-muted-foreground'}>
