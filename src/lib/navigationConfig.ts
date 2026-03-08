@@ -99,6 +99,30 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/predictions',
+    labelEn: 'Predictions',
+    labelHi: 'भविष्यफल',
+    icon: TrendingUp,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/live-consultation',
+    labelEn: 'Live Chat',
+    labelHi: 'लाइव चैट',
+    icon: Video,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/settings',
+    labelEn: 'Settings',
+    labelHi: 'सेटिंग्स',
+    icon: Settings,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',
