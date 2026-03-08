@@ -155,6 +155,21 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
 
       if (profileError) throw profileError;
 
+      // Save kundli report for permanent record
+      await supabase.from('kundli_reports').insert({
+        user_id: user.id,
+        birth_details: {
+          birth_date: formData.birth_date,
+          birth_time: formData.birth_time_known ? formData.birth_time : '06:00',
+          birth_place: formData.birth_place,
+          latitude: coords?.lat || 28.6139,
+          longitude: coords?.lng || 77.2090,
+        },
+        chart_data: kundliData || {},
+        dasha_data: kundliData?.mahadasha || null,
+        ai_insights: null,
+      });
+
       // Store Mahadasha data if available
       if (kundliData?.mahadasha) {
         const { error: mahadashaError } = await supabase
@@ -171,6 +186,13 @@ const KundliOnboardingModal = ({ open, onComplete }: KundliOnboardingModalProps)
           }, { onConflict: 'user_id' });
 
         if (mahadashaError) console.error('Mahadasha save error:', mahadashaError);
+      }
+
+      // Trigger verification email
+      if (user.email) {
+        supabase.functions.invoke('send-verification-email', {
+          body: { userId: user.id, email: user.email, language: formData.preferred_language },
+        }).catch(err => console.error('Verification email error:', err));
       }
 
       toast.success(language === 'hi' ? 'कुंडली सफलतापूर्वक बनाई गई!' : 'Kundli generated successfully!');
