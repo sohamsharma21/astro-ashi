@@ -17,8 +17,14 @@ const VerifyEmail = () => {
 
     const verify = async () => {
       try {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const res = await fetch(
-          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-email?token=${token}`
+          `${supabaseUrl}/functions/v1/verify-email?token=${token}`,
+          {
+            headers: {
+              'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            },
+          }
         );
         if (res.ok) {
           setStatus('success');
