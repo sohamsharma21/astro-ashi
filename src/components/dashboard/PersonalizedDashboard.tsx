@@ -148,6 +148,11 @@ const PersonalizedDashboard = () => {
         })}
       </motion.div>
 
+      {/* Spiritual Quick Access */}
+      <motion.div {...anim(0.12)}>
+        <SpiritualQuickAccess religion={(dashboardData?.profile?.religion as Religion) || 'hindu'} language={language} navigate={navigate} />
+      </motion.div>
+
       {/* Faith Module */}
       <motion.div {...anim(0.15)}>
         <FaithDashboardModule religion={(dashboardData?.profile?.religion as Religion) || 'hindu'} />
