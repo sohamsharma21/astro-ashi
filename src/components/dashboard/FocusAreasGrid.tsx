@@ -1,6 +1,5 @@
 import { useAuth } from '@/lib/auth';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Briefcase, Heart, Coins, Activity, ArrowRight } from 'lucide-react';
 
 interface FocusAreasGridProps {
