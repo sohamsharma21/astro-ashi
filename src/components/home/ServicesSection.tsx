@@ -86,6 +86,46 @@ const serviceFeatures = [
     descEn: "Articles on astrology, spirituality, and cosmic wisdom.",
     descHi: "ज्योतिष और आध्यात्मिकता पर लेख।",
     path: "/cosmic-journal"
+  },
+  {
+    icon: Sparkles,
+    titleEn: "Spiritual Guide",
+    titleHi: "आध्यात्मिक गाइड",
+    descEn: "AI-powered spiritual guidance from your faith tradition.",
+    descHi: "आपकी धार्मिक परंपरा से AI आध्यात्मिक मार्गदर्शन।",
+    path: "/spiritual-guide"
+  },
+  {
+    icon: HandHeart,
+    titleEn: "Good Deeds",
+    titleHi: "दैनिक सद्कर्म",
+    descEn: "Track daily good deeds, earn karma points and build streaks.",
+    descHi: "दैनिक सद्कर्म ट्रैक करें, कर्म अंक अर्जित करें।",
+    path: "/karma-tracker"
+  },
+  {
+    icon: Music,
+    titleEn: "Spiritual Music",
+    titleHi: "आध्यात्मिक संगीत",
+    descEn: "Devotional music, mantras and chants from all traditions.",
+    descHi: "सभी परंपराओं से भक्ति संगीत, मंत्र और जाप।",
+    path: "/devotional-music"
+  },
+  {
+    icon: CloudMoon,
+    titleEn: "Sleep & Relaxation",
+    titleHi: "नींद और विश्राम",
+    descEn: "Guided sleep meditation, nature sounds and bedtime stories.",
+    descHi: "निर्देशित नींद ध्यान, प्रकृति ध्वनि और सोने की कहानियां।",
+    path: "/sleep-relaxation"
+  },
+  {
+    icon: MessageCircle,
+    titleEn: "Community",
+    titleHi: "समुदाय",
+    descEn: "Connect with spiritual seekers worldwide in discussion groups.",
+    descHi: "दुनिया भर के आध्यात्मिक साधकों से जुड़ें।",
+    path: "/community"
   }
 ];
 

@@ -141,6 +141,31 @@ const App = () => (
                 <SacredCalendar />
               </ProtectedRoute>
             } />
+            <Route path="/spiritual-guide" element={
+              <ProtectedRoute>
+                <SpiritualGuide />
+              </ProtectedRoute>
+            } />
+            <Route path="/karma-tracker" element={
+              <ProtectedRoute>
+                <KarmaTracker />
+              </ProtectedRoute>
+            } />
+            <Route path="/devotional-music" element={
+              <ProtectedRoute>
+                <DevotionalMusic />
+              </ProtectedRoute>
+            } />
+            <Route path="/sleep-relaxation" element={
+              <ProtectedRoute>
+                <SleepRelaxation />
+              </ProtectedRoute>
+            } />
+            <Route path="/community" element={
+              <ProtectedRoute>
+                <Community />
+              </ProtectedRoute>
+            } />
             {/* Redirect old booking URLs */}
             <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />

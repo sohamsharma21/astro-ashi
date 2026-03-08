@@ -1,13 +1,13 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, BotMessageSquare, TrendingUp, CalendarDays, User } from 'lucide-react';
+import { Home, Sparkles, Music, Users, User } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 
 const tabs = [
   { path: '/', icon: Home, labelEn: 'Home', labelHi: 'होम' },
-  { path: '/ask-astroashi', icon: BotMessageSquare, labelEn: 'Ask AI', labelHi: 'AI पूछें' },
-  { path: '/predictions', icon: TrendingUp, labelEn: 'Predictions', labelHi: 'भविष्यफल' },
-  { path: '/panchang', icon: CalendarDays, labelEn: 'Panchang', labelHi: 'पंचांग' },
+  { path: '/spiritual-guide', icon: Sparkles, labelEn: 'Guide', labelHi: 'गाइड' },
+  { path: '/devotional-music', icon: Music, labelEn: 'Music', labelHi: 'संगीत' },
+  { path: '/community', icon: Users, labelEn: 'Community', labelHi: 'समुदाय' },
   { path: '/profile', icon: User, labelEn: 'Profile', labelHi: 'प्रोफ़ाइल' },
 ];
 

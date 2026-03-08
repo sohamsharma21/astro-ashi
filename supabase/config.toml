@@ -41,3 +41,6 @@ verify_jwt = false
 
 [functions.ask-astroashi]
 verify_jwt = false
+
+[functions.spiritual-guide]
+verify_jwt = false
