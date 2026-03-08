@@ -162,24 +162,24 @@ export const ServicesSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.06 }}
-                className={`group text-left rounded-2xl p-5 transition-all duration-300 border ${
+                className={`group text-left rounded-2xl p-3.5 md:p-5 transition-all duration-300 border ${
                   feature.highlight 
                     ? 'bg-primary/[0.06] border-primary/15 hover:border-primary/30' 
                     : 'bg-card/40 border-border/40 hover:border-primary/15'
                 } hover:shadow-xl hover:shadow-primary/[0.04] hover:-translate-y-1`}
                 onClick={() => go(feature.path)}
               >
-                <div className={`mb-3.5 w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                <div className={`mb-2.5 md:mb-3.5 w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
                   feature.highlight 
                     ? 'bg-primary/15 text-primary' 
                     : 'bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
                 }`}>
-                  <Icon className="h-[18px] w-[18px]" />
+                  <Icon className="h-4 w-4 md:h-[18px] md:w-[18px]" />
                 </div>
-                <h3 className={`text-[15px] font-bold mb-1.5 text-foreground ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
+                <h3 className={`text-[13px] md:text-[15px] font-bold mb-1 md:mb-1.5 text-foreground ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
                   {language === 'en' ? feature.titleEn : feature.titleHi}
                 </h3>
-                <p className={`text-[13px] text-muted-foreground leading-relaxed ${language === 'hi' ? 'font-hindi' : ''}`}>
+                <p className={`text-[11px] md:text-[13px] text-muted-foreground leading-relaxed line-clamp-2 ${language === 'hi' ? 'font-hindi' : ''}`}>
                   {language === 'en' ? feature.descEn : feature.descHi}
                 </p>
               </motion.button>

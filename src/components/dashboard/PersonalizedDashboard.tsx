@@ -213,12 +213,12 @@ const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Reli
   return (
     <div className="space-y-3">
       {/* Shortcut buttons */}
-      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
         {shortcuts.map(s => (
           <button key={s.path} onClick={() => navigate(s.path)}
-            className="flex flex-col items-center gap-1 px-3 py-2 rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 transition-all min-w-[64px] shrink-0">
-            <span className="text-xl">{s.icon}</span>
-            <span className="text-[10px] font-medium text-muted-foreground">{s.label}</span>
+            className="flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all">
+            <span className="text-lg">{s.icon}</span>
+            <span className="text-[9px] font-medium text-muted-foreground leading-tight text-center">{s.label}</span>
           </button>
         ))}
       </div>
