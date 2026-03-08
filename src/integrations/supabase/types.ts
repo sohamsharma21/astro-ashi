@@ -230,6 +230,39 @@ export type Database = {
         }
         Relationships: []
       }
+      gratitude_entries: {
+        Row: {
+          content: string
+          created_at: string
+          entry_date: string
+          id: string
+          mood: string
+          prompt: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          mood?: string
+          prompt?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          entry_date?: string
+          id?: string
+          mood?: string
+          prompt?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       kundli_data: {
         Row: {
           birth_date: string
@@ -535,6 +568,57 @@ export type Database = {
           content_type?: string
           id?: string
           read_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_inspirations: {
+        Row: {
+          id: string
+          quote_text: string
+          religion: string
+          saved_at: string
+          source: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          quote_text: string
+          religion?: string
+          saved_at?: string
+          source: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          quote_text?: string
+          religion?: string
+          saved_at?: string
+          source?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      spiritual_routine_logs: {
+        Row: {
+          completed_date: string
+          created_at: string
+          id: string
+          routine_key: string
+          user_id: string
+        }
+        Insert: {
+          completed_date?: string
+          created_at?: string
+          id?: string
+          routine_key: string
+          user_id: string
+        }
+        Update: {
+          completed_date?: string
+          created_at?: string
+          id?: string
+          routine_key?: string
           user_id?: string
         }
         Relationships: []
