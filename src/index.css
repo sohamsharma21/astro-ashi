@@ -384,3 +384,10 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid hsla(43, 90%, 55%, 0.1);
 }
+
+/* Mobile bottom tab safe area */
+@media (max-width: 1023px) {
+  .pb-safe {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
+  }
+}
