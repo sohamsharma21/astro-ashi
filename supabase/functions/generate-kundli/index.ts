@@ -19,8 +19,9 @@ serve(async (req) => {
   try {
     const { birthDate, birthTime, latitude, longitude, birthPlace } = await req.json();
 
-    // Parse birth details
-    const birth = new Date(`${birthDate}T${birthTime}`);
+    // Parse birth details - default to 12:00 if no time provided
+    const timeStr = birthTime && birthTime.trim() !== '' ? birthTime : '12:00';
+    const birth = new Date(`${birthDate}T${timeStr}`);
     const julianDay = getJulianDay(birth);
     
     // Calculate planetary positions using simplified Vedic calculations
