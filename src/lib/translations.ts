@@ -23,7 +23,7 @@ const translations: Record<TranslationKey, Record<string, { en: string; hi: stri
     dailyHoroscope: { en: 'Daily Horoscope', hi: 'दैनिक राशिफल' },
     kundli: { en: 'Kundli', hi: 'कुंडली' },
     compatibility: { en: 'Compatibility', hi: 'संगतता' },
-    askAstro: { en: 'Ask Astro', hi: 'एस्ट्रो से पूछें' },
+    
     journal: { en: 'Journal', hi: 'जर्नल' },
     history: { en: 'History', hi: 'इतिहास' },
     profile: { en: 'Profile', hi: 'प्रोफाइल' },
