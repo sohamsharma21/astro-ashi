@@ -103,7 +103,7 @@ const DailyHoroscope = () => {
         content_type: 'horoscope',
         content_id: `horoscope-${selectedSign}-${new Date().toISOString().split('T')[0]}`,
         content_title: `${getZodiacSignName(selectedSign, 'en')} Daily Horoscope`,
-        content_summary: typeof horoscope === 'string' ? horoscope.slice(0, 200) : String(horoscope || '').slice(0, 200)
+        content_summary: horoscope ? String(horoscope).slice(0, 200) : ''
       }).then(() => {});
     }
   };
