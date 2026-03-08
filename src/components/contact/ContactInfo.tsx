@@ -18,7 +18,7 @@ export const ContactInfo = () => {
             <h3 className="font-bold text-white">
               {language === 'en' ? 'Email' : 'ईमेल'}
             </h3>
-            <p className="text-gray-300">info@astroashi.com</p>
+            <p className="text-gray-300">astroashi@gmail.com</p>
           </div>
         </div>
         
