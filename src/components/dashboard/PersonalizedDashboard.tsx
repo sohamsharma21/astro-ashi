@@ -100,6 +100,22 @@ const PersonalizedDashboard = () => {
       {/* Email Verification Banner */}
       <EmailVerificationBanner />
 
+      {/* Ask AstroAshi AI Button */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.05 }}
+      >
+        <Button
+          onClick={() => navigate('/ask-astroashi')}
+          className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-primary to-amber-600 hover:from-primary/90 hover:to-amber-600/90 text-primary-foreground shadow-lg"
+          size="lg"
+        >
+          <BotMessageSquare className="h-6 w-6 mr-2" />
+          {language === 'hi' ? '🌟 AstroAshi AI से पूछें' : '🌟 Ask AstroAshi AI'}
+        </Button>
+      </motion.div>
+
       {/* User Snapshot Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
