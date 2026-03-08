@@ -55,12 +55,6 @@ export const NavActions = () => {
                 <span>{language === 'en' ? 'Profile' : 'प्रोफ़ाइल'}</span>
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
-              <Link to="/reading-history" className="flex items-center w-full gap-2">
-                <BookOpen className="h-4 w-4 text-muted-foreground" />
-                <span>{language === 'en' ? 'History' : 'इतिहास'}</span>
-              </Link>
-            </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border/30 my-1" />
             <DropdownMenuItem className="hover:bg-destructive/10 cursor-pointer rounded-lg text-destructive" onClick={handleSignOut}>
               <LogOut className="mr-2 h-4 w-4" />
