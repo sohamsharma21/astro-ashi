@@ -170,6 +170,26 @@ const App = () => (
                 <Community />
               </ProtectedRoute>
             } />
+            <Route path="/spiritual-progress" element={
+              <ProtectedRoute>
+                <SpiritualProgress />
+              </ProtectedRoute>
+            } />
+            <Route path="/worship-places" element={
+              <ProtectedRoute>
+                <WorshipPlaces />
+              </ProtectedRoute>
+            } />
+            <Route path="/life-path" element={
+              <ProtectedRoute>
+                <LifePathPlanner />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-knowledge" element={
+              <ProtectedRoute>
+                <SpiritualKnowledge />
+              </ProtectedRoute>
+            } />
             {/* Redirect old booking URLs */}
             <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />

@@ -186,6 +186,38 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/spiritual-progress',
+    labelEn: 'Progress',
+    labelHi: 'प्रगति',
+    icon: BarChart3,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/worship-places',
+    labelEn: 'Worship Places',
+    labelHi: 'पूजा स्थल',
+    icon: MapPin,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/life-path',
+    labelEn: 'Life Path',
+    labelHi: 'जीवन पथ',
+    icon: Target,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/spiritual-knowledge',
+    labelEn: 'Knowledge',
+    labelHi: 'ज्ञान',
+    icon: Library,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',

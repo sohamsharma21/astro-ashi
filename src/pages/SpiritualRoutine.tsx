@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Circle, BarChart3, Clock, Loader2 } from 'lucide-react';
+import { CheckCircle2, Circle, BarChart3, Clock } from 'lucide-react';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import StarBackground from '@/components/StarBackground';
@@ -8,18 +8,18 @@ import { SEOHead } from '@/components/SEOHead';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { format, subDays } from 'date-fns';
-import { getRoutinesForReligion, RoutineItem } from '@/lib/spiritualRoutineData';
+import { getRoutinesByTimeBlock, timeBlockLabels } from '@/lib/spiritualRoutineData';
 import { Religion } from '@/lib/faithModules';
 
 const SpiritualRoutine = () => {
   const { user, userProfile, language } = useAuth();
   const { toast } = useToast();
   const religion = (userProfile?.religion as Religion) || 'hindu';
-  const routines = getRoutinesForReligion(religion);
+  const timeBlocks = getRoutinesByTimeBlock(religion);
+  const allRoutines = [...(timeBlocks.morning || []), ...(timeBlocks.afternoon || []), ...(timeBlocks.evening || [])];
   const today = format(new Date(), 'yyyy-MM-dd');
 
   const [completedToday, setCompletedToday] = useState<string[]>([]);
@@ -33,7 +33,6 @@ const SpiritualRoutine = () => {
     const { data } = await supabase.from('spiritual_routine_logs').select('*').eq('user_id', user.id).gte('completed_date', weekAgo);
     const logs = data || [];
     setCompletedToday(logs.filter((l: any) => l.completed_date === today).map((l: any) => l.routine_key));
-    // Weekly data
     const wd: Record<string, number> = {};
     for (let i = 6; i >= 0; i--) {
       const d = format(subDays(new Date(), i), 'yyyy-MM-dd');
@@ -58,14 +57,20 @@ const SpiritualRoutine = () => {
     fetchLogs();
   };
 
-  const progress = routines.length > 0 ? (completedToday.length / routines.length) * 100 : 0;
+  const progress = allRoutines.length > 0 ? (completedToday.length / allRoutines.length) * 100 : 0;
   const maxWeek = Math.max(...Object.values(weekData), 1);
 
   const t = {
-    en: { title: 'Spiritual Routine Planner', today: "Today's Progress", weekly: '7-Day Progress', completed: 'completed' },
-    hi: { title: 'आध्यात्मिक दिनचर्या', today: 'आज की प्रगति', weekly: '7-दिन की प्रगति', completed: 'पूर्ण' },
+    en: { title: 'My Spiritual Routine', today: "Today's Progress", weekly: '7-Day Progress', completed: 'completed' },
+    hi: { title: 'मेरी आध्यात्मिक दिनचर्या', today: 'आज की प्रगति', weekly: '7-दिन की प्रगति', completed: 'पूर्ण' },
   };
   const tr = t[language] || t.en;
+
+  const getBlockProgress = (block: string) => {
+    const items = timeBlocks[block] || [];
+    if (items.length === 0) return 0;
+    return Math.round((items.filter(r => completedToday.includes(r.key)).length / items.length) * 100);
+  };
 
   return (
     <>
@@ -82,32 +87,43 @@ const SpiritualRoutine = () => {
           <Card className="p-4 mb-6 mt-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">{tr.today}</span>
-              <span className="text-sm text-primary font-bold">{completedToday.length}/{routines.length} {tr.completed}</span>
+              <span className="text-sm text-primary font-bold">{completedToday.length}/{allRoutines.length} {tr.completed}</span>
             </div>
             <Progress value={progress} className="h-3" />
           </Card>
 
-          {/* Routines */}
-          <div className="space-y-3 mb-8">
-            {routines.map((r, i) => {
-              const done = completedToday.includes(r.key);
-              return (
-                <motion.div key={r.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-                  <Card className={`p-4 flex items-center gap-4 cursor-pointer transition-all ${done ? 'border-primary/40 bg-primary/5' : 'hover:border-border/80'}`}
-                    onClick={() => toggleRoutine(r.key)}>
-                    <button className="shrink-0">
-                      {done ? <CheckCircle2 className="w-6 h-6 text-primary" /> : <Circle className="w-6 h-6 text-muted-foreground" />}
-                    </button>
-                    <span className="text-2xl">{r.icon}</span>
-                    <div className="flex-1">
-                      <h3 className={`font-medium ${done ? 'text-primary line-through' : 'text-foreground'}`}>{r.label[language]}</h3>
-                      <p className="text-xs text-muted-foreground flex items-center gap-1"><Clock className="w-3 h-3" /> {r.defaultTime}</p>
-                    </div>
-                  </Card>
-                </motion.div>
-              );
-            })}
-          </div>
+          {/* Time Block Sections */}
+          {(['morning', 'afternoon', 'evening'] as const).map((block) => {
+            const items = timeBlocks[block] || [];
+            if (items.length === 0) return null;
+            const blockProgress = getBlockProgress(block);
+            return (
+              <motion.div key={block} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h2 className="text-sm font-bold text-foreground">{timeBlockLabels[block][language]}</h2>
+                  <span className="text-xs text-primary font-medium">{blockProgress}%</span>
+                </div>
+                <div className="space-y-2.5">
+                  {items.map((r, i) => {
+                    const done = completedToday.includes(r.key);
+                    return (
+                      <Card key={r.key} className={`p-3.5 flex items-center gap-3 cursor-pointer transition-all ${done ? 'border-primary/40 bg-primary/5' : 'hover:border-border/80'}`}
+                        onClick={() => toggleRoutine(r.key)}>
+                        <button className="shrink-0">
+                          {done ? <CheckCircle2 className="w-5 h-5 text-primary" /> : <Circle className="w-5 h-5 text-muted-foreground" />}
+                        </button>
+                        <span className="text-xl">{r.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`text-sm font-medium ${done ? 'text-primary line-through' : 'text-foreground'}`}>{r.label[language]}</h3>
+                          <p className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> {r.defaultTime}</p>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            );
+          })}
 
           {/* Weekly Chart */}
           <Card className="p-4">
