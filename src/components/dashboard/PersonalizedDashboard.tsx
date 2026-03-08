@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import { BotMessageSquare, CalendarDays, TrendingUp } from 'lucide-react';
+import { BotMessageSquare, CalendarDays, TrendingUp, ArrowRight } from 'lucide-react';
 import UserSnapshotCard from './UserSnapshotCard';
 import PersonalDailyPrediction from './PersonalDailyPrediction';
 import FocusAreasGrid from './FocusAreasGrid';
@@ -62,18 +62,18 @@ const PersonalizedDashboard = () => {
 
   if (loading) {
     return (
-      <div className="space-y-5 p-4 max-w-6xl mx-auto">
-        <Skeleton className="h-40 w-full rounded-2xl" />
-        <div className="grid grid-cols-3 gap-3">
-          <Skeleton className="h-20 rounded-xl" />
-          <Skeleton className="h-20 rounded-xl" />
-          <Skeleton className="h-20 rounded-xl" />
+      <div className="space-y-4 px-4 py-4 max-w-5xl mx-auto">
+        <Skeleton className="h-36 w-full rounded-2xl" />
+        <div className="grid grid-cols-3 gap-2.5">
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
+          <Skeleton className="h-16 rounded-xl" />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <Skeleton className="h-56 rounded-2xl" />
-          <Skeleton className="h-56 rounded-2xl" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Skeleton className="h-48 rounded-2xl" />
+          <Skeleton className="h-48 rounded-2xl" />
         </div>
-        <Skeleton className="h-40 w-full rounded-2xl" />
+        <Skeleton className="h-36 w-full rounded-2xl" />
       </div>
     );
   }
@@ -81,38 +81,42 @@ const PersonalizedDashboard = () => {
   const quickActions = [
     {
       icon: BotMessageSquare,
-      label: language === 'hi' ? 'AstroAshi AI' : 'Ask AI',
+      label: language === 'hi' ? 'AI पूछें' : 'Ask AI',
+      desc: language === 'hi' ? 'ज्योतिषीय मार्गदर्शन' : 'Spiritual guidance',
       path: '/ask-astroashi',
-      color: 'bg-primary/10 text-primary border-primary/20',
+      gradient: 'from-primary/15 to-primary/5 border-primary/15 hover:border-primary/30',
+      iconColor: 'text-primary',
     },
     {
       icon: CalendarDays,
       label: language === 'hi' ? 'पंचांग' : 'Panchang',
+      desc: language === 'hi' ? 'आज का पंचांग' : "Today's almanac",
       path: '/panchang',
-      color: 'bg-cosmic-purple/10 text-cosmic-purple border-cosmic-purple/20',
+      gradient: 'from-cosmic-purple/15 to-cosmic-purple/5 border-cosmic-purple/15 hover:border-cosmic-purple/30',
+      iconColor: 'text-cosmic-purple',
     },
     {
       icon: TrendingUp,
       label: language === 'hi' ? 'भविष्यफल' : 'Predictions',
+      desc: language === 'hi' ? 'दैनिक भविष्यफल' : 'Daily forecast',
       path: '/predictions',
-      color: 'bg-cosmic-blue/10 text-cosmic-blue border-cosmic-blue/20',
+      gradient: 'from-cosmic-blue/15 to-cosmic-blue/5 border-cosmic-blue/15 hover:border-cosmic-blue/30',
+      iconColor: 'text-cosmic-blue',
     },
   ];
 
+  const anim = (delay: number) => ({
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay, duration: 0.35 },
+  });
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="space-y-5 p-4 max-w-6xl mx-auto"
-    >
+    <motion.div {...anim(0)} className="space-y-4 px-4 py-4 max-w-5xl mx-auto">
       <EmailVerificationBanner />
 
-      {/* User Snapshot */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.05 }}
-      >
+      {/* Spiritual Snapshot */}
+      <motion.div {...anim(0.05)}>
         <UserSnapshotCard
           profile={dashboardData?.profile}
           mahadasha={dashboardData?.mahadasha}
@@ -121,63 +125,46 @@ const PersonalizedDashboard = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-        className="grid grid-cols-3 gap-3"
-      >
+      <motion.div {...anim(0.1)} className="grid grid-cols-3 gap-2.5">
         {quickActions.map((action) => {
           const Icon = action.icon;
           return (
             <button
               key={action.path}
               onClick={() => navigate(action.path)}
-              className={`group flex flex-col items-center gap-2 p-4 rounded-xl border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/5 ${action.color}`}
+              className={`group flex flex-col items-start gap-1.5 p-3.5 rounded-xl border bg-gradient-to-br transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/[0.04] ${action.gradient}`}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{action.label}</span>
+              <Icon className={`w-5 h-5 ${action.iconColor}`} />
+              <div>
+                <span className="text-xs font-bold text-foreground font-heading block">{action.label}</span>
+                <span className="text-[10px] text-muted-foreground hidden sm:block">{action.desc}</span>
+              </div>
+              <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors mt-auto" />
             </button>
           );
         })}
       </motion.div>
 
       {/* Faith Module */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-      >
+      <motion.div {...anim(0.15)}>
         <FaithDashboardModule religion={(dashboardData?.profile?.religion as Religion) || 'hindu'} />
       </motion.div>
 
-      {/* Panchang & Prediction Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <motion.div
-          initial={{ opacity: 0, x: -12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <PanchangWidget panchang={dashboardData?.panchang} />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, x: 12 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.25 }}
-        >
+      {/* Daily Guidance & Panchang */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <motion.div {...anim(0.2)}>
           <PersonalDailyPrediction
             prediction={dashboardData?.predictions}
             profile={dashboardData?.profile}
           />
         </motion.div>
+        <motion.div {...anim(0.25)}>
+          <PanchangWidget panchang={dashboardData?.panchang} />
+        </motion.div>
       </div>
 
-      {/* Focus Areas */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-      >
+      {/* Life Areas */}
+      <motion.div {...anim(0.3)}>
         <FocusAreasGrid
           focusAreas={dashboardData?.predictions?.focus_areas}
           kundliData={dashboardData?.profile?.kundli_data}
@@ -185,11 +172,7 @@ const PersonalizedDashboard = () => {
       </motion.div>
 
       {/* Predictions */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-      >
+      <motion.div {...anim(0.35)}>
         <PredictionTabs userId={user?.id || ''} />
       </motion.div>
     </motion.div>
