@@ -19,7 +19,7 @@ export const useAvatarUpload = () => {
       setError(null);
 
       // Create a unique file path for this avatar
-      const filePath = `avatars/${user.id}/${Math.random().toString(36).substring(2)}`;
+      const filePath = `${user.id}/${Math.random().toString(36).substring(2)}`;
       
       // Upload the file to Supabase Storage
       const { data, error: uploadError } = await supabase.storage
