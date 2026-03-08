@@ -106,14 +106,6 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
-    path: '/settings',
-    labelEn: 'Settings',
-    labelHi: 'सेटिंग्स',
-    icon: Settings,
-    requiresAuth: true,
-    showWhenLoggedOut: false
-  },
-  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',
