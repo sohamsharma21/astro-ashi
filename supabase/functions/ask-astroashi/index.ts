@@ -12,6 +12,7 @@ serve(async (req) => {
   }
 
   try {
+    console.log('ask-astroashi invoked, method:', req.method);
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
