@@ -11,7 +11,7 @@ import { getDailyDeeds } from '@/lib/karmaData';
 import { SEOHead } from '@/components/SEOHead';
 
 const KarmaTracker = () => {
-  const { user, language, profile } = useAuth();
+  const { user, language, userProfile } = useAuth();
   const [completedDeeds, setCompletedDeeds] = useState<string[]>([]);
   const [totalPoints, setTotalPoints] = useState(0);
   const [streak, setStreak] = useState(0);
