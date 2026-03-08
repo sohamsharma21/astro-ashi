@@ -208,6 +208,10 @@ const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Reli
     { icon: '📅', label: language === 'hi' ? 'त्योहार' : 'Festivals', path: '/sacred-calendar' },
     { icon: '💬', label: language === 'hi' ? 'समुदाय' : 'Community', path: '/community' },
     { icon: '📖', label: language === 'hi' ? 'जर्नल' : 'Journal', path: '/cosmic-journal' },
+    { icon: '📊', label: language === 'hi' ? 'प्रगति' : 'Progress', path: '/spiritual-progress' },
+    { icon: '🕌', label: language === 'hi' ? 'पूजा स्थल' : 'Worship', path: '/worship-places' },
+    { icon: '🎯', label: language === 'hi' ? 'जीवन पथ' : 'Life Path', path: '/life-path' },
+    { icon: '📚', label: language === 'hi' ? 'ज्ञान' : 'Knowledge', path: '/spiritual-knowledge' },
   ];
 
   return (

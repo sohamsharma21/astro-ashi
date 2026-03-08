@@ -39,6 +39,10 @@ import KarmaTracker from "./pages/KarmaTracker";
 import DevotionalMusic from "./pages/DevotionalMusic";
 import SleepRelaxation from "./pages/SleepRelaxation";
 import Community from "./pages/Community";
+import SpiritualProgress from "./pages/SpiritualProgress";
+import WorshipPlaces from "./pages/WorshipPlaces";
+import LifePathPlanner from "./pages/LifePathPlanner";
+import SpiritualKnowledge from "./pages/SpiritualKnowledge";
 // Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -164,6 +168,26 @@ const App = () => (
             <Route path="/community" element={
               <ProtectedRoute>
                 <Community />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-progress" element={
+              <ProtectedRoute>
+                <SpiritualProgress />
+              </ProtectedRoute>
+            } />
+            <Route path="/worship-places" element={
+              <ProtectedRoute>
+                <WorshipPlaces />
+              </ProtectedRoute>
+            } />
+            <Route path="/life-path" element={
+              <ProtectedRoute>
+                <LifePathPlanner />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-knowledge" element={
+              <ProtectedRoute>
+                <SpiritualKnowledge />
               </ProtectedRoute>
             } />
             {/* Redirect old booking URLs */}

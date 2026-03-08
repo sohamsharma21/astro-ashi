@@ -1,6 +1,6 @@
 
 
-import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle } from 'lucide-react';
+import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle, BarChart3, MapPin, Target, Library } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -126,6 +126,38 @@ const serviceFeatures = [
     descEn: "Connect with spiritual seekers worldwide in discussion groups.",
     descHi: "दुनिया भर के आध्यात्मिक साधकों से जुड़ें।",
     path: "/community"
+  },
+  {
+    icon: BarChart3,
+    titleEn: "Spiritual Progress",
+    titleHi: "आध्यात्मिक प्रगति",
+    descEn: "Track growth with streaks, badges and daily/weekly/monthly progress.",
+    descHi: "स्ट्रीक, बैज और दैनिक/साप्ताहिक/मासिक प्रगति ट्रैक करें।",
+    path: "/spiritual-progress"
+  },
+  {
+    icon: MapPin,
+    titleEn: "Worship Places",
+    titleHi: "पूजा स्थल",
+    descEn: "Find nearby temples, mosques, churches and spiritual places.",
+    descHi: "पास के मंदिर, मस्जिद, चर्च और आध्यात्मिक स्थान खोजें।",
+    path: "/worship-places"
+  },
+  {
+    icon: Target,
+    titleEn: "Life Path Planner",
+    titleHi: "जीवन पथ योजना",
+    descEn: "Align life goals with spiritual values and dharma path.",
+    descHi: "जीवन लक्ष्यों को आध्यात्मिक मूल्यों से जोड़ें।",
+    path: "/life-path"
+  },
+  {
+    icon: Library,
+    titleEn: "Spiritual Knowledge",
+    titleHi: "आध्यात्मिक ज्ञान",
+    descEn: "Multi-faith library with sacred texts, teachings and stories.",
+    descHi: "पवित्र ग्रंथ, शिक्षाएं और कथाओं की बहु-धार्मिक लाइब्रेरी।",
+    path: "/spiritual-knowledge"
   }
 ];
 

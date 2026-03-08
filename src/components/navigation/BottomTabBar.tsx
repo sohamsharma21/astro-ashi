@@ -1,12 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Sparkles, Music, Users, User } from 'lucide-react';
+import { Home, Sparkles, Library, Users, User } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { motion } from 'framer-motion';
 
 const tabs = [
   { path: '/', icon: Home, labelEn: 'Home', labelHi: 'होम' },
   { path: '/spiritual-guide', icon: Sparkles, labelEn: 'Guide', labelHi: 'गाइड' },
-  { path: '/devotional-music', icon: Music, labelEn: 'Music', labelHi: 'संगीत' },
+  { path: '/spiritual-knowledge', icon: Library, labelEn: 'Knowledge', labelHi: 'ज्ञान' },
   { path: '/community', icon: Users, labelEn: 'Community', labelHi: 'समुदाय' },
   { path: '/profile', icon: User, labelEn: 'Profile', labelHi: 'प्रोफ़ाइल' },
 ];
