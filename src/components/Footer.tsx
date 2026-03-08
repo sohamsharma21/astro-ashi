@@ -1,5 +1,5 @@
 
-import { Heart, Mail, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Mail, Instagram, Facebook, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
 
@@ -91,8 +91,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/consultations" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Consultations' : 'परामर्श'}
+                <Link to="/ask-astroashi" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
+                  {language === 'en' ? 'AstroAshi AI' : 'AstroAshi AI'}
                 </Link>
               </li>
             </ul>

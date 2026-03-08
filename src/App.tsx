@@ -20,14 +20,11 @@ import KundliGenerator from "./pages/KundliGenerator";
 import Compatibility from "./pages/Compatibility";
 import AstroLove from "./pages/AstroLove";
 import AskAstro from "./pages/AskAstro";
-import Consultations from "./pages/Consultations";
 import CosmicJournal from "./pages/CosmicJournal";
 import Profile from "./pages/Profile";
 import Help from "./pages/Help";
-import VerifyBooking from "./pages/VerifyBooking";
 import Panchang from "./pages/Panchang";
 import FloatingPlanets from "./components/FloatingPlanets";
-import LiveConsultation from "./pages/LiveConsultation";
 import Predictions from "./pages/Predictions";
 import Settings from "./pages/Settings";
 import VerifyEmail from "./pages/VerifyEmail";
@@ -92,11 +89,6 @@ const App = () => (
                 <AskAstro />
               </ProtectedRoute>
             } />
-            <Route path="/consultations" element={
-              <ProtectedRoute>
-                <Consultations />
-              </ProtectedRoute>
-            } />
             <Route path="/cosmic-journal" element={
               <ProtectedRoute>
                 <CosmicJournal />
@@ -104,11 +96,6 @@ const App = () => (
             } />
             <Route path="/help" element={<Help />} />
             <Route path="/panchang" element={<Panchang />} />
-            <Route path="/live-consultation" element={
-              <ProtectedRoute>
-                <LiveConsultation />
-              </ProtectedRoute>
-            } />
             <Route path="/predictions" element={
               <ProtectedRoute>
                 <Predictions />
@@ -124,7 +111,10 @@ const App = () => (
                 <AskAstroAshi />
               </ProtectedRoute>
             } />
-            <Route path="/verify-booking" element={<VerifyBooking />} />
+            {/* Redirect old booking URLs */}
+            <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
+            <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />
+            <Route path="/verify-booking" element={<Navigate to="/" replace />} />
             <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
