@@ -246,6 +246,14 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/palm-reading',
+    labelEn: 'Palm Reading',
+    labelHi: 'हस्तरेखा',
+    icon: Hand,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',

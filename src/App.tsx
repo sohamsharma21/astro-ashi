@@ -209,6 +209,11 @@ const App = () => (
                 <SpiritualPersonalityTest />
               </ProtectedRoute>
             } />
+            <Route path="/palm-reading" element={
+              <ProtectedRoute>
+                <PalmReading />
+              </ProtectedRoute>
+            } />
             {/* Redirect old booking URLs */}
             <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />
