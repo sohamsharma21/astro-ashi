@@ -9,16 +9,71 @@ export interface AstroLoveFormData {
   person2: { name: string; birthDate: string };
 }
 
-export interface AstroLoveResult {
-  person1: { name: string; sign: ZodiacSign; lifePathNumber: number };
-  person2: { name: string; sign: ZodiacSign; lifePathNumber: number };
-  loveScore: number;
-  zodiacScore: number;
-  numerologyScore: number;
-  planetaryScore: number;
-  compatibility: string;
-  insights: string[];
+export interface LoveDimension {
+  name: string;
+  nameHi: string;
+  score: number;
+  icon: string;
+  color: string;
 }
+
+export interface AstroLoveResult {
+  person1: { name: string; sign: ZodiacSign; lifePathNumber: number; element: string; rulingPlanet: string };
+  person2: { name: string; sign: ZodiacSign; lifePathNumber: number; element: string; rulingPlanet: string };
+  loveScore: number;
+  dimensions: LoveDimension[];
+  compatibility: string;
+  compatibilityHi: string;
+  loveStory: { en: string; hi: string };
+  tips: { en: string; hi: string }[];
+}
+
+const ELEMENTS: Record<ZodiacSign, string> = {
+  aries: 'Fire', leo: 'Fire', sagittarius: 'Fire',
+  taurus: 'Earth', virgo: 'Earth', capricorn: 'Earth',
+  gemini: 'Air', libra: 'Air', aquarius: 'Air',
+  cancer: 'Water', scorpio: 'Water', pisces: 'Water'
+};
+
+const RULING_PLANETS: Record<ZodiacSign, string> = {
+  aries: 'Mars', taurus: 'Venus', gemini: 'Mercury', cancer: 'Moon',
+  leo: 'Sun', virgo: 'Mercury', libra: 'Venus', scorpio: 'Mars',
+  sagittarius: 'Jupiter', capricorn: 'Saturn', aquarius: 'Saturn', pisces: 'Jupiter'
+};
+
+// Element harmony scoring
+const ELEMENT_HARMONY: Record<string, Record<string, number>> = {
+  Fire: { Fire: 85, Air: 90, Earth: 45, Water: 40 },
+  Earth: { Fire: 45, Air: 55, Earth: 88, Water: 92 },
+  Air: { Fire: 90, Air: 82, Earth: 55, Water: 50 },
+  Water: { Fire: 40, Air: 50, Earth: 92, Water: 85 }
+};
+
+// Refined compatibility matrix using Vedic + Western blended approach
+const ZODIAC_MATRIX: Record<ZodiacSign, Record<ZodiacSign, number>> = {
+  aries: { aries: 72, taurus: 38, gemini: 83, cancer: 47, leo: 93, virgo: 42, libra: 68, scorpio: 55, sagittarius: 88, capricorn: 33, aquarius: 78, pisces: 52 },
+  taurus: { aries: 38, taurus: 88, gemini: 48, cancer: 87, leo: 58, virgo: 95, libra: 73, scorpio: 92, sagittarius: 38, capricorn: 96, aquarius: 42, pisces: 86 },
+  gemini: { aries: 83, taurus: 48, gemini: 74, cancer: 42, leo: 82, virgo: 63, libra: 94, scorpio: 38, sagittarius: 87, capricorn: 43, aquarius: 96, pisces: 48 },
+  cancer: { aries: 47, taurus: 87, gemini: 42, cancer: 93, leo: 58, virgo: 82, libra: 48, scorpio: 96, sagittarius: 38, capricorn: 72, aquarius: 37, pisces: 97 },
+  leo: { aries: 93, taurus: 58, gemini: 82, cancer: 58, leo: 83, virgo: 48, libra: 78, scorpio: 62, sagittarius: 96, capricorn: 43, aquarius: 67, pisces: 57 },
+  virgo: { aries: 42, taurus: 95, gemini: 63, cancer: 82, leo: 48, virgo: 84, libra: 58, scorpio: 87, sagittarius: 43, capricorn: 96, aquarius: 48, pisces: 72 },
+  libra: { aries: 68, taurus: 73, gemini: 94, cancer: 48, leo: 78, virgo: 58, libra: 82, scorpio: 43, sagittarius: 73, capricorn: 53, aquarius: 92, pisces: 58 },
+  scorpio: { aries: 55, taurus: 92, gemini: 38, cancer: 96, leo: 62, virgo: 87, libra: 43, scorpio: 88, sagittarius: 58, capricorn: 82, aquarius: 38, pisces: 97 },
+  sagittarius: { aries: 88, taurus: 38, gemini: 87, cancer: 38, leo: 96, virgo: 43, libra: 73, scorpio: 58, sagittarius: 82, capricorn: 53, aquarius: 87, pisces: 48 },
+  capricorn: { aries: 33, taurus: 96, gemini: 43, cancer: 72, leo: 43, virgo: 96, libra: 53, scorpio: 82, sagittarius: 53, capricorn: 87, aquarius: 58, pisces: 77 },
+  aquarius: { aries: 78, taurus: 42, gemini: 96, cancer: 37, leo: 67, virgo: 48, libra: 92, scorpio: 38, sagittarius: 87, capricorn: 58, aquarius: 82, pisces: 53 },
+  pisces: { aries: 52, taurus: 86, gemini: 48, cancer: 97, leo: 57, virgo: 72, libra: 58, scorpio: 97, sagittarius: 48, capricorn: 77, aquarius: 53, pisces: 88 }
+};
+
+// Numerology master number aware compatibility
+const NUMEROLOGY_COMPAT: Record<string, number> = {
+  '0': 100, '1': 88, '2': 82, '3': 72, '4': 65, '5': 58, '6': 52, '7': 45, '8': 40,
+  '11': 95, '22': 95, '33': 95
+};
+
+// Planet friendship for love
+const VENUS_FRIENDLY = ['Moon', 'Mercury', 'Saturn', 'Jupiter'];
+const MARS_FRIENDLY = ['Sun', 'Moon', 'Jupiter'];
 
 export const useAstroLove = () => {
   const { language, user } = useAuth();
@@ -30,7 +85,6 @@ export const useAstroLove = () => {
     const date = new Date(birthDate);
     const day = date.getDate();
     const month = date.getMonth() + 1;
-
     if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'aries';
     if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'taurus';
     if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'gemini';
@@ -46,107 +100,103 @@ export const useAstroLove = () => {
   };
 
   const calculateLifePathNumber = (birthDate: string): number => {
-    const date = new Date(birthDate);
-    const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
-    
-    let sum = dateStr.split('').reduce((acc, digit) => acc + parseInt(digit), 0);
-    
+    const dateStr = new Date(birthDate).toISOString().split('T')[0].replace(/-/g, '');
+    let sum = dateStr.split('').reduce((acc, d) => acc + parseInt(d), 0);
     while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-      sum = sum.toString().split('').reduce((acc, digit) => acc + parseInt(digit), 0);
+      sum = sum.toString().split('').reduce((acc, d) => acc + parseInt(d), 0);
     }
-    
     return sum;
   };
 
   const calculateCompatibility = async (formData: AstroLoveFormData) => {
     setLoading(true);
-
     try {
       const contentId = crypto.randomUUID();
-      
-      if (user) {
-        await recordReading('astro-love', contentId);
-      }
+      if (user) await recordReading('astro-love', contentId);
 
       const sign1 = getZodiacSign(formData.person1.birthDate);
       const sign2 = getZodiacSign(formData.person2.birthDate);
-      const lifePathNumber1 = calculateLifePathNumber(formData.person1.birthDate);
-      const lifePathNumber2 = calculateLifePathNumber(formData.person2.birthDate);
+      const lp1 = calculateLifePathNumber(formData.person1.birthDate);
+      const lp2 = calculateLifePathNumber(formData.person2.birthDate);
+      const elem1 = ELEMENTS[sign1];
+      const elem2 = ELEMENTS[sign2];
+      const planet1 = RULING_PLANETS[sign1];
+      const planet2 = RULING_PLANETS[sign2];
 
-      // Zodiac compatibility matrix
-      const compatibilityMatrix: Record<string, Record<string, number>> = {
-        aries: { aries: 70, taurus: 40, gemini: 85, cancer: 50, leo: 90, virgo: 45, libra: 65, scorpio: 50, sagittarius: 85, capricorn: 35, aquarius: 75, pisces: 50 },
-        taurus: { aries: 40, taurus: 90, gemini: 50, cancer: 85, leo: 60, virgo: 95, libra: 75, scorpio: 90, sagittarius: 40, capricorn: 95, aquarius: 45, pisces: 85 },
-        gemini: { aries: 85, taurus: 50, gemini: 75, cancer: 45, leo: 80, virgo: 65, libra: 95, scorpio: 40, sagittarius: 85, capricorn: 45, aquarius: 95, pisces: 50 },
-        cancer: { aries: 50, taurus: 85, gemini: 45, cancer: 95, leo: 60, virgo: 80, libra: 50, scorpio: 95, sagittarius: 40, capricorn: 70, aquarius: 40, pisces: 95 },
-        leo: { aries: 90, taurus: 60, gemini: 80, cancer: 60, leo: 85, virgo: 50, libra: 75, scorpio: 60, sagittarius: 95, capricorn: 45, aquarius: 65, pisces: 60 },
-        virgo: { aries: 45, taurus: 95, gemini: 65, cancer: 80, leo: 50, virgo: 85, libra: 60, scorpio: 85, sagittarius: 45, capricorn: 95, aquarius: 50, pisces: 70 },
-        libra: { aries: 65, taurus: 75, gemini: 95, cancer: 50, leo: 75, virgo: 60, libra: 80, scorpio: 45, sagittarius: 70, capricorn: 55, aquarius: 90, pisces: 60 },
-        scorpio: { aries: 50, taurus: 90, gemini: 40, cancer: 95, leo: 60, virgo: 85, libra: 45, scorpio: 90, sagittarius: 60, capricorn: 80, aquarius: 40, pisces: 95 },
-        sagittarius: { aries: 85, taurus: 40, gemini: 85, cancer: 40, leo: 95, virgo: 45, libra: 70, scorpio: 60, sagittarius: 80, capricorn: 55, aquarius: 85, pisces: 50 },
-        capricorn: { aries: 35, taurus: 95, gemini: 45, cancer: 70, leo: 45, virgo: 95, libra: 55, scorpio: 80, sagittarius: 55, capricorn: 85, aquarius: 60, pisces: 75 },
-        aquarius: { aries: 75, taurus: 45, gemini: 95, cancer: 40, leo: 65, virgo: 50, libra: 90, scorpio: 40, sagittarius: 85, capricorn: 60, aquarius: 80, pisces: 55 },
-        pisces: { aries: 50, taurus: 85, gemini: 50, cancer: 95, leo: 60, virgo: 70, libra: 60, scorpio: 95, sagittarius: 50, capricorn: 75, aquarius: 55, pisces: 90 }
-      };
+      // 1. Zodiac Chemistry (30%)
+      const zodiacScore = ZODIAC_MATRIX[sign1][sign2];
 
-      const zodiacScore = compatibilityMatrix[sign1][sign2];
+      // 2. Element Harmony (20%)
+      const elementScore = ELEMENT_HARMONY[elem1][elem2];
 
-      // Numerology compatibility
-      const numerologyDiff = Math.abs(lifePathNumber1 - lifePathNumber2);
-      const numerologyScore = numerologyDiff === 0 ? 100 : 
-                             numerologyDiff === 1 || numerologyDiff === 2 ? 85 :
-                             numerologyDiff === 3 || numerologyDiff === 4 ? 70 :
-                             numerologyDiff === 5 || numerologyDiff === 6 ? 55 : 40;
+      // 3. Numerology Resonance (15%)
+      const lpDiff = Math.abs(lp1 - lp2);
+      const isMaster = [11, 22, 33].includes(lp1) || [11, 22, 33].includes(lp2);
+      const numerologyScore = isMaster ? 95 : (NUMEROLOGY_COMPAT[lpDiff.toString()] ?? 40);
 
-      // Planetary influence (simulated based on zodiac elements)
-      const elements: Record<string, string> = {
-        aries: 'fire', leo: 'fire', sagittarius: 'fire',
-        taurus: 'earth', virgo: 'earth', capricorn: 'earth',
-        gemini: 'air', libra: 'air', aquarius: 'air',
-        cancer: 'water', scorpio: 'water', pisces: 'water'
-      };
-      
-      const sameElement = elements[sign1] === elements[sign2];
-      const planetaryScore = sameElement ? 90 : zodiacScore;
+      // 4. Planetary Love Alignment (15%)  
+      const venusAffinity = (VENUS_FRIENDLY.includes(planet1) ? 15 : 0) + (VENUS_FRIENDLY.includes(planet2) ? 15 : 0);
+      const marsAffinity = (MARS_FRIENDLY.includes(planet1) ? 10 : 0) + (MARS_FRIENDLY.includes(planet2) ? 10 : 0);
+      const samePlanet = planet1 === planet2 ? 20 : 0;
+      const planetaryScore = Math.min(100, 30 + venusAffinity + marsAffinity + samePlanet);
 
-      // Overall love score
-      const loveScore = Math.round((zodiacScore * 0.4 + numerologyScore * 0.35 + planetaryScore * 0.25));
+      // 5. Emotional Depth (10%)
+      const waterSigns: ZodiacSign[] = ['cancer', 'scorpio', 'pisces'];
+      const emotionalBonus = (waterSigns.includes(sign1) ? 15 : 0) + (waterSigns.includes(sign2) ? 15 : 0);
+      const emotionalScore = Math.min(100, elementScore * 0.5 + zodiacScore * 0.3 + emotionalBonus);
 
-      let compatibility;
-      if (loveScore >= 90) compatibility = language === 'en' ? 'Soulmates ❤️' : 'आत्मीय साथी ❤️';
-      else if (loveScore >= 75) compatibility = language === 'en' ? 'Perfect Match 💕' : 'सर्वोत्तम जोड़ी 💕';
-      else if (loveScore >= 60) compatibility = language === 'en' ? 'Great Connection 💖' : 'महान संबंध 💖';
-      else if (loveScore >= 45) compatibility = language === 'en' ? 'Potential Romance 💗' : 'संभावित प्रेम 💗';
-      else compatibility = language === 'en' ? 'Needs Work 💔' : 'प्रयास की आवश्यकता 💔';
+      // 6. Communication & Intellect (10%)
+      const airSigns: ZodiacSign[] = ['gemini', 'libra', 'aquarius'];
+      const mercurySigns: ZodiacSign[] = ['gemini', 'virgo'];
+      const commBonus = (airSigns.includes(sign1) ? 12 : 0) + (airSigns.includes(sign2) ? 12 : 0) +
+                        (mercurySigns.includes(sign1) ? 8 : 0) + (mercurySigns.includes(sign2) ? 8 : 0);
+      const communicationScore = Math.min(100, 40 + commBonus + (elem1 === elem2 ? 15 : 0));
 
-      const insights = language === 'en' ? [
-        `Your zodiac signs create a ${zodiacScore >= 70 ? 'harmonious' : 'challenging'} cosmic energy`,
-        `Life path numbers ${lifePathNumber1} and ${lifePathNumber2} ${numerologyScore >= 70 ? 'resonate beautifully' : 'offer growth opportunities'}`,
-        `Planetary alignment suggests ${planetaryScore >= 70 ? 'strong romantic potential' : 'building emotional bonds over time'}`
-      ] : [
-        `आपके राशि चिह्न ${zodiacScore >= 70 ? 'सामंजस्यपूर्ण' : 'चुनौतीपूर्ण'} ब्रह्मांडीय ऊर्जा बनाते हैं`,
-        `जीवन पथ संख्या ${lifePathNumber1} और ${lifePathNumber2} ${numerologyScore >= 70 ? 'सुंदर प्रतिध्वनि करते हैं' : 'विकास के अवसर प्रदान करते हैं'}`,
-        `ग्रहों की स्थिति ${planetaryScore >= 70 ? 'मजबूत रोमांटिक संभावना' : 'समय के साथ भावनात्मक बंधन बनाने'} का सुझाव देती है`
+      // Weighted love score
+      const loveScore = Math.round(
+        zodiacScore * 0.30 +
+        elementScore * 0.20 +
+        numerologyScore * 0.15 +
+        planetaryScore * 0.15 +
+        emotionalScore * 0.10 +
+        communicationScore * 0.10
+      );
+
+      const dimensions: LoveDimension[] = [
+        { name: 'Zodiac Chemistry', nameHi: 'राशि केमिस्ट्री', score: zodiacScore, icon: '🌟', color: 'from-amber-400 to-orange-500' },
+        { name: 'Element Harmony', nameHi: 'तत्व सामंजस्य', score: elementScore, icon: '🔥', color: 'from-red-400 to-pink-500' },
+        { name: 'Numerology Bond', nameHi: 'अंकशास्त्र बंधन', score: numerologyScore, icon: '🔢', color: 'from-purple-400 to-indigo-500' },
+        { name: 'Planetary Love', nameHi: 'ग्रहीय प्रेम', score: planetaryScore, icon: '🪐', color: 'from-blue-400 to-cyan-500' },
+        { name: 'Emotional Depth', nameHi: 'भावनात्मक गहराई', score: Math.round(emotionalScore), icon: '💎', color: 'from-teal-400 to-emerald-500' },
+        { name: 'Communication', nameHi: 'संवाद', score: Math.round(communicationScore), icon: '💬', color: 'from-rose-400 to-fuchsia-500' }
       ];
 
-      const loveResult: AstroLoveResult = {
-        person1: { name: formData.person1.name, sign: sign1, lifePathNumber: lifePathNumber1 },
-        person2: { name: formData.person2.name, sign: sign2, lifePathNumber: lifePathNumber2 },
-        loveScore,
-        zodiacScore,
-        numerologyScore,
-        planetaryScore,
-        compatibility,
-        insights
-      };
+      let compatibility = '';
+      let compatibilityHi = '';
+      if (loveScore >= 85) { compatibility = 'Twin Flames 🔥'; compatibilityHi = 'जुड़वां लपटें 🔥'; }
+      else if (loveScore >= 72) { compatibility = 'Soulmates 💕'; compatibilityHi = 'आत्मीय साथी 💕'; }
+      else if (loveScore >= 58) { compatibility = 'Strong Connection 💖'; compatibilityHi = 'मजबूत जुड़ाव 💖'; }
+      else if (loveScore >= 45) { compatibility = 'Growing Love 🌱'; compatibilityHi = 'बढ़ता प्यार 🌱'; }
+      else { compatibility = 'Opposites Attract ⚡'; compatibilityHi = 'विपरीत आकर्षण ⚡'; }
 
-      setResult(loveResult);
-      
-      toast.success(
-        language === 'en'
-          ? '💕 Love compatibility calculated!'
-          : '💕 प्रेम संगतता की गणना की गई!'
-      );
+      // Generate love story based on elements
+      const loveStory = generateLoveStory(elem1, elem2, loveScore);
+
+      // Generate actionable tips
+      const tips = generateTips(sign1, sign2, elem1, elem2, loveScore);
+
+      setResult({
+        person1: { name: formData.person1.name, sign: sign1, lifePathNumber: lp1, element: elem1, rulingPlanet: planet1 },
+        person2: { name: formData.person2.name, sign: sign2, lifePathNumber: lp2, element: elem2, rulingPlanet: planet2 },
+        loveScore,
+        dimensions,
+        compatibility,
+        compatibilityHi,
+        loveStory,
+        tips
+      });
+
+      toast.success(language === 'en' ? '💕 Love analysis complete!' : '💕 प्रेम विश्लेषण पूर्ण!');
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -154,14 +204,46 @@ export const useAstroLove = () => {
     }
   };
 
-  const resetResult = () => {
-    setResult(null);
+  const generateLoveStory = (e1: string, e2: string, score: number): { en: string; hi: string } => {
+    const key = [e1, e2].sort().join('-');
+    const stories: Record<string, { en: string; hi: string }> = {
+      'Air-Air': { en: 'Two brilliant minds creating endless conversations and shared dreams. Your intellectual bond is your superpower — you inspire each other to think bigger and love deeper.', hi: 'दो प्रतिभाशाली दिमाग अंतहीन बातचीत और साझा सपने बना रहे हैं। आपका बौद्धिक बंधन आपकी महाशक्ति है।' },
+      'Air-Fire': { en: 'Air fans the flames of Fire — together you create a passionate, adventurous love that lights up every room. Your energy is contagious and your love story is legendary.', hi: 'वायु अग्नि की लपटों को हवा देती है — साथ मिलकर आप एक भावुक, साहसिक प्रेम बनाते हैं जो हर कमरे को रोशन करता है।' },
+      'Air-Earth': { en: 'Earth grounds Air\'s soaring ideas while Air lifts Earth from routine. Together you find balance between dreams and reality — a love built on growth.', hi: 'पृथ्वी वायु के उड़ते विचारों को जमीन देती है जबकि वायु पृथ्वी को दिनचर्या से ऊपर उठाती है।' },
+      'Air-Water': { en: 'Air creates gentle waves on Water\'s surface — sometimes stormy, sometimes magical. Your love teaches both partners to feel deeply and think clearly.', hi: 'वायु पानी की सतह पर कोमल लहरें बनाती है — कभी तूफानी, कभी जादुई।' },
+      'Earth-Earth': { en: 'Two souls building a fortress of love — stable, reliable, and deeply committed. Your love grows like an ancient tree, stronger with each passing season.', hi: 'दो आत्माएं प्रेम का किला बना रही हैं — स्थिर, विश्वसनीय और गहरी प्रतिबद्ध।' },
+      'Earth-Fire': { en: 'Fire warms Earth\'s heart while Earth gives Fire a home. Your love is the perfect dance between passion and stability.', hi: 'अग्नि पृथ्वी के हृदय को गर्म करती है जबकि पृथ्वी अग्नि को एक घर देती है।' },
+      'Earth-Water': { en: 'Water nourishes Earth, creating a garden of love that blooms endlessly. Yours is the most nurturing and naturally harmonious combination.', hi: 'पानी पृथ्वी को पोषित करता है, एक प्रेम का बगीचा बनाता है जो अनंत रूप से खिलता है।' },
+      'Fire-Fire': { en: 'Two flames merging into a blazing love — passionate, dramatic, and unforgettable. Your love burns bright and inspires everyone around you.', hi: 'दो लपटें एक धधकते प्रेम में विलीन — भावुक, नाटकीय और अविस्मरणीय।' },
+      'Fire-Water': { en: 'Steam rises when Fire meets Water — intense, transformative love that changes both partners forever. Your contrasts create magic.', hi: 'जब अग्नि पानी से मिलती है तो भाप उठती है — तीव्र, परिवर्तनकारी प्रेम।' },
+      'Water-Water': { en: 'Two oceans merging — the deepest, most emotionally profound love. You understand each other without words, connected at a soul level.', hi: 'दो महासागर एक हो रहे हैं — सबसे गहरा, सबसे भावनात्मक रूप से गहन प्रेम।' }
+    };
+    return stories[key] || stories['Air-Fire']!;
   };
 
-  return {
-    loading,
-    result,
-    calculateCompatibility,
-    resetResult
+  const generateTips = (s1: ZodiacSign, s2: ZodiacSign, e1: string, e2: string, score: number): { en: string; hi: string }[] => {
+    const tips: { en: string; hi: string }[] = [];
+
+    if (e1 !== e2) {
+      tips.push({ en: `Embrace your differences — ${e1} and ${e2} complement each other beautifully when balanced`, hi: `अपनी भिन्नताओं को अपनाएं — ${e1} और ${e2} संतुलित होने पर एक-दूसरे के पूरक हैं` });
+    }
+
+    if (score >= 70) {
+      tips.push({ en: 'Your natural chemistry is strong — nurture it with quality time together', hi: 'आपकी प्राकृतिक केमिस्ट्री मजबूत है — साथ में गुणवत्तापूर्ण समय बिताकर इसे पोषित करें' });
+    } else {
+      tips.push({ en: 'Focus on open communication and patience — great love is built over time', hi: 'खुले संवाद और धैर्य पर ध्यान दें — महान प्रेम समय के साथ बनता है' });
+    }
+
+    tips.push({ en: 'Plan activities that honor both your energies — adventure AND comfort', hi: 'ऐसी गतिविधियाँ करें जो दोनों की ऊर्जाओं का सम्मान करें — साहस और आराम दोनों' });
+
+    if (['cancer', 'scorpio', 'pisces'].includes(s1) || ['cancer', 'scorpio', 'pisces'].includes(s2)) {
+      tips.push({ en: 'Honor emotional vulnerability — it\'s your relationship\'s greatest strength', hi: 'भावनात्मक संवेदनशीलता का सम्मान करें — यह आपके रिश्ते की सबसे बड़ी ताकत है' });
+    }
+
+    return tips;
   };
+
+  const resetResult = () => setResult(null);
+
+  return { loading, result, calculateCompatibility, resetResult };
 };
