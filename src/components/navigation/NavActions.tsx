@@ -42,15 +42,6 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
 
   return (
     <div className="flex items-center gap-2">
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => setLanguage(language === 'en' ? 'hi' : 'en')}
-        className="text-muted-foreground hover:text-foreground hover:bg-muted/50 text-xs font-medium rounded-full px-3"
-      >
-        {language === 'en' ? 'हिं' : 'EN'}
-      </Button>
-
       {user && <NotificationBell />}
 
       {user ? (
@@ -69,25 +60,19 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
             <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
               <Link to="/profile" className="flex items-center w-full gap-2">
                 <Settings className="h-4 w-4 text-muted-foreground" />
-                <span>{language === 'en' ? 'Settings' : 'सेटिंग्स'}</span>
+                <span>{language === 'en' ? 'Profile' : 'प्रोफ़ाइल'}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
-              <Link to="/ask-astroashi" className="flex items-center w-full gap-2">
-                <BotMessageSquare className="h-4 w-4 text-muted-foreground" />
-                <span>AstroAshi AI</span>
+              <Link to="/settings" className="flex items-center w-full gap-2">
+                <SettingsIcon className="h-4 w-4 text-muted-foreground" />
+                <span>{language === 'en' ? 'Settings' : 'सेटिंग्स'}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
               <Link to="/reading-history" className="flex items-center w-full gap-2">
                 <BookOpen className="h-4 w-4 text-muted-foreground" />
                 <span>{language === 'en' ? 'History' : 'इतिहास'}</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="hover:bg-muted/50 cursor-pointer rounded-lg">
-              <Link to="/daily-horoscope" className="flex items-center w-full gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>{language === 'en' ? 'Horoscope' : 'राशिफल'}</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator className="bg-border/30 my-1" />
@@ -104,15 +89,6 @@ export const NavActions = ({ menuOpen, onMenuToggle }: NavActionsProps) => {
           </Button>
         </Link>
       )}
-
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={onMenuToggle}
-        className="lg:hidden text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-full"
-      >
-        {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-      </Button>
     </div>
   );
 };
