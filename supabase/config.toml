@@ -21,13 +21,7 @@ verify_jwt = false
 [functions.get-astro-insight]
 verify_jwt = false
 
-[functions.send-booking-confirmation]
-verify_jwt = false
-
 [functions.send-welcome-email]
-verify_jwt = false
-
-[functions.verify-booking]
 verify_jwt = false
 
 [functions.send-auth-email]

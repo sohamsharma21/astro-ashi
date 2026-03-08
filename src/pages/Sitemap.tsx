@@ -14,9 +14,11 @@ const Sitemap = () => {
     { name: language === 'en' ? 'Kundli Generator' : 'कुंडली जनरेटर', path: '/kundli-generator' },
     { name: language === 'en' ? 'Compatibility' : 'कुंडली मिलान', path: '/compatibility' },
     { name: language === 'en' ? 'Ask Astro' : 'ज्योतिषी से पूछें', path: '/ask-astro' },
-    { name: language === 'en' ? 'Consultations' : 'परामर्श', path: '/consultations' },
+    { name: language === 'en' ? 'AstroAshi AI' : 'AstroAshi AI', path: '/ask-astroashi' },
     { name: language === 'en' ? 'Cosmic Journal' : 'कॉस्मिक जर्नल', path: '/cosmic-journal' },
     { name: language === 'en' ? 'Reading History' : 'पठन इतिहास', path: '/reading-history' },
+    { name: language === 'en' ? 'Predictions' : 'भविष्यफल', path: '/predictions' },
+    { name: language === 'en' ? 'Panchang' : 'पंचांग', path: '/panchang' },
   ];
 
   const infoLinks = [

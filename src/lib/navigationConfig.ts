@@ -6,13 +6,11 @@ import {
   HeartHandshake, 
   MessageSquare, 
   BotMessageSquare,
-  Phone, 
   BookOpen, 
   Info, 
   Mail,
   CalendarDays,
   TrendingUp,
-  Video,
   Settings,
   type LucideIcon 
 } from 'lucide-react';
@@ -92,14 +90,6 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
-    path: '/consultations',
-    labelEn: 'Consultations',
-    labelHi: 'परामर्श',
-    icon: Phone,
-    requiresAuth: true,
-    showWhenLoggedOut: false
-  },
-  {
     path: '/reading-history',
     labelEn: 'History',
     labelHi: 'इतिहास',
@@ -112,14 +102,6 @@ export const navigationConfig: NavItem[] = [
     labelEn: 'Predictions',
     labelHi: 'भविष्यफल',
     icon: TrendingUp,
-    requiresAuth: true,
-    showWhenLoggedOut: false
-  },
-  {
-    path: '/live-consultation',
-    labelEn: 'Live Chat',
-    labelHi: 'लाइव चैट',
-    icon: Video,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
@@ -154,7 +136,6 @@ export type NavDisplayMode = 'icons' | 'text' | 'both';
 export const getFilteredNavItems = (isAuthenticated: boolean): NavItem[] => {
   return navigationConfig.filter(item => {
     if (isAuthenticated) {
-      // Show all items when logged in, except hide public-only pages like About/Contact to reduce clutter
       return item.requiresAuth || item.path === '/' || item.path === '/panchang';
     }
     return item.showWhenLoggedOut;

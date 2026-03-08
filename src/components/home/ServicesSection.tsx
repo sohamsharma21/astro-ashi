@@ -1,5 +1,5 @@
 
-import { Star, Moon, Sun, Users, MessageCircle, Book } from 'lucide-react';
+import { Star, Moon, Sun, Users, MessageCircle, Book, BotMessageSquare } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,12 +37,12 @@ const serviceFeatures = [
     path: "/ask-astro"
   },
   {
-    icon: <Sun className="h-10 w-10 text-cosmic-gold" />,
-    titleEn: "Expert Consultations",
-    titleHi: "विशेषज्ञ परामर्श",
-    descriptionEn: "Connect with experienced astrologers for personalized guidance sessions.",
-    descriptionHi: "व्यक्तिगत मार्गदर्शन सत्रों के लिए अनुभवी ज्योतिषियों से जुड़ें।",
-    path: "/consultations"
+    icon: <BotMessageSquare className="h-10 w-10 text-cosmic-gold" />,
+    titleEn: "AstroAshi AI Guidance",
+    titleHi: "AstroAshi AI मार्गदर्शन",
+    descriptionEn: "Get personalized AI-powered spiritual guidance based on your Kundli, Mahadasha, and Panchang.",
+    descriptionHi: "आपकी कुंडली, महादशा और पंचांग के आधार पर व्यक्तिगत AI-संचालित आध्यात्मिक मार्गदर्शन प्राप्त करें।",
+    path: "/ask-astroashi"
   },
   {
     icon: <Book className="h-10 w-10 text-cosmic-gold" />,

@@ -91,8 +91,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/consultations" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
-                  {language === 'en' ? 'Consultations' : 'परामर्श'}
+                <Link to="/ask-astroashi" className="text-gray-300 hover:text-cosmic-gold transition-colors duration-200">
+                  {language === 'en' ? 'AstroAshi AI' : 'AstroAshi AI'}
                 </Link>
               </li>
             </ul>
