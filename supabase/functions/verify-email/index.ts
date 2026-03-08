@@ -1,9 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.78.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
 serve(async (req) => {
@@ -12,10 +12,28 @@ serve(async (req) => {
   }
 
   try {
-    const { token } = await req.json();
-    
+    // Support both GET (from email link) and POST
+    let token: string | null = null;
+
+    if (req.method === 'GET') {
+      const url = new URL(req.url);
+      token = url.searchParams.get('token');
+    } else {
+      const body = await req.json();
+      token = body.token;
+    }
+
     if (!token) {
       return new Response(JSON.stringify({ error: 'Token is required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Validate UUID format
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(token)) {
+      return new Response(JSON.stringify({ error: 'Invalid token format' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -59,6 +77,13 @@ serve(async (req) => {
       .from('profiles')
       .update({ email_verified: true })
       .eq('id', verification.user_id);
+
+    // Log audit event
+    await supabase.from('audit_events').insert({
+      user_id: verification.user_id,
+      action: 'email_verified',
+      details: { email: verification.email, verified_at: new Date().toISOString() },
+    });
 
     return new Response(JSON.stringify({ success: true, message: 'Email verified successfully' }), {
       status: 200,
