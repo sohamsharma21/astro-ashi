@@ -10,11 +10,11 @@ import {
   Mail,
   CalendarDays,
   TrendingUp,
-  Flower2,
+  Leaf,
   BookHeart,
-  Quote,
+  MessageCircleHeart,
   ListChecks,
-  CalendarHeart,
+  PartyPopper,
   type LucideIcon 
 } from 'lucide-react';
 

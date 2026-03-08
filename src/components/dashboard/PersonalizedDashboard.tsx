@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
-import { BotMessageSquare, CalendarDays, TrendingUp, ArrowRight, Flower2, Quote, CalendarHeart, ListChecks } from 'lucide-react';
+import { BotMessageSquare, CalendarDays, TrendingUp, ArrowRight } from 'lucide-react';
 import UserSnapshotCard from './UserSnapshotCard';
 import PersonalDailyPrediction from './PersonalDailyPrediction';
 import FocusAreasGrid from './FocusAreasGrid';
