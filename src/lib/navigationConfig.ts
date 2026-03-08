@@ -12,6 +12,10 @@ import {
   TrendingUp,
   ListChecks,
   Star,
+  Music,
+  Moon,
+  Users,
+  HandHeart,
   type LucideIcon 
 } from 'lucide-react';
 
@@ -134,6 +138,46 @@ export const navigationConfig: NavItem[] = [
     labelEn: 'Festivals',
     labelHi: 'त्योहार',
     icon: Star,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/spiritual-guide',
+    labelEn: 'Spiritual Guide',
+    labelHi: 'आध्यात्मिक गाइड',
+    icon: Sparkles,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/karma-tracker',
+    labelEn: 'Good Deeds',
+    labelHi: 'सद्कर्म',
+    icon: HandHeart,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/devotional-music',
+    labelEn: 'Music',
+    labelHi: 'संगीत',
+    icon: Music,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/sleep-relaxation',
+    labelEn: 'Sleep',
+    labelHi: 'नींद',
+    icon: Moon,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/community',
+    labelEn: 'Community',
+    labelHi: 'समुदाय',
+    icon: Users,
     requiresAuth: true,
     showWhenLoggedOut: false
   },

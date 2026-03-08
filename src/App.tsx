@@ -34,7 +34,11 @@ import GratitudeJournal from "./pages/GratitudeJournal";
 import DailyInspiration from "./pages/DailyInspiration";
 import SpiritualRoutine from "./pages/SpiritualRoutine";
 import SacredCalendar from "./pages/SacredCalendar";
-
+import SpiritualGuide from "./pages/SpiritualGuide";
+import KarmaTracker from "./pages/KarmaTracker";
+import DevotionalMusic from "./pages/DevotionalMusic";
+import SleepRelaxation from "./pages/SleepRelaxation";
+import Community from "./pages/Community";
 // Create a client for React Query
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -135,6 +139,31 @@ const App = () => (
             <Route path="/sacred-calendar" element={
               <ProtectedRoute>
                 <SacredCalendar />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-guide" element={
+              <ProtectedRoute>
+                <SpiritualGuide />
+              </ProtectedRoute>
+            } />
+            <Route path="/karma-tracker" element={
+              <ProtectedRoute>
+                <KarmaTracker />
+              </ProtectedRoute>
+            } />
+            <Route path="/devotional-music" element={
+              <ProtectedRoute>
+                <DevotionalMusic />
+              </ProtectedRoute>
+            } />
+            <Route path="/sleep-relaxation" element={
+              <ProtectedRoute>
+                <SleepRelaxation />
+              </ProtectedRoute>
+            } />
+            <Route path="/community" element={
+              <ProtectedRoute>
+                <Community />
               </ProtectedRoute>
             } />
             {/* Redirect old booking URLs */}
