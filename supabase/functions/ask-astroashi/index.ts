@@ -12,6 +12,7 @@ serve(async (req) => {
   }
 
   try {
+    console.log('ask-astroashi invoked, method:', req.method);
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -23,15 +24,19 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const lovableApiKey = Deno.env.get('LOVABLE_API_KEY');
 
-    // Verify user
-    const authClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!);
+    // Verify user via getClaims
+    const authClient = createClient(supabaseUrl, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: { headers: { Authorization: authHeader } }
+    });
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await authClient.auth.getUser(token);
-    if (authError || !user) {
+    const { data: claimsData, error: authError } = await authClient.auth.getClaims(token);
+    if (authError || !claimsData?.claims) {
+      console.error('Auth error:', authError);
       return new Response(JSON.stringify({ error: 'Invalid token' }), {
         status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
+    const userId = claimsData.claims.sub as string;
 
     const { question, language = 'en' } = await req.json();
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
@@ -44,8 +49,8 @@ serve(async (req) => {
 
     // Fetch user context in parallel: profile/kundli, panchang, mahadasha
     const [profileRes, mahadashaRes, panchangRes] = await Promise.all([
-      serviceClient.from('profiles').select('*').eq('id', user.id).single(),
-      serviceClient.from('user_mahadasha').select('*').eq('user_id', user.id).maybeSingle(),
+      serviceClient.from('profiles').select('*').eq('id', userId).single(),
+      serviceClient.from('user_mahadasha').select('*').eq('user_id', userId).maybeSingle(),
       serviceClient.from('panchang_cache').select('*')
         .eq('date', new Date().toISOString().split('T')[0])
         .maybeSingle(),
@@ -152,7 +157,7 @@ Be compassionate, wise, and specific. Never give generic advice — always tie g
 
     // Store in database
     await serviceClient.from('ai_questions').insert({
-      user_id: user.id,
+      user_id: userId,
       question: question.substring(0, 2000),
       ai_response: { content: responseContent, language, model: 'gemini-3-flash-preview' },
       language,
