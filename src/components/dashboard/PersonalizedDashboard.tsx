@@ -212,6 +212,9 @@ const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Reli
     { icon: '🕌', label: language === 'hi' ? 'पूजा स्थल' : 'Worship', path: '/worship-places' },
     { icon: '🎯', label: language === 'hi' ? 'जीवन पथ' : 'Life Path', path: '/life-path' },
     { icon: '📚', label: language === 'hi' ? 'ज्ञान' : 'Knowledge', path: '/spiritual-knowledge' },
+    { icon: '🧠', label: language === 'hi' ? 'AI अंतर्दृष्टि' : 'AI Insights', path: '/ai-life-insights' },
+    { icon: '🏆', label: language === 'hi' ? 'चुनौतियां' : 'Challenges', path: '/spiritual-challenges' },
+    { icon: '🧪', label: language === 'hi' ? 'व्यक्तित्व' : 'Personality', path: '/personality-test' },
   ];
 
   return (

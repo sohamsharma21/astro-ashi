@@ -221,6 +221,30 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/ai-life-insights',
+    labelEn: 'Life Insights',
+    labelHi: 'जीवन अंतर्दृष्टि',
+    icon: Brain,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/spiritual-challenges',
+    labelEn: 'Challenges',
+    labelHi: 'चुनौतियां',
+    icon: Trophy,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/personality-test',
+    labelEn: 'Personality',
+    labelHi: 'व्यक्तित्व',
+    icon: FlaskConical,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',

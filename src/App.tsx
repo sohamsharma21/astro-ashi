@@ -193,6 +193,21 @@ const App = () => (
                 <SpiritualKnowledge />
               </ProtectedRoute>
             } />
+            <Route path="/ai-life-insights" element={
+              <ProtectedRoute>
+                <AILifeInsights />
+              </ProtectedRoute>
+            } />
+            <Route path="/spiritual-challenges" element={
+              <ProtectedRoute>
+                <SpiritualChallenges />
+              </ProtectedRoute>
+            } />
+            <Route path="/personality-test" element={
+              <ProtectedRoute>
+                <SpiritualPersonalityTest />
+              </ProtectedRoute>
+            } />
             {/* Redirect old booking URLs */}
             <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
             <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />
