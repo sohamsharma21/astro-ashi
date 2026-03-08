@@ -156,7 +156,7 @@ Be compassionate, wise, and specific. Never give generic advice — always tie g
 
     // Store in database
     await serviceClient.from('ai_questions').insert({
-      user_id: user.id,
+      user_id: userId,
       question: question.substring(0, 2000),
       ai_response: { content: responseContent, language, model: 'gemini-3-flash-preview' },
       language,
