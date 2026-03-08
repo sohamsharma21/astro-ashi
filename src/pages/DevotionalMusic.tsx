@@ -10,7 +10,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { toast } from '@/hooks/use-toast';
 
 const DevotionalMusic = () => {
-  const { language, profile } = useAuth();
+  const { language, userProfile } = useAuth();
   const religion = (profile as any)?.religion || 'other';
   const tracks = getMusicByReligion(religion);
   const [playing, setPlaying] = useState<string | null>(null);
