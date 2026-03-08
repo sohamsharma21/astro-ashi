@@ -1,5 +1,5 @@
 
-import { Mail, Instagram, Facebook, Twitter } from 'lucide-react';
+import { Mail, Instagram } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/lib/auth';
 
@@ -81,19 +81,13 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Mail size={14} className="text-muted-foreground" />
-                <a href="mailto:info@astroashi.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  info@astroashi.com
+                <a href="mailto:astroashi@gmail.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  astroashi@gmail.com
                 </a>
               </div>
               <div className="flex gap-3 mt-4">
                 <a href="https://www.instagram.com/astro.ashi/" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
                   <Instagram size={18} />
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Facebook">
-                  <Facebook size={18} />
-                </a>
-                <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Twitter">
-                  <Twitter size={18} />
                 </a>
               </div>
             </div>
