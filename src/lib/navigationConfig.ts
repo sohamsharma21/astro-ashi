@@ -5,6 +5,7 @@ import {
   Heart, 
   HeartHandshake, 
   MessageSquare, 
+  BotMessageSquare,
   Phone, 
   BookOpen, 
   Info, 
@@ -79,6 +80,14 @@ export const navigationConfig: NavItem[] = [
     labelEn: 'Ask Astro',
     labelHi: 'पूछें',
     icon: MessageSquare,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/ask-astroashi',
+    labelEn: 'AstroAshi AI',
+    labelHi: 'AstroAshi AI',
+    icon: BotMessageSquare,
     requiresAuth: true,
     showWhenLoggedOut: false
   },

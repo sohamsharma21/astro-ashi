@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { BotMessageSquare } from 'lucide-react';
 import UserSnapshotCard from './UserSnapshotCard';
 import PersonalDailyPrediction from './PersonalDailyPrediction';
 import FocusAreasGrid from './FocusAreasGrid';
@@ -10,6 +12,7 @@ import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
 import EmailVerificationBanner from './EmailVerificationBanner';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 import { Religion } from '@/lib/faithModules';
 
 interface DashboardData {
@@ -21,6 +24,7 @@ interface DashboardData {
 
 const PersonalizedDashboard = () => {
   const { user, language } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
 
@@ -95,6 +99,22 @@ const PersonalizedDashboard = () => {
     >
       {/* Email Verification Banner */}
       <EmailVerificationBanner />
+
+      {/* Ask AstroAshi AI Button */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.05 }}
+      >
+        <Button
+          onClick={() => navigate('/ask-astroashi')}
+          className="w-full py-6 text-lg font-semibold bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg"
+          size="lg"
+        >
+          <BotMessageSquare className="h-6 w-6 mr-2" />
+          {language === 'hi' ? '🌟 AstroAshi AI से पूछें' : '🌟 Ask AstroAshi AI'}
+        </Button>
+      </motion.div>
 
       {/* User Snapshot Card */}
       <motion.div
