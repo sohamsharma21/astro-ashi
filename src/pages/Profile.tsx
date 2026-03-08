@@ -15,7 +15,7 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useAvatarUpload } from '@/hooks/useAvatarUpload';
 import ProfileSection from '@/components/profile/ProfileSection';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 
 const Profile = () => {
   const { user, userProfile, language, updateUserProfile, loading } = useAuth();
