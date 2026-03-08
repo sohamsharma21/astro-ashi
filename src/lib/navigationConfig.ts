@@ -16,6 +16,10 @@ import {
   Moon,
   Users,
   HandHeart,
+  BarChart3,
+  MapPin,
+  Target,
+  Library,
   type LucideIcon 
 } from 'lucide-react';
 
