@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { AstroLoveForm } from '@/components/astro-love/AstroLoveForm';
 import { AstroLoveResultDisplay } from '@/components/astro-love/AstroLoveResult';
 import { useAstroLove } from '@/hooks/useAstroLove';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { Heart } from 'lucide-react';
 

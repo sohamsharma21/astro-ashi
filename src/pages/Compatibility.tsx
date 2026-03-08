@@ -5,7 +5,7 @@ import { useAuth } from '@/lib/auth';
 import { CompatibilityForm } from '@/components/compatibility/CompatibilityForm';
 import { CompatibilityResult } from '@/components/compatibility/CompatibilityResult';
 import { useCompatibility } from '@/hooks/useCompatibility';
-import SEOHead from '@/components/SEOHead';
+import { SEOHead } from '@/components/SEOHead';
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 
