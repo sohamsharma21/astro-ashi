@@ -1,124 +1,147 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Heart, Flag, Plus, Send, User, Users } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Users } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { toast } from '@/hooks/use-toast';
 import { SEOHead } from '@/components/SEOHead';
-
-interface Post {
-  id: string;
-  user_id: string;
-  title: string;
-  content: string;
-  category: string;
-  group_name: string;
-  likes_count: number;
-  is_anonymous: boolean;
-  created_at: string;
-}
-
-const GROUPS = [
-  { key: 'mindfulness', en: 'Mindfulness', hi: 'सचेतनता' },
-  { key: 'daily-prayer', en: 'Daily Prayer', hi: 'दैनिक प्रार्थना' },
-  { key: 'meditation-challenge', en: 'Meditation Challenge', hi: 'ध्यान चुनौती' },
-  { key: 'spiritual-growth', en: 'Spiritual Growth', hi: 'आध्यात्मिक विकास' },
-  { key: 'general', en: 'General', hi: 'सामान्य' },
-];
-
-const CATEGORIES = [
-  { key: 'discussion', en: 'Discussion', hi: 'चर्चा' },
-  { key: 'question', en: 'Question', hi: 'प्रश्न' },
-  { key: 'experience', en: 'Experience', hi: 'अनुभव' },
-  { key: 'inspiration', en: 'Inspiration', hi: 'प्रेरणा' },
-];
+import { toast } from '@/hooks/use-toast';
+import { CommunityHeader } from '@/components/community/CommunityHeader';
+import { GroupTabs } from '@/components/community/GroupTabs';
+import { PostCard, type PostData } from '@/components/community/PostCard';
+import { CreatePostDialog } from '@/components/community/CreatePostDialog';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Community = () => {
   const { user, language } = useAuth();
-  const [posts, setPosts] = useState<Post[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeGroup, setActiveGroup] = useState('general');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+  const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
   const [showCreate, setShowCreate] = useState(false);
-  // Create post form
-  const [newTitle, setNewTitle] = useState('');
-  const [newContent, setNewContent] = useState('');
-  const [newCategory, setNewCategory] = useState('discussion');
-  const [newGroup, setNewGroup] = useState('general');
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [creating, setCreating] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'recent' | 'trending'>('recent');
 
-  useEffect(() => { loadPosts(); loadLikes(); }, [activeGroup]);
-
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     setLoading(true);
-    // Use safe view to protect anonymous user identities
-    const query = supabase.from('community_posts_safe' as any).select('*')
-      .eq('group_name', activeGroup).order('created_at', { ascending: false }).limit(50);
-    const { data } = await query;
-    setPosts((data as unknown as Post[]) || []);
-    setLoading(false);
-  };
+    let query = supabase
+      .from('community_posts_safe' as any)
+      .select('*')
+      .eq('group_name', activeGroup)
+      .limit(50);
 
-  const loadLikes = async () => {
+    if (sortBy === 'trending') {
+      query = query.order('likes_count', { ascending: false });
+    } else {
+      query = query.order('created_at', { ascending: false });
+    }
+
+    const { data } = await query;
+    let postsData = (data as unknown as PostData[]) || [];
+
+    // Fetch author names for non-anonymous posts
+    const userIds = postsData.filter(p => !p.is_anonymous && p.user_id).map(p => p.user_id!);
+    let profileMap: Record<string, string> = {};
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase.from('profiles').select('id, full_name').in('id', userIds);
+      if (profiles) profiles.forEach(p => { profileMap[p.id] = p.full_name || ''; });
+    }
+
+    // Fetch comment counts
+    const postIds = postsData.map(p => p.id);
+    let commentCounts: Record<string, number> = {};
+    if (postIds.length > 0) {
+      const { data: comments } = await supabase
+        .from('community_comments')
+        .select('post_id')
+        .in('post_id', postIds);
+      if (comments) {
+        comments.forEach(c => { commentCounts[c.post_id] = (commentCounts[c.post_id] || 0) + 1; });
+      }
+    }
+
+    postsData = postsData.map(p => ({
+      ...p,
+      author_name: !p.is_anonymous && p.user_id ? profileMap[p.user_id] : undefined,
+      comment_count: commentCounts[p.id] || 0,
+    }));
+
+    setPosts(postsData);
+    setLoading(false);
+  }, [activeGroup, sortBy]);
+
+  const loadLikes = useCallback(async () => {
     if (!user) return;
     const { data } = await supabase.from('community_likes').select('post_id').eq('user_id', user.id);
     if (data) setLikedPosts(new Set(data.map(l => l.post_id)));
-  };
+  }, [user]);
 
-  const createPost = async () => {
-    if (!user || !newTitle.trim() || !newContent.trim()) return;
-    setCreating(true);
-    const { error } = await supabase.from('community_posts').insert({
-      user_id: user.id, title: newTitle.trim(), content: newContent.trim(),
-      category: newCategory, group_name: newGroup, is_anonymous: isAnonymous
-    });
-    if (error) { toast({ title: 'Error', description: error.message, variant: 'destructive' }); }
-    else {
-      toast({ title: language === 'hi' ? 'पोस्ट बनाई गई!' : 'Post created!' });
-      setNewTitle(''); setNewContent(''); setShowCreate(false); setIsAnonymous(false);
-      if (newGroup === activeGroup) loadPosts();
-    }
-    setCreating(false);
-  };
+  useEffect(() => { loadPosts(); loadLikes(); }, [loadPosts, loadLikes]);
 
   const toggleLike = async (postId: string) => {
-    if (!user) return;
-    if (likedPosts.has(postId)) {
+    if (!user) {
+      toast({ title: language === 'hi' ? 'पहले लॉगिन करें' : 'Please sign in first', variant: 'destructive' });
+      return;
+    }
+    const liked = likedPosts.has(postId);
+    // Optimistic update
+    setLikedPosts(prev => { const n = new Set(prev); liked ? n.delete(postId) : n.add(postId); return n; });
+    setPosts(prev => prev.map(p => p.id === postId ? { ...p, likes_count: p.likes_count + (liked ? -1 : 1) } : p));
+
+    if (liked) {
       await supabase.from('community_likes').delete().eq('user_id', user.id).eq('post_id', postId);
-      setLikedPosts(prev => { const n = new Set(prev); n.delete(postId); return n; });
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, likes_count: Math.max(0, p.likes_count - 1) } : p));
-      // Update post likes_count
-      await supabase.from('community_posts').update({ likes_count: Math.max(0, (posts.find(p => p.id === postId)?.likes_count || 1) - 1) }).eq('id', postId);
+      const post = posts.find(p => p.id === postId);
+      if (post) await supabase.from('community_posts').update({ likes_count: Math.max(0, post.likes_count - 1) }).eq('id', postId);
     } else {
       await supabase.from('community_likes').insert({ user_id: user.id, post_id: postId });
-      setLikedPosts(prev => new Set(prev).add(postId));
-      setPosts(prev => prev.map(p => p.id === postId ? { ...p, likes_count: p.likes_count + 1 } : p));
-      await supabase.from('community_posts').update({ likes_count: (posts.find(p => p.id === postId)?.likes_count || 0) + 1 }).eq('id', postId);
+      const post = posts.find(p => p.id === postId);
+      if (post) await supabase.from('community_posts').update({ likes_count: post.likes_count + 1 }).eq('id', postId);
     }
+  };
+
+  const toggleBookmark = (postId: string) => {
+    // Client-side only bookmarks (localStorage)
+    setBookmarkedPosts(prev => {
+      const n = new Set(prev);
+      n.has(postId) ? n.delete(postId) : n.add(postId);
+      const arr = Array.from(n);
+      localStorage.setItem('community_bookmarks', JSON.stringify(arr));
+      return n;
+    });
+    toast({ title: bookmarkedPosts.has(postId) ? (language === 'hi' ? 'बुकमार्क हटाया' : 'Bookmark removed') : (language === 'hi' ? '🔖 बुकमार्क किया!' : '🔖 Bookmarked!') });
   };
 
   const reportPost = async (postId: string) => {
     if (!user) return;
     await supabase.from('community_reports').insert({ reporter_id: user.id, post_id: postId, reason: 'inappropriate' });
-    toast({ title: language === 'hi' ? 'रिपोर्ट भेजी गई' : 'Report submitted' });
+    toast({ title: language === 'hi' ? '🚩 रिपोर्ट भेजी गई' : '🚩 Report submitted' });
   };
 
-  const timeAgo = (date: string) => {
-    const mins = Math.floor((Date.now() - new Date(date).getTime()) / 60000);
-    if (mins < 60) return `${mins}m`;
-    if (mins < 1440) return `${Math.floor(mins / 60)}h`;
-    return `${Math.floor(mins / 1440)}d`;
+  const sharePost = async (post: PostData) => {
+    const text = `${post.title}\n\n${post.content.slice(0, 200)}...`;
+    if (navigator.share) {
+      try { await navigator.share({ title: post.title, text }); } catch {}
+    } else {
+      await navigator.clipboard.writeText(text);
+      toast({ title: language === 'hi' ? '📋 कॉपी किया!' : '📋 Copied to clipboard!' });
+    }
   };
+
+  // Load bookmarks from localStorage
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('community_bookmarks');
+      if (saved) setBookmarkedPosts(new Set(JSON.parse(saved)));
+    } catch {}
+  }, []);
+
+  // Filter by search
+  const filteredPosts = searchQuery.trim()
+    ? posts.filter(p =>
+        p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.content.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : posts;
 
   return (
     <>
@@ -126,108 +149,61 @@ const Community = () => {
       <Navigation />
       <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
         <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl py-4 sm:py-6">
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                {language === 'hi' ? 'आध्यात्मिक समुदाय' : 'Spiritual Community'}
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                {language === 'hi' ? 'साथ मिलकर आगे बढ़ें' : 'Grow together spiritually'}
-              </p>
-            </div>
-            <Dialog open={showCreate} onOpenChange={setShowCreate}>
-              <DialogTrigger asChild>
-                <Button size="sm" className="rounded-full gap-1.5"><Plus className="h-4 w-4" /> {language === 'hi' ? 'पोस्ट' : 'Post'}</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-md">
-                <DialogHeader><DialogTitle>{language === 'hi' ? 'नई पोस्ट बनाएं' : 'Create Post'}</DialogTitle></DialogHeader>
-                <div className="space-y-4">
-                  <Input placeholder={language === 'hi' ? 'शीर्षक' : 'Title'} value={newTitle} onChange={e => setNewTitle(e.target.value)} />
-                  <Textarea placeholder={language === 'hi' ? 'अपनी बात लिखें...' : 'Share your thoughts...'} value={newContent}
-                    onChange={e => setNewContent(e.target.value)} rows={4} />
-                  <div className="grid grid-cols-2 gap-3">
-                    <Select value={newCategory} onValueChange={setNewCategory}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {CATEGORIES.map(c => <SelectItem key={c.key} value={c.key}>{language === 'hi' ? c.hi : c.en}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                    <Select value={newGroup} onValueChange={setNewGroup}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {GROUPS.map(g => <SelectItem key={g.key} value={g.key}>{language === 'hi' ? g.hi : g.en}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch id="anon" checked={isAnonymous} onCheckedChange={setIsAnonymous} />
-                    <Label htmlFor="anon" className="text-sm">{language === 'hi' ? 'गुमनाम रहें' : 'Post anonymously'}</Label>
-                  </div>
-                  <Button className="w-full" onClick={createPost} disabled={!newTitle.trim() || !newContent.trim() || creating}>
-                    <Send className="h-4 w-4 mr-2" /> {language === 'hi' ? 'पोस्ट करें' : 'Publish'}
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </motion.div>
+          <CommunityHeader
+            language={language as 'en' | 'hi'}
+            onCreatePost={() => user ? setShowCreate(true) : toast({ title: language === 'hi' ? 'पहले लॉगिन करें' : 'Please sign in', variant: 'destructive' })}
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            sortBy={sortBy}
+            onSortChange={setSortBy}
+          />
 
-          {/* Groups */}
-          <div className="flex gap-2 overflow-x-auto pb-3 mb-4 scrollbar-hide">
-            {GROUPS.map(g => (
-              <Button key={g.key} variant={activeGroup === g.key ? 'default' : 'outline'} size="sm"
-                className="shrink-0 text-xs rounded-full" onClick={() => setActiveGroup(g.key)}>
-                {language === 'hi' ? g.hi : g.en}
-              </Button>
-            ))}
-          </div>
+          <GroupTabs activeGroup={activeGroup} onGroupChange={setActiveGroup} language={language as 'en' | 'hi'} />
 
-          {/* Posts */}
-          <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
+          {/* Posts list */}
+          <div className="space-y-3">
             {loading ? (
-              <div className="text-center py-12 text-muted-foreground text-sm">
-                {language === 'hi' ? 'लोड हो रहा है...' : 'Loading...'}
-              </div>
-            ) : posts.length === 0 ? (
-              <div className="text-center py-12">
-                <Users className="h-10 w-10 mx-auto text-muted-foreground/40 mb-3" />
+              Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-40 w-full rounded-xl" />
+              ))
+            ) : filteredPosts.length === 0 ? (
+              <div className="text-center py-16">
+                <Users className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
                 <p className="text-sm text-muted-foreground">
-                  {language === 'hi' ? 'अभी कोई पोस्ट नहीं। पहली पोस्ट बनाएं!' : 'No posts yet. Be the first to share!'}
+                  {searchQuery
+                    ? (language === 'hi' ? 'कोई पोस्ट नहीं मिली' : 'No posts found')
+                    : (language === 'hi' ? 'अभी कोई पोस्ट नहीं। पहली पोस्ट बनाएं!' : 'No posts yet. Be the first to share!')}
                 </p>
               </div>
-            ) : posts.map((post, i) => (
-              <motion.div key={post.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.03 }}>
-                <Card className="p-4 bg-card/60 border-border/40">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
-                      <User className="h-3.5 w-3.5 text-primary" />
-                    </div>
-                    <span className="text-xs text-muted-foreground">
-                      {post.is_anonymous ? (language === 'hi' ? 'गुमनाम' : 'Anonymous') : 'Member'} · {timeAgo(post.created_at)}
-                    </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted/50 text-muted-foreground ml-auto">
-                      {CATEGORIES.find(c => c.key === post.category)?.[language === 'hi' ? 'hi' : 'en'] || post.category}
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-semibold text-foreground mb-1">{post.title}</h3>
-                  <p className="text-xs text-muted-foreground line-clamp-3 mb-3">{post.content}</p>
-                  <div className="flex items-center gap-3">
-                    <Button variant="ghost" size="sm" className={`h-7 gap-1 text-xs ${likedPosts.has(post.id) ? 'text-red-500' : ''}`}
-                      onClick={() => toggleLike(post.id)}>
-                      <Heart className={`h-3.5 w-3.5 ${likedPosts.has(post.id) ? 'fill-current' : ''}`} />
-                      {post.likes_count}
-                    </Button>
-                    <Button variant="ghost" size="sm" className="h-7 gap-1 text-xs text-muted-foreground"
-                      onClick={() => reportPost(post.id)}>
-                      <Flag className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
-                </Card>
-              </motion.div>
+            ) : filteredPosts.map((post, i) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                index={i}
+                language={language as 'en' | 'hi'}
+                userId={user?.id}
+                isLiked={likedPosts.has(post.id)}
+                isBookmarked={bookmarkedPosts.has(post.id)}
+                onLike={toggleLike}
+                onBookmark={toggleBookmark}
+                onReport={reportPost}
+                onShare={sharePost}
+              />
             ))}
           </div>
         </div>
       </main>
+
+      {user && (
+        <CreatePostDialog
+          open={showCreate}
+          onOpenChange={setShowCreate}
+          userId={user.id}
+          language={language as 'en' | 'hi'}
+          activeGroup={activeGroup}
+          onPostCreated={loadPosts}
+        />
+      )}
     </>
   );
 };
