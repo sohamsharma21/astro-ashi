@@ -16,6 +16,10 @@ export const ambientSounds: AmbientSound[] = [
   { id: 'crickets', label: { en: 'Night Crickets', hi: 'रात के झींगुर' }, icon: '🦗' },
   { id: 'fire', label: { en: 'Crackling Fire', hi: 'जलती आग' }, icon: '🔥' },
   { id: 'om', label: { en: 'Om Drone', hi: 'ॐ ध्वनि' }, icon: '🕉️' },
+  { id: 'thunder', label: { en: 'Thunderstorm', hi: 'तूफान' }, icon: '⛈️' },
+  { id: 'river', label: { en: 'River Stream', hi: 'नदी की धारा' }, icon: '🏞️' },
+  { id: 'birds', label: { en: 'Birds at Dawn', hi: 'सुबह की चिड़ियाँ' }, icon: '🐦' },
+  { id: 'flute', label: { en: 'Bamboo Flute', hi: 'बांसुरी' }, icon: '🎵' },
 ];
 
 class AmbientSoundEngine {
@@ -59,6 +63,10 @@ class AmbientSoundEngine {
       case 'crickets': this.createCrickets(); break;
       case 'fire': this.createFire(); break;
       case 'om': this.createOm(); break;
+      case 'thunder': this.createThunder(); break;
+      case 'river': this.createRiver(); break;
+      case 'birds': this.createBirds(); break;
+      case 'flute': this.createFlute(); break;
     }
   }
 
@@ -333,6 +341,148 @@ class AmbientSoundEngine {
       this.activeSources.push(osc, vibrato);
       this.activeNodes.push(gain, vibGain, filter);
     });
+  }
+
+  private createThunder() {
+    // Thunder: low rumbles + rain
+    this.createRain();
+    const ctx = this.getCtx();
+    const rumble = () => {
+      if (!this.isPlaying || this.currentSound !== 'thunder') return;
+      const buffer = this.createNoiseBuffer(2);
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 150;
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, ctx.currentTime);
+      env.gain.linearRampToValueAtTime(0.4, ctx.currentTime + 0.3);
+      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2);
+      source.connect(filter);
+      filter.connect(env);
+      env.connect(this.getMasterGain());
+      source.start();
+      source.stop(ctx.currentTime + 2.5);
+      this.activeNodes.push(filter, env);
+      setTimeout(rumble, 5000 + Math.random() * 15000);
+    };
+    setTimeout(rumble, 2000);
+  }
+
+  private createRiver() {
+    // Flowing water sound
+    this.loopNoise('bandpass', 400, 1.5, 0.15);
+    this.loopNoise('bandpass', 1500, 2, 0.08);
+    const ctx = this.getCtx();
+    const { filter } = this.loopNoise('bandpass', 800, 1, 0.12);
+    const lfo = ctx.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = 0.2;
+    const lfoGain = ctx.createGain();
+    lfoGain.gain.value = 200;
+    lfo.connect(lfoGain);
+    lfoGain.connect(filter.frequency);
+    lfo.start();
+    this.activeSources.push(lfo);
+    this.activeNodes.push(lfoGain);
+  }
+
+  private createBirds() {
+    const ctx = this.getCtx();
+    // Soft ambient background
+    this.loopNoise('bandpass', 3000, 4, 0.02);
+
+    const chirp = () => {
+      if (!this.isPlaying || this.currentSound !== 'birds') return;
+      const baseFreq = 2000 + Math.random() * 2000;
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      // Frequency modulation for birdsong
+      const freqLfo = ctx.createOscillator();
+      freqLfo.frequency.value = 10 + Math.random() * 20;
+      const freqGain = ctx.createGain();
+      freqGain.gain.value = 200;
+      freqLfo.connect(freqGain);
+      freqGain.connect(osc.frequency);
+      osc.frequency.value = baseFreq;
+
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, ctx.currentTime);
+      env.gain.linearRampToValueAtTime(0.06, ctx.currentTime + 0.05);
+      env.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
+
+      osc.connect(env);
+      env.connect(this.getMasterGain());
+      osc.start();
+      freqLfo.start();
+      osc.stop(ctx.currentTime + 0.25);
+      freqLfo.stop(ctx.currentTime + 0.25);
+      this.activeNodes.push(env, freqGain);
+
+      setTimeout(chirp, 300 + Math.random() * 2000);
+    };
+    chirp();
+    setTimeout(() => chirp(), 800);
+    setTimeout(() => chirp(), 1500);
+  }
+
+  private createFlute() {
+    const ctx = this.getCtx();
+    // Pentatonic scale notes for Indian flute feel
+    const notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25]; // C4 pentatonic
+    let noteIndex = 0;
+
+    const playNote = () => {
+      if (!this.isPlaying || this.currentSound !== 'flute') return;
+      const freq = notes[noteIndex % notes.length];
+      noteIndex++;
+
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+
+      // Vibrato
+      const vibrato = ctx.createOscillator();
+      vibrato.frequency.value = 5;
+      const vibGain = ctx.createGain();
+      vibGain.gain.value = 3;
+      vibrato.connect(vibGain);
+      vibGain.connect(osc.frequency);
+      vibrato.start();
+
+      // Breath noise
+      const noise = ctx.createBufferSource();
+      noise.buffer = this.createNoiseBuffer(2);
+      noise.loop = true;
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = 'bandpass';
+      noiseFilter.frequency.value = freq * 2;
+      noiseFilter.Q.value = 5;
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.value = 0.015;
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+
+      const env = ctx.createGain();
+      env.gain.setValueAtTime(0, ctx.currentTime);
+      env.gain.linearRampToValueAtTime(0.1, ctx.currentTime + 0.2);
+      env.gain.setValueAtTime(0.1, ctx.currentTime + 1.5);
+      env.gain.linearRampToValueAtTime(0, ctx.currentTime + 2);
+
+      osc.connect(env);
+      noiseGain.connect(env);
+      env.connect(this.getMasterGain());
+      osc.start();
+      noise.start();
+      osc.stop(ctx.currentTime + 2.1);
+      noise.stop(ctx.currentTime + 2.1);
+      vibrato.stop(ctx.currentTime + 2.1);
+      this.activeNodes.push(env, vibGain, noiseFilter, noiseGain);
+
+      setTimeout(playNote, 2000 + Math.random() * 2000);
+    };
+    playNote();
   }
 }
 

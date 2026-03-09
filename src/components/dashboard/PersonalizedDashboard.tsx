@@ -10,7 +10,7 @@ import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
-import EmailVerificationBanner from './EmailVerificationBanner';
+// Email verification banner removed - Google OAuth already verifies email
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
 import { getDailyInspiration } from '@/lib/inspirationData';
@@ -116,7 +116,7 @@ const PersonalizedDashboard = () => {
 
   return (
     <motion.div {...anim(0)} className="space-y-4 px-4 py-4 max-w-5xl mx-auto">
-      <EmailVerificationBanner />
+      {/* Email verification removed - Google OAuth verifies email automatically */}
 
       {/* Spiritual Snapshot */}
       <motion.div {...anim(0.05)}>
