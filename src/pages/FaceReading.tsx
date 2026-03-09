@@ -525,14 +525,17 @@ const FaceReadingPage = () => {
                 </Card>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <Button onClick={handleSave} variant="outline" className="flex-1 gap-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <Button onClick={handleSave} variant="outline" className="gap-2">
                     <Bookmark className="w-4 h-4" /> {hi ? 'सहेजें' : 'Save'}
                   </Button>
-                  <Button onClick={handleShare} variant="outline" className="flex-1 gap-2">
+                  <Button onClick={handleShare} variant="outline" className="gap-2">
                     <Share2 className="w-4 h-4" /> {hi ? 'शेयर' : 'Share'}
                   </Button>
-                  <Button onClick={handleReset} className="flex-1 gap-2 bg-primary hover:bg-primary/90">
+                  <Button onClick={generateStoryCard} className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white border-0">
+                    <Download className="w-4 h-4" /> {hi ? 'Instagram स्टोरी' : 'Story Card'}
+                  </Button>
+                  <Button onClick={handleReset} variant="outline" className="gap-2">
                     <RotateCcw className="w-4 h-4" /> {hi ? 'दोबारा' : 'Try Again'}
                   </Button>
                 </div>
