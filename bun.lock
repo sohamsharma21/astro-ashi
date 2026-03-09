@@ -56,7 +56,7 @@
         "react-router-dom": "^6.26.2",
         "recharts": "^2.12.7",
         "resend": "^2.0.0",
-        "serialize-javascript": "7.0.3",
+        "serialize-javascript": "7.0.4",
         "sonner": "^1.5.0",
         "swisseph": "^0.5.16",
         "tailwind-merge": "^2.5.2",
@@ -1557,7 +1557,7 @@
 
     "semver": ["semver@5.3.0", "", { "bin": "bin/semver" }, "sha512-mfmm3/H9+67MCVix1h+IXTpDwL6710LyHuk7+cWC9T1mE0qz4iHhh6r4hU2wrIT9iTsAAC2XQRvfblL028cpLw=="],
 
-    "serialize-javascript": ["serialize-javascript@7.0.3", "", {}, "sha512-h+cZ/XXarqDgCjo+YSyQU/ulDEESGGf8AMK9pPNmhNSl/FzPl6L8pMp1leca5z6NuG6tvV/auC8/43tmovowww=="],
+    "serialize-javascript": ["serialize-javascript@7.0.4", "", {}, "sha512-DuGdB+Po43Q5Jxwpzt1lhyFSYKryqoNjQSA9M92tyw0lyHIOur+XCalOUe0KTJpyqzT8+fQ5A0Jf7vCx/NKmIg=="],
 
     "set-blocking": ["set-blocking@2.0.0", "", {}, "sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw=="],
 
