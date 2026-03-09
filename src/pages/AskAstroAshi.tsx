@@ -269,7 +269,7 @@ const AskAstroAshi = () => {
       <div className="min-h-screen bg-background text-foreground">
         <Navigation />
 
-        <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
+        <main className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -283,7 +283,7 @@ const AskAstroAshi = () => {
                 </div>
                 <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold font-display text-primary">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-display text-primary">
                 {isHindi ? 'AstroAshi AI से पूछें' : 'Ask AstroAshi AI'}
               </h1>
             </div>
@@ -309,7 +309,7 @@ const AskAstroAshi = () => {
           </div>
 
           {/* Chat Card */}
-          <Card className="border-border bg-card/80 backdrop-blur-lg flex flex-col h-[calc(100vh-280px)] min-h-[500px]">
+          <Card className="border-border bg-card/80 backdrop-blur-lg flex flex-col h-[calc(100vh-260px)] sm:h-[calc(100vh-280px)] min-h-[400px] sm:min-h-[500px]">
             {/* Scrollable Messages Area */}
             <div
               ref={chatContainerRef}

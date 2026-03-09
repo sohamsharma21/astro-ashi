@@ -136,8 +136,8 @@ const Meditation = () => {
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={100} />
         <Navigation />
-        <main className="pt-20 pb-24 px-4 max-w-4xl mx-auto">
-          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">
+        <main className="pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10 px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
+          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground text-center mb-6 md:mb-8">
             🧘 {tr.title}
           </motion.h1>
 
@@ -157,7 +157,7 @@ const Meditation = () => {
               <p className="text-xs text-muted-foreground mb-4">{tr.ambientDesc}</p>
 
               {/* Sound grid */}
-              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 mb-4">
+              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4">
                 {ambientSounds.map(sound => {
                   const isActive = activeAmbient === sound.id;
                   return (
@@ -254,7 +254,7 @@ const Meditation = () => {
           {religionSpecific.length > 0 && (
             <section className="mb-8">
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2"><Sparkles className="w-5 h-5 text-primary" /> {tr.recommended}</h2>
-              <div className="grid gap-3">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
                 {religionSpecific.map((m, i) => (
                   <MeditationCard key={m.id} session={m} language={language} index={i} onSelect={() => { resetTimer(); setActiveSession(m); }} />
                 ))}
@@ -265,7 +265,7 @@ const Meditation = () => {
           {/* All General */}
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2"><Wind className="w-5 h-5 text-primary" /> {tr.all}</h2>
-            <div className="grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               {allGeneral.map((m, i) => (
                 <MeditationCard key={m.id} session={m} language={language} index={i} onSelect={() => { resetTimer(); setActiveSession(m); }} />
               ))}

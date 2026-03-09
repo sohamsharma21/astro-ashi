@@ -126,8 +126,8 @@ const SpiritualProgress = () => {
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={100} />
         <Navigation />
-        <main className="pt-20 pb-24 px-4 max-w-2xl mx-auto">
-          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-3xl font-bold text-foreground text-center mb-6">
+        <main className="pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10 px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto">
+          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground text-center mb-6">
             📊 {tr.title}
           </motion.h1>
 
@@ -150,7 +150,7 @@ const SpiritualProgress = () => {
           </Tabs>
 
           {/* Activity Progress */}
-          <div className="space-y-3 mb-8">
+          <div className="space-y-3 mb-8 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {activities.map((a, i) => (
               <motion.div key={a.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 * i }}>
                 <Card className="p-4">
@@ -171,7 +171,7 @@ const SpiritualProgress = () => {
             <h2 className="text-lg font-bold text-foreground mb-4 flex items-center gap-2">
               <Award className="w-5 h-5 text-primary" /> {tr.badges}
             </h2>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
               {badgeDefinitions.map((badge) => {
                 const isEarned = earnedBadges.includes(badge.key);
                 return (

@@ -126,7 +126,7 @@ const Panchang = () => {
         <StarBackground starCount={100} />
         <Navigation />
         
-        <main className="container mx-auto px-4 pt-24 pb-12">
+        <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -134,7 +134,7 @@ const Panchang = () => {
           >
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-cinzel text-gradient-gold mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-cinzel text-gradient-gold mb-2">
                 {t.title}
               </h1>
               <p className="text-muted-foreground">{t.subtitle}</p>
