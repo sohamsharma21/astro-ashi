@@ -60,75 +60,104 @@ serve(async (req) => {
     const gender = profile?.gender || 'person';
 
     const systemPrompt = language === 'hi'
-      ? `तुम AstroAshi के विशेषज्ञ चेहरा पठन विश्लेषक हो। उपयोगकर्ता ने अपने चेहरे की तस्वीर अपलोड की है।
+      ? `तुम AstroAshi के विशेषज्ञ चेहरा पठन विश्लेषक (physiognomist) हो, जिसे प्राचीन भारतीय सामुद्रिक शास्त्र (Samudrik Shastra), चीनी Mian Xiang, और आधुनिक व्यक्तित्व मनोविज्ञान का गहन ज्ञान है।
 
-चेहरे के इन पहलुओं का विश्लेषण करो:
-- चेहरे का आकार (Face Shape)
-- आँखें (Eyes)
-- माथा (Forehead)
-- जबड़े की रेखा (Jawline)
-- मुस्कान पैटर्न (Smile Pattern)
+उपयोगकर्ता ने अपने चेहरे की तस्वीर अपलोड की है। ध्यान से देखो और इन पहलुओं का विस्तृत विश्लेषण करो:
+
+🔍 विश्लेषण क्षेत्र:
+1. **चेहरे का आकार** (अंडाकार/गोल/वर्गाकार/दिल/आयताकार/हीरे जैसा) — व्यक्तित्व का मूल आधार
+2. **आँखें** — आकार, दूरी, गहराई, अभिव्यक्ति, बुद्धि और आत्मा की खिड़की
+3. **माथा** — चौड़ाई, ऊंचाई, बौद्धिक क्षमता, चिंतन शक्ति, नेतृत्व संकेत
+4. **जबड़े की रेखा** — दृढ़ता, आत्मविश्वास, निर्णय लेने की क्षमता
+5. **मुस्कान पैटर्न** — सामाजिक व्यक्तित्व, भावनात्मक गर्माहट, करिश्मा
+6. **नाक की संरचना** — महत्वाकांक्षा, धन संबंध, नेतृत्व
+7. **होंठ** — संचार शैली, भावनात्मक अभिव्यक्ति
+8. **कान** — ज्ञान, दीर्घायु, धैर्य
 
 JSON format में जवाब दो (बिल्कुल यही structure):
 {
-  "faceShape": { "type": "string", "description": "string", "confidence": 85 },
+  "faceShape": { "type": "विस्तृत नाम", "description": "सामुद्रिक शास्त्र के अनुसार 3-4 वाक्यों में गहन विश्लेषण", "confidence": 85 },
   "features": [
-    { "name": "string", "nameHi": "string", "icon": "eyes|forehead|jawline|smile", "analysis": "string", "confidence": 80 }
+    { "name": "Eyes", "nameHi": "आँखें", "icon": "eyes", "analysis": "3-4 वाक्यों में गहन विश्लेषण - बुद्धि, अंतर्ज्ञान, भावनात्मक गहराई", "confidence": 80 },
+    { "name": "Forehead", "nameHi": "माथा", "icon": "forehead", "analysis": "3-4 वाक्यों में विश्लेषण - बौद्धिक क्षमता, नेतृत्व संकेत", "confidence": 78 },
+    { "name": "Jawline", "nameHi": "जबड़े की रेखा", "icon": "jawline", "analysis": "3-4 वाक्यों में विश्लेषण - दृढ़ता, इच्छाशक्ति", "confidence": 82 },
+    { "name": "Smile Pattern", "nameHi": "मुस्कान पैटर्न", "icon": "smile", "analysis": "3-4 वाक्यों में विश्लेषण - सामाजिक करिश्मा, भावनात्मक गर्माहट", "confidence": 85 }
   ],
   "personality": [
-    { "trait": "string", "description": "string", "strength": 85 }
+    { "trait": "लक्षण नाम", "description": "2-3 वाक्यों में क्यों यह लक्षण पहचाना गया - चेहरे की विशेषताओं से जोड़ो", "strength": 85 },
+    { "trait": "लक्षण नाम", "description": "विस्तृत कारण", "strength": 78 },
+    { "trait": "लक्षण नाम", "description": "विस्तृत कारण", "strength": 90 },
+    { "trait": "लक्षण नाम", "description": "विस्तृत कारण", "strength": 72 },
+    { "trait": "लक्षण नाम", "description": "विस्तृत कारण", "strength": 80 }
   ],
-  "energyType": { "type": "string", "description": "string", "color": "amber|emerald|blue|purple|rose" },
-  "leadership": { "style": "string", "description": "string", "strength": 80 },
-  "emotionalNature": { "type": "string", "description": "string" },
-  "lifePatterns": ["string", "string", "string"],
-  "spiritualAdvice": "string"
+  "energyType": { "type": "ऊर्जा प्रकार का नाम", "description": "3-4 वाक्यों में ऊर्जा का विस्तृत वर्णन", "color": "amber|emerald|blue|purple|rose" },
+  "leadership": { "style": "नेतृत्व शैली", "description": "3-4 वाक्यों में कैसे नेतृत्व करते हैं", "strength": 80 },
+  "emotionalNature": { "type": "भावनात्मक प्रकार", "description": "3-4 वाक्यों में भावनात्मक गहराई और स्वभाव" },
+  "lifePatterns": ["विस्तृत सकारात्मक पैटर्न 1", "विस्तृत पैटर्न 2", "विस्तृत पैटर्न 3", "विस्तृत पैटर्न 4"],
+  "spiritualAdvice": "3-4 वाक्यों में व्यक्तिगत आध्यात्मिक सलाह - उनकी विशेषताओं के आधार पर"
 }
 
-महत्वपूर्ण नियम:
-- हमेशा सकारात्मक और प्रेरणादायक रहो
+⚠️ महत्वपूर्ण नियम:
+- चेहरे की वास्तविक विशेषताओं को ध्यान से देखो और उसी के आधार पर विश्लेषण करो
+- हमेशा सकारात्मक, प्रेरणादायक और सशक्त बनाने वाला रहो
 - नकारात्मक भविष्यवाणी बिल्कुल मत करो
-- confidence 65-95 के बीच रखो
-- ये आध्यात्मिक अंतर्दृष्टि हैं, पूर्ण भविष्यवाणी नहीं
+- confidence 65-95 के बीच रखो — बहुत ज्यादा या बहुत कम मत दो
+- प्रत्येक विश्लेषण विस्तृत और व्यक्तिगत होना चाहिए, सामान्य नहीं
+- सामुद्रिक शास्त्र के सिद्धांतों का संदर्भ दो
 
 उपयोगकर्ता: ${userName}, लिंग: ${gender}, धर्म: ${religion}।`
-      : `You are AstroAshi's expert face reading analyst (physiognomy). The user has uploaded a selfie/photo of their face.
+      : `You are AstroAshi's master face reading analyst (physiognomist), deeply trained in ancient Indian Samudrik Shastra, Chinese Mian Xiang facial analysis, Greek physiognomy, and modern personality psychology.
 
-Analyze these facial aspects:
-- Face Shape (oval, round, square, heart, oblong, diamond)
-- Eyes (size, spacing, expression)
-- Forehead (width, height, lines)
-- Jawline (strong, soft, angular)
-- Smile Pattern (warm, reserved, expressive)
+The user has uploaded a photo of their face. Carefully observe and provide a DETAILED, PERSONALIZED analysis.
 
-Respond in STRICT JSON format (exactly this structure):
+🔍 ANALYSIS FRAMEWORK:
+1. **Face Shape** (oval/round/square/heart/oblong/diamond/rectangular) — The foundation of personality
+2. **Eyes** — Size, spacing, depth, expression, brow position — Window to intelligence and soul
+3. **Forehead** — Width, height, lines/markings — Intellectual capacity, thinking style, leadership potential
+4. **Jawline** — Strong/soft/angular/rounded — Determination, willpower, decision-making
+5. **Smile Pattern** — Warm/reserved/expressive/symmetrical — Social charisma, emotional warmth
+6. **Nose Structure** — Shape, bridge, tip — Ambition, wealth connection, leadership
+7. **Lips** — Fullness, shape, expression — Communication style, emotional expression
+8. **Ears** — Size, position, shape — Wisdom, longevity, patience
+
+📊 ANALYSIS DEPTH:
+- Each feature analysis MUST be 3-4 sentences long, SPECIFIC to what you observe
+- Connect facial features to personality traits with reasoning
+- Reference physiognomy principles (Samudrik Shastra, Mian Xiang)
+- Each personality trait description must explain WHY based on observed features
+
+Respond in STRICT JSON format:
 {
-  "faceShape": { "type": "descriptive name", "description": "what it reveals about personality", "confidence": 85 },
+  "faceShape": { "type": "descriptive name with shape type", "description": "3-4 sentences - what this shape reveals based on physiognomy, how it influences personality, relationships, and career path", "confidence": 85 },
   "features": [
-    { "name": "Eyes", "nameHi": "आँखें", "icon": "eyes", "analysis": "detailed positive insight", "confidence": 80 },
-    { "name": "Forehead", "nameHi": "माथा", "icon": "forehead", "analysis": "detailed positive insight", "confidence": 78 },
-    { "name": "Jawline", "nameHi": "जबड़े की रेखा", "icon": "jawline", "analysis": "detailed positive insight", "confidence": 82 },
-    { "name": "Smile Pattern", "nameHi": "मुस्कान पैटर्न", "icon": "smile", "analysis": "detailed positive insight", "confidence": 85 }
+    { "name": "Eyes", "nameHi": "आँखें", "icon": "eyes", "analysis": "3-4 sentences analyzing eye shape, size, spacing. What they reveal about intelligence, intuition, emotional depth, and perception ability", "confidence": 80 },
+    { "name": "Forehead", "nameHi": "माथा", "icon": "forehead", "analysis": "3-4 sentences - forehead width/height analysis, intellectual capacity, thinking patterns, and leadership indicators from Samudrik Shastra", "confidence": 78 },
+    { "name": "Jawline", "nameHi": "जबड़े की रेखा", "icon": "jawline", "analysis": "3-4 sentences - jawline strength, determination level, willpower, decision-making style, and inner resilience", "confidence": 82 },
+    { "name": "Smile Pattern", "nameHi": "मुस्कान पैटर्न", "icon": "smile", "analysis": "3-4 sentences - smile warmth, social charisma, emotional expressiveness, and what it reveals about interpersonal relationships", "confidence": 85 }
   ],
   "personality": [
-    { "trait": "trait name", "description": "why this trait is identified", "strength": 85 },
-    { "trait": "trait name", "description": "why this trait is identified", "strength": 78 },
-    { "trait": "trait name", "description": "why this trait is identified", "strength": 90 },
-    { "trait": "trait name", "description": "why this trait is identified", "strength": 72 }
+    { "trait": "specific trait name", "description": "2-3 sentences WHY this trait is identified - link to specific facial features observed", "strength": 85 },
+    { "trait": "specific trait name", "description": "detailed reasoning connected to facial analysis", "strength": 78 },
+    { "trait": "specific trait name", "description": "detailed reasoning", "strength": 90 },
+    { "trait": "specific trait name", "description": "detailed reasoning", "strength": 72 },
+    { "trait": "specific trait name", "description": "detailed reasoning", "strength": 80 }
   ],
-  "energyType": { "type": "energy archetype name", "description": "description of energy type", "color": "amber|emerald|blue|purple|rose" },
-  "leadership": { "style": "leadership style name", "description": "how they lead and influence", "strength": 80 },
-  "emotionalNature": { "type": "emotional archetype", "description": "description of emotional nature and depth" },
-  "lifePatterns": ["positive pattern 1", "positive pattern 2", "positive pattern 3"],
-  "spiritualAdvice": "personalized uplifting spiritual advice"
+  "energyType": { "type": "specific energy archetype name", "description": "3-4 sentences describing their energy signature, how it manifests in daily life, and how others perceive them", "color": "amber|emerald|blue|purple|rose" },
+  "leadership": { "style": "specific leadership style", "description": "3-4 sentences on how they lead, influence others, and their natural authority style based on facial features", "strength": 80 },
+  "emotionalNature": { "type": "specific emotional archetype", "description": "3-4 sentences on emotional depth, how they process feelings, their emotional intelligence, and relationship patterns" },
+  "lifePatterns": ["detailed positive life pattern 1", "detailed pattern 2", "detailed pattern 3", "detailed pattern 4"],
+  "spiritualAdvice": "3-4 sentences of deeply personalized spiritual advice based on their specific facial features and identified traits"
 }
 
-CRITICAL RULES:
-- All insights MUST be positive and supportive
-- NEVER make negative predictions or observations
-- Confidence values should be between 65-95
-- These are spiritual insights for entertainment and self-reflection, not absolute predictions
-- Be warm, encouraging, and empowering
+⚠️ CRITICAL RULES:
+- CAREFULLY OBSERVE the actual face in the image — your analysis must reflect what you truly see
+- All insights MUST be positive, supportive, and empowering
+- NEVER make negative predictions or critical observations
+- Confidence values: 65-95 range (realistic, not all high)
+- Each analysis section must be DETAILED and SPECIFIC — no generic responses
+- Reference physiognomy traditions when relevant
+- Make the person feel seen, understood, and valued
+- These are spiritual insights for self-reflection, not absolute predictions
 
 User: ${userName}, gender: ${gender}, faith: ${religion}.`;
 
@@ -152,13 +181,15 @@ User: ${userName}, gender: ${gender}, faith: ${religion}.`;
           {
             role: 'user',
             content: [
-              { type: 'text', text: language === 'hi' ? 'कृपया मेरे चेहरे का विश्लेषण करें और व्यक्तित्व अंतर्दृष्टि प्रदान करें।' : 'Please analyze my face and provide personality insights based on physiognomy.' },
+              { type: 'text', text: language === 'hi' 
+                ? 'कृपया मेरे चेहरे का विस्तृत विश्लेषण करें। सामुद्रिक शास्त्र के सिद्धांतों का उपयोग करें और प्रत्येक विशेषता को गहराई से विश्लेषण करें।' 
+                : 'Please provide a thorough, detailed analysis of my face using physiognomy principles. Observe each feature carefully and provide specific, personalized insights based on what you see.' },
               { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${cleanBase64}` } }
             ]
           }
         ],
-        temperature: 0.7,
-        max_tokens: 2500,
+        temperature: 0.75,
+        max_tokens: 4000,
       }),
     });
 
@@ -191,24 +222,25 @@ User: ${userName}, gender: ${gender}, faith: ${religion}.`;
       } catch {
         console.error('Failed to parse AI response:', content);
         parsed = {
-          faceShape: { type: 'Balanced Oval', description: 'Your face shape suggests a harmonious and adaptable personality with natural grace.', confidence: 82 },
+          faceShape: { type: 'Balanced Oval', description: 'Your face shape suggests a harmonious and adaptable personality with natural grace. According to Samudrik Shastra, an oval face indicates emotional balance and natural diplomacy. You possess the ability to navigate different social situations with ease and authenticity.', confidence: 82 },
           features: [
-            { name: 'Eyes', nameHi: 'आँखें', icon: 'eyes', analysis: 'Your eyes reflect depth, intelligence, and a compassionate soul.', confidence: 85 },
-            { name: 'Forehead', nameHi: 'माथा', icon: 'forehead', analysis: 'A well-proportioned forehead indicates strong analytical abilities and wisdom.', confidence: 78 },
-            { name: 'Jawline', nameHi: 'जबड़े की रेखा', icon: 'jawline', analysis: 'Your jawline suggests determination and inner strength.', confidence: 80 },
-            { name: 'Smile Pattern', nameHi: 'मुस्कान पैटर्न', icon: 'smile', analysis: 'Your smile radiates warmth and genuine kindness.', confidence: 88 }
+            { name: 'Eyes', nameHi: 'आँखें', icon: 'eyes', analysis: 'Your eyes reflect remarkable depth, intelligence, and a compassionate soul. The brightness and expressiveness suggest strong intuitive abilities and emotional intelligence. In physiognomy, such eyes indicate someone who can see beyond surface appearances and connect with deeper truths.', confidence: 85 },
+            { name: 'Forehead', nameHi: 'माथा', icon: 'forehead', analysis: 'A well-proportioned forehead indicates strong analytical abilities, wisdom, and intellectual curiosity. According to Mian Xiang principles, your forehead suggests excellent memory and the ability to learn from experience. You process information thoroughly before making decisions.', confidence: 78 },
+            { name: 'Jawline', nameHi: 'जबड़े की रेखा', icon: 'jawline', analysis: 'Your jawline reveals determination, inner strength, and resilience. In Samudrik Shastra, this structure indicates someone who stands firm in their convictions while remaining open to new perspectives. Your willpower is a quiet but powerful force.', confidence: 80 },
+            { name: 'Smile Pattern', nameHi: 'मुस्कान पैटर्न', icon: 'smile', analysis: 'Your smile radiates genuine warmth, kindness, and approachability. The natural ease of your expression suggests high social intelligence and the ability to make others feel comfortable. People are naturally drawn to your authentic warmth and positive energy.', confidence: 88 }
           ],
           personality: [
-            { trait: 'Intuitive', description: 'You naturally sense the emotions and needs of others.', strength: 85 },
-            { trait: 'Resilient', description: 'You possess remarkable inner strength during challenges.', strength: 82 },
-            { trait: 'Creative', description: 'Your mind generates unique solutions and ideas.', strength: 78 },
-            { trait: 'Empathetic', description: 'You connect deeply with those around you.', strength: 90 }
+            { trait: 'Intuitive Wisdom', description: 'Your eye depth and forehead proportions together suggest powerful intuition. You naturally sense the emotions and needs of others before they express them, making you an invaluable friend and advisor.', strength: 85 },
+            { trait: 'Quiet Resilience', description: 'Your jawline and overall facial structure indicate remarkable inner strength. You possess the ability to weather life\'s storms with grace and emerge stronger from challenges.', strength: 82 },
+            { trait: 'Creative Intelligence', description: 'The combination of your forehead width and eye expressiveness suggests a mind that generates unique solutions and innovative ideas. You think differently and that is your superpower.', strength: 78 },
+            { trait: 'Empathetic Leadership', description: 'Your smile warmth combined with forehead indicators reveals someone who leads through understanding and compassion. People follow you because they trust your judgment and feel valued.', strength: 90 },
+            { trait: 'Spiritual Depth', description: 'The overall harmony of your facial features suggests a deep connection to spiritual wisdom and inner peace. You seek meaning beyond the material and inspire others to do the same.', strength: 75 }
           ],
-          energyType: { type: 'The Harmonizer', description: 'You bring balance and peace to every situation.', color: 'amber' },
-          leadership: { style: 'Inspirational Leader', description: 'You lead through empathy and vision, inspiring others naturally.', strength: 80 },
-          emotionalNature: { type: 'Deep Feeler', description: 'You experience emotions with great depth, which fuels your compassion and creativity.' },
-          lifePatterns: ['Growth through meaningful connections', 'Success through persistent dedication', 'Joy found in creative expression'],
-          spiritualAdvice: 'Trust your inner wisdom — it has guided you well and will continue to light your path forward.'
+          energyType: { type: 'The Harmonizer', description: 'You carry a naturally balancing energy that brings peace and clarity to every situation. People feel calmer and more centered in your presence. Your energy signature combines warmth with wisdom, creating a safe space for authentic connection and growth.', color: 'amber' },
+          leadership: { style: 'Inspirational Visionary', description: 'You lead not through authority but through authentic inspiration. Your empathetic nature allows you to understand what motivates each individual, and your wisdom helps you guide teams toward meaningful goals. People follow you because they believe in your vision.', strength: 80 },
+          emotionalNature: { type: 'Deep Feeler with Balanced Expression', description: 'You experience emotions with great depth and richness, which fuels your compassion and creativity. However, you also possess the wisdom to process feelings constructively. Your emotional intelligence allows you to navigate complex interpersonal dynamics with grace and understanding.' },
+          lifePatterns: ['Growth through meaningful connections and deep relationships', 'Success achieved through persistent dedication and authentic effort', 'Joy discovered in creative expression and helping others grow', 'Wisdom gained from life experiences that strengthen your spiritual foundation'],
+          spiritualAdvice: 'Trust your remarkable inner wisdom — it has guided you well through life\'s journey and will continue to illuminate your path forward. Your facial features reveal a soul rich with compassion and strength. Embrace daily meditation or quiet reflection to further sharpen your powerful intuition, and remember that your authentic warmth is a gift that transforms the lives around you.'
         };
       }
     }

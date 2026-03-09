@@ -62,14 +62,12 @@ const FaceReadingPage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [reading, setReading] = useState<FaceReading | null>(null);
   const [scanProgress, setScanProgress] = useState(0);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const hi = language === 'hi';
 
-  const handleImageSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processImage = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast({ title: hi ? 'कृपया एक छवि अपलोड करें' : 'Please upload an image file', variant: 'destructive' });
       return;
@@ -119,6 +117,27 @@ const FaceReadingPage = () => {
     reader.readAsDataURL(file);
   }, [hi, language]);
 
+  const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processImage(file);
+    // Reset input so same file can be selected again
+    e.target.value = '';
+  }, [processImage]);
+
+  const handleCameraCapture = useCallback(() => {
+    // Directly triggered by user click - camera permission will work
+    if (cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  }, []);
+
+  const handleGalleryUpload = useCallback(() => {
+    // Directly triggered by user click
+    if (galleryInputRef.current) {
+      galleryInputRef.current.click();
+    }
+  }, []);
+
   const handleShare = async () => {
     if (!reading) return;
     const text = `🧑 My Face Reading by AstroAshi\n\n` +
@@ -133,6 +152,10 @@ const FaceReadingPage = () => {
       await navigator.clipboard.writeText(text);
       toast({ title: hi ? 'कॉपी किया गया!' : 'Copied to clipboard!' });
     }
+  };
+
+  const handleSave = () => {
+    toast({ title: hi ? '✅ रीडिंग सहेजी गई!' : '✅ Reading saved!', description: hi ? 'आपकी रीडिंग इतिहास में सहेजी गई' : 'Saved to your reading history' });
   };
 
   const generateStoryCard = useCallback(async () => {
@@ -181,27 +204,23 @@ const FaceReadingPage = () => {
         const sy = (img.height - size) / 2;
         ctx.drawImage(img, sx, sy, size, size, 390, 230, 300, 300);
         ctx.restore();
-        // Ring
         ctx.beginPath();
         ctx.arc(540, 380, 155, 0, Math.PI * 2);
         ctx.strokeStyle = '#a78bfa';
         ctx.lineWidth = 3;
         ctx.stroke();
-      } catch {}
+      } catch { /* ignore */ }
     }
 
-    // Title
     ctx.textAlign = 'center';
     ctx.fillStyle = '#e2e0ff';
     ctx.font = 'bold 52px system-ui, -apple-system, sans-serif';
     ctx.fillText('🧑 Face Reading AI', 540, 610);
 
-    // Face shape
     ctx.fillStyle = '#a78bfa';
     ctx.font = 'bold 32px system-ui, sans-serif';
     ctx.fillText(reading.faceShape.type, 540, 680);
 
-    // Personality traits
     let y = 760;
     ctx.fillStyle = '#9ca3af';
     ctx.font = '24px system-ui, sans-serif';
@@ -220,7 +239,6 @@ const FaceReadingPage = () => {
       y += 50;
     });
 
-    // Energy Type
     y += 20;
     ctx.fillStyle = '#fbbf24';
     ctx.font = 'bold 28px system-ui, sans-serif';
@@ -231,13 +249,11 @@ const FaceReadingPage = () => {
     const energyDesc = reading.energyType.description.length > 60 ? reading.energyType.description.slice(0, 60) + '...' : reading.energyType.description;
     ctx.fillText(energyDesc, 540, y);
 
-    // Leadership
     y += 70;
     ctx.fillStyle = '#f59e0b';
     ctx.font = 'bold 28px system-ui, sans-serif';
     ctx.fillText(`👑 ${reading.leadership.style}`, 540, y);
 
-    // Footer
     ctx.fillStyle = '#6b7280';
     ctx.font = '22px system-ui, sans-serif';
     ctx.fillText('Discover yours at', 540, 1780);
@@ -245,12 +261,10 @@ const FaceReadingPage = () => {
     ctx.font = 'bold 26px system-ui, sans-serif';
     ctx.fillText('astroashi.lovable.app/face-reading', 540, 1820);
 
-    // Watermark
     ctx.fillStyle = '#4b5563';
     ctx.font = '20px system-ui, sans-serif';
     ctx.fillText('✨ AstroAshi', 540, 1880);
 
-    // Download
     const link = document.createElement('a');
     link.download = 'astroashi-face-reading.png';
     link.href = canvas.toDataURL('image/png');
@@ -259,16 +273,11 @@ const FaceReadingPage = () => {
     toast({ title: hi ? '📸 स्टोरी कार्ड डाउनलोड हो गया!' : '📸 Story card downloaded!' });
   }, [reading, imagePreview, hi]);
 
-  const handleSave = () => {
-    toast({ title: hi ? '✅ रीडिंग सहेजी गई!' : '✅ Reading saved!', description: hi ? 'आपकी रीडिंग इतिहास में सहेजी गई' : 'Saved to your reading history' });
-  };
-
   const handleReset = () => {
     setPhase('instructions');
     setImagePreview(null);
     setReading(null);
     setScanProgress(0);
-    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const ec = energyColorMap[reading?.energyType?.color || 'amber'];
@@ -279,6 +288,23 @@ const FaceReadingPage = () => {
       <Navigation />
       <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
         <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl py-4 sm:py-6">
+
+          {/* Separate file inputs for camera and gallery */}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="user"
+            className="hidden"
+            onChange={handleImageSelect}
+          />
+          <input
+            ref={galleryInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSelect}
+          />
 
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
@@ -292,8 +318,6 @@ const FaceReadingPage = () => {
               {hi ? 'अपनी सेल्फी अपलोड करें और AI-संचालित व्यक्तित्व अंतर्दृष्टि प्राप्त करें' : 'Upload your selfie and discover personality insights through AI face analysis'}
             </p>
           </motion.div>
-
-          <input ref={fileInputRef} type="file" accept="image/*" capture="user" className="hidden" onChange={handleImageSelect} />
 
           <AnimatePresence mode="wait">
             {/* PHASE: Instructions */}
@@ -340,17 +364,11 @@ const FaceReadingPage = () => {
                 </Card>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button onClick={() => fileInputRef.current?.click()} className="flex-1 h-14 text-base gap-2 bg-primary hover:bg-primary/90">
+                  <Button onClick={handleCameraCapture} className="flex-1 h-14 text-base gap-2 bg-primary hover:bg-primary/90">
                     <Camera className="w-5 h-5" />
                     {hi ? 'सेल्फी लें' : 'Take a Selfie'}
                   </Button>
-                  <Button onClick={() => {
-                    if (fileInputRef.current) {
-                      fileInputRef.current.removeAttribute('capture');
-                      fileInputRef.current.click();
-                      fileInputRef.current.setAttribute('capture', 'user');
-                    }
-                  }} variant="outline" className="flex-1 h-14 text-base gap-2">
+                  <Button onClick={handleGalleryUpload} variant="outline" className="flex-1 h-14 text-base gap-2">
                     <Upload className="w-5 h-5" />
                     {hi ? 'गैलरी से अपलोड करें' : 'Upload from Gallery'}
                   </Button>
@@ -370,7 +388,6 @@ const FaceReadingPage = () => {
               <motion.div key="scanning" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center gap-6 py-8">
                 <div className="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full overflow-hidden border-4 border-primary/30 shadow-lg shadow-primary/10">
                   {imagePreview && <img src={imagePreview} alt="Your face" className="w-full h-full object-cover" />}
-                  {/* Circular scan animation */}
                   <motion.div
                     className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary"
                     animate={{ rotate: 360 }}

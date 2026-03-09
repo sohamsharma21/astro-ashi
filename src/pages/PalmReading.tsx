@@ -47,14 +47,12 @@ const PalmReadingPage = () => {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [reading, setReading] = useState<PalmReading | null>(null);
   const [scanProgress, setScanProgress] = useState(0);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
 
   const hi = language === 'hi';
 
-  const handleImageSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const processImage = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast({ title: hi ? 'कृपया एक छवि अपलोड करें' : 'Please upload an image file', variant: 'destructive' });
       return;
@@ -71,7 +69,6 @@ const PalmReadingPage = () => {
       setPhase('scanning');
       setScanProgress(0);
 
-      // Animate scan progress
       const interval = setInterval(() => {
         setScanProgress(prev => {
           if (prev >= 90) { clearInterval(interval); return 90; }
@@ -105,12 +102,30 @@ const PalmReadingPage = () => {
     reader.readAsDataURL(file);
   }, [hi, language]);
 
+  const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processImage(file);
+    e.target.value = '';
+  }, [processImage]);
+
+  const handleCameraCapture = useCallback(() => {
+    if (cameraInputRef.current) {
+      cameraInputRef.current.click();
+    }
+  }, []);
+
+  const handleGalleryUpload = useCallback(() => {
+    if (galleryInputRef.current) {
+      galleryInputRef.current.click();
+    }
+  }, []);
+
   const handleShare = async () => {
     if (!reading) return;
     const text = `🖐️ My Palm Reading by AstroAshi\n\n` +
       `Personality: ${reading.personality.join(', ')}\n` +
       `Strengths: ${reading.strengths.join(', ')}\n\n` +
-      `${reading.spiritualAdvice}\n\nTry yours at astroashi.vercel.app`;
+      `${reading.spiritualAdvice}\n\nTry yours at astroashi.lovable.app/palm-reading`;
     if (navigator.share) {
       await navigator.share({ title: 'My Palm Reading', text });
     } else {
@@ -128,7 +143,6 @@ const PalmReadingPage = () => {
     setImagePreview(null);
     setReading(null);
     setScanProgress(0);
-    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
@@ -137,6 +151,23 @@ const PalmReadingPage = () => {
       <Navigation />
       <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
         <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl py-4 sm:py-6">
+
+          {/* Separate file inputs for camera and gallery */}
+          <input
+            ref={cameraInputRef}
+            type="file"
+            accept="image/*"
+            capture="environment"
+            className="hidden"
+            onChange={handleImageSelect}
+          />
+          <input
+            ref={galleryInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageSelect}
+          />
 
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
@@ -150,8 +181,6 @@ const PalmReadingPage = () => {
               {hi ? 'अपनी हथेली की तस्वीर अपलोड करें और AI-संचालित आध्यात्मिक अंतर्दृष्टि प्राप्त करें' : 'Upload a photo of your palm and receive AI-powered spiritual insights'}
             </p>
           </motion.div>
-
-          <input ref={fileInputRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageSelect} />
 
           <AnimatePresence mode="wait">
             {/* PHASE: Instructions */}
@@ -178,11 +207,11 @@ const PalmReadingPage = () => {
                 </Card>
 
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Button onClick={() => fileInputRef.current?.click()} className="flex-1 h-14 text-base gap-2 bg-primary hover:bg-primary/90">
+                  <Button onClick={handleCameraCapture} className="flex-1 h-14 text-base gap-2 bg-primary hover:bg-primary/90">
                     <Camera className="w-5 h-5" />
                     {hi ? 'कैमरा से कैप्चर करें' : 'Capture from Camera'}
                   </Button>
-                  <Button onClick={() => { if (fileInputRef.current) { fileInputRef.current.removeAttribute('capture'); fileInputRef.current.click(); fileInputRef.current.setAttribute('capture', 'environment'); } }} variant="outline" className="flex-1 h-14 text-base gap-2">
+                  <Button onClick={handleGalleryUpload} variant="outline" className="flex-1 h-14 text-base gap-2">
                     <Upload className="w-5 h-5" />
                     {hi ? 'गैलरी से अपलोड करें' : 'Upload from Gallery'}
                   </Button>
@@ -202,7 +231,6 @@ const PalmReadingPage = () => {
               <motion.div key="scanning" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} className="flex flex-col items-center gap-6 py-8">
                 <div className="relative w-64 h-64 rounded-2xl overflow-hidden border-2 border-primary/30">
                   {imagePreview && <img src={imagePreview} alt="Your palm" className="w-full h-full object-cover" />}
-                  {/* Scan line animation */}
                   <motion.div
                     className="absolute left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent"
                     animate={{ top: ['0%', '100%', '0%'] }}
@@ -233,7 +261,6 @@ const PalmReadingPage = () => {
             {phase === 'results' && reading && (
               <motion.div key="results" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
 
-                {/* Palm preview + shape */}
                 <Card className="p-4 bg-card/60 backdrop-blur border-border/50 flex gap-4 items-center">
                   {imagePreview && (
                     <div className="w-20 h-20 rounded-xl overflow-hidden border border-border/50 shrink-0">
@@ -246,7 +273,6 @@ const PalmReadingPage = () => {
                   </div>
                 </Card>
 
-                {/* Palm Lines */}
                 <div className="space-y-3">
                   <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <Hand className="w-4 h-4 text-primary" />
@@ -268,7 +294,6 @@ const PalmReadingPage = () => {
                   ))}
                 </div>
 
-                {/* Personality + Strengths */}
                 <div className="grid grid-cols-2 gap-3">
                   <Card className="p-4 bg-card/60 border-border/50">
                     <h4 className="text-xs font-semibold text-primary mb-2">{hi ? '🧠 व्यक्तित्व लक्षण' : '🧠 Personality Traits'}</h4>
@@ -288,13 +313,11 @@ const PalmReadingPage = () => {
                   </Card>
                 </div>
 
-                {/* Emotional Nature */}
                 <Card className="p-4 bg-card/60 border-border/50">
                   <h4 className="text-xs font-semibold text-pink-400 mb-2">{hi ? '💖 भावनात्मक स्वभाव' : '💖 Emotional Nature'}</h4>
                   <p className="text-xs text-muted-foreground leading-relaxed">{reading.emotionalNature}</p>
                 </Card>
 
-                {/* Life Patterns */}
                 <Card className="p-4 bg-card/60 border-border/50">
                   <h4 className="text-xs font-semibold text-blue-400 mb-2">{hi ? '🔮 जीवन पैटर्न' : '🔮 Life Patterns'}</h4>
                   <div className="space-y-1.5">
@@ -304,7 +327,6 @@ const PalmReadingPage = () => {
                   </div>
                 </Card>
 
-                {/* Spiritual Advice */}
                 <Card className="p-5 bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
                   <h4 className="text-sm font-semibold text-primary mb-2 flex items-center gap-2">
                     <Sparkles className="w-4 h-4" /> {hi ? 'आध्यात्मिक सलाह' : 'Spiritual Advice'}
@@ -312,7 +334,6 @@ const PalmReadingPage = () => {
                   <p className="text-sm text-foreground/80 leading-relaxed italic">"{reading.spiritualAdvice}"</p>
                 </Card>
 
-                {/* Action Buttons */}
                 <div className="flex gap-3">
                   <Button onClick={handleSave} variant="outline" className="flex-1 gap-2">
                     <Bookmark className="w-4 h-4" /> {hi ? 'सहेजें' : 'Save'}
@@ -326,7 +347,7 @@ const PalmReadingPage = () => {
                 </div>
 
                 <p className="text-center text-[10px] text-muted-foreground/60">
-                  {hi ? '⚡ ये अंतर्दृष्टि आध्यात्मिक मार्गदर्शन हैं, पूर्ण भविष्यवाणियां नहीं।' : '⚡ These insights are spiritual guidance, not absolute predictions.'}
+                  {hi ? '⚠️ ये अंतर्दृष्टि AI-जनित हैं और केवल मनोरंजन व आत्म-चिंतन के लिए हैं।' : '⚠️ These insights are AI-generated and intended for entertainment and self-reflection only.'}
                 </p>
               </motion.div>
             )}
