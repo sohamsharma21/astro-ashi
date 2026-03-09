@@ -1,6 +1,8 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { Loader2, Star, Gem, Palette, Hash, CalendarDays, BookOpen } from 'lucide-react';
+import type { StructuredInsights } from '@/hooks/useKundli';
 
 interface PlanetPosition {
   planet: string;
@@ -23,176 +25,202 @@ interface KundliTabsProps {
   planetPositions: PlanetPosition[];
   houses: House[];
   insights?: string;
+  structured?: StructuredInsights | null;
   language: 'en' | 'hi';
   loadingInsights?: boolean;
 }
 
+const planetEmoji: Record<string, string> = {
+  Sun: '☀️', Moon: '🌙', Mercury: '💫', Venus: '💖', Mars: '🔴',
+  Jupiter: '🟡', Saturn: '🪐', Rahu: '🐍', Ketu: '🔮',
+};
+
 const KundliTabs = ({
-  name,
-  birthDate,
-  birthTime,
-  birthPlace,
-  ascendant,
-  planetPositions,
-  houses,
-  insights,
-  language,
-  loadingInsights
+  name, birthDate, birthTime, birthPlace, ascendant,
+  planetPositions, houses, insights, structured, language, loadingInsights,
 }: KundliTabsProps) => {
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+  const hi = language === 'hi';
+
+  const formatDate = (date: string) =>
+    new Date(date).toLocaleDateString(hi ? 'hi-IN' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  // Signs summary
+  const moonSign = planetPositions.find(p => p.planet === 'Moon')?.sign || '';
+  const sunSign = planetPositions.find(p => p.planet === 'Sun')?.sign || '';
 
   return (
-    <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="grid w-full grid-cols-4 cosmic-card">
-        <TabsTrigger value="overview" className="cosmic-button-outline">
-          {language === 'en' ? 'Overview' : 'अवलोकन'}
-        </TabsTrigger>
-        <TabsTrigger value="planets" className="cosmic-button-outline">
-          {language === 'en' ? 'Planets' : 'ग्रह'}
-        </TabsTrigger>
-        <TabsTrigger value="houses" className="cosmic-button-outline">
-          {language === 'en' ? 'Houses' : 'भाव'}
-        </TabsTrigger>
-        <TabsTrigger value="insights" className="cosmic-button-outline">
-          {language === 'en' ? 'AI Insights' : 'AI अंतर्दृष्टि'}
-        </TabsTrigger>
-      </TabsList>
+    <div className="space-y-6">
+      {/* Quick Summary Cards */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: hi ? 'सूर्य राशि' : 'Sun Sign', value: structured?.summary?.zodiacSign || sunSign, icon: '☀️', desc: structured?.summary?.zodiacDescription },
+          { label: hi ? 'चंद्र राशि' : 'Moon Sign', value: structured?.summary?.moonSign || moonSign, icon: '🌙', desc: structured?.summary?.moonSignDescription },
+          { label: hi ? 'लग्न राशि' : 'Rising Sign', value: structured?.summary?.risingSign || ascendant, icon: '⬆️', desc: structured?.summary?.risingSignDescription },
+          { label: hi ? 'तत्व' : 'Element', value: structured?.summary?.element || '—', icon: '🔥', desc: structured?.summary?.rulingPlanet ? `${hi ? 'शासक' : 'Ruler'}: ${structured.summary.rulingPlanet}` : undefined },
+        ].map((item, i) => (
+          <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}>
+            <Card className="p-3 sm:p-4 border-primary/20 bg-card/60 backdrop-blur text-center h-full">
+              <span className="text-2xl">{item.icon}</span>
+              <p className="text-xs text-muted-foreground mt-1">{item.label}</p>
+              <p className="font-bold text-foreground text-sm sm:text-base">{item.value}</p>
+              {item.desc && <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-2">{item.desc}</p>}
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
-      <TabsContent value="overview" className="mt-6">
-        <Card className="cosmic-card p-6">
-          <h3 className="text-2xl font-bold text-gradient-gold mb-6">
-            {language === 'en' ? 'Birth Details' : 'जन्म विवरण'}
-          </h3>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-cosmic-text/60">
-                  {language === 'en' ? 'Name' : 'नाम'}
-                </p>
-                <p className="text-lg font-semibold text-cosmic-gold">{name}</p>
-              </div>
-              <div>
-                <p className="text-sm text-cosmic-text/60">
-                  {language === 'en' ? 'Date of Birth' : 'जन्म तिथि'}
-                </p>
-                <p className="text-lg font-semibold text-cosmic-text">{formatDate(birthDate)}</p>
-              </div>
-              <div>
-                <p className="text-sm text-cosmic-text/60">
-                  {language === 'en' ? 'Time of Birth' : 'जन्म समय'}
-                </p>
-                <p className="text-lg font-semibold text-cosmic-text">{birthTime}</p>
-              </div>
-              <div>
-                <p className="text-sm text-cosmic-text/60">
-                  {language === 'en' ? 'Place of Birth' : 'जन्म स्थान'}
-                </p>
-                <p className="text-lg font-semibold text-cosmic-text">{birthPlace}</p>
-              </div>
+      {/* Birth Details */}
+      <Card className="p-5 border-primary/20 bg-card/60 backdrop-blur">
+        <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-primary" />
+          {hi ? 'जन्म विवरण' : 'Birth Details'}
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+          {[
+            { l: hi ? 'नाम' : 'Name', v: name },
+            { l: hi ? 'जन्म तिथि' : 'Date', v: formatDate(birthDate) },
+            { l: hi ? 'जन्म समय' : 'Time', v: birthTime },
+            { l: hi ? 'जन्म स्थान' : 'Place', v: birthPlace },
+          ].map((f, i) => (
+            <div key={i}>
+              <p className="text-xs text-muted-foreground">{f.l}</p>
+              <p className="font-semibold text-foreground">{f.v}</p>
             </div>
-            <div className="pt-4 border-t border-cosmic-gold/20">
-              <p className="text-sm text-cosmic-text/60 mb-2">
-                {language === 'en' ? 'Ascendant (Lagna)' : 'लग्न'}
-              </p>
-              <p className="text-2xl font-bold text-gradient-gold">{ascendant}</p>
-            </div>
-          </div>
-        </Card>
-      </TabsContent>
+          ))}
+        </div>
+      </Card>
 
-      <TabsContent value="planets" className="mt-6">
-        <Card className="cosmic-card p-6">
-          <h3 className="text-2xl font-bold text-gradient-gold mb-6">
-            {language === 'en' ? 'Planetary Positions' : 'ग्रह स्थिति'}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {planetPositions.map((planet) => (
-              <div
-                key={planet.planet}
-                className="p-4 bg-cosmic-purple/10 rounded-lg border border-cosmic-gold/20 hover:border-cosmic-gold/40 transition-colors"
-              >
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-semibold text-cosmic-gold">
-                    {planet.planet}
-                  </span>
-                  <span className="text-sm text-cosmic-text/60">
-                    {planet.degree.toFixed(2)}°
-                  </span>
-                </div>
-                <p className="text-cosmic-pink mt-1">{planet.sign}</p>
+      {/* Planet Positions Table */}
+      <Card className="p-5 border-primary/20 bg-card/60 backdrop-blur">
+        <h3 className="font-bold text-foreground mb-4 flex items-center gap-2">
+          <Star className="w-4 h-4 text-primary" />
+          {hi ? 'ग्रह स्थिति' : 'Planet Positions'}
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          {planetPositions.map((p, i) => (
+            <motion.div key={p.planet} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
+              className="flex items-center justify-between p-3 rounded-xl bg-background/50 border border-border/40"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{planetEmoji[p.planet] || '⭐'}</span>
+                <span className="font-medium text-foreground text-sm">{p.planet}</span>
               </div>
-            ))}
-          </div>
-        </Card>
-      </TabsContent>
+              <div className="text-right">
+                <span className="text-sm font-semibold text-primary">{p.sign}</span>
+                <span className="text-xs text-muted-foreground ml-1.5">{p.degree.toFixed(1)}°</span>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Card>
 
-      <TabsContent value="houses" className="mt-6">
-        <Card className="cosmic-card p-6">
-          <h3 className="text-2xl font-bold text-gradient-gold mb-6">
-            {language === 'en' ? 'House Details' : 'भाव विवरण'}
+      {/* House Details */}
+      <Card className="p-5 border-primary/20 bg-card/60 backdrop-blur">
+        <h3 className="font-bold text-foreground mb-4">{hi ? 'भाव विवरण' : 'House Details'}</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5">
+          {houses.map((h) => (
+            <div key={h.house} className="p-3 rounded-xl bg-background/50 border border-border/40">
+              <div className="flex justify-between items-center">
+                <Badge variant="outline" className="text-xs">{hi ? `भाव ${h.house}` : `H${h.house}`}</Badge>
+                <span className="text-xs font-semibold text-primary">{h.sign}</span>
+              </div>
+              {h.planets.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-1.5">{h.planets.map(p => planetEmoji[p] || p).join(' ')}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* AI Interpretation Cards */}
+      {loadingInsights ? (
+        <Card className="p-8 border-primary/20 bg-card/60 backdrop-blur flex flex-col items-center gap-3">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground text-sm">{hi ? 'AI अंतर्दृष्टि उत्पन्न हो रही है...' : 'Generating AI insights...'}</p>
+        </Card>
+      ) : structured ? (
+        <div className="space-y-4">
+          <h3 className="text-xl font-bold text-foreground text-center">
+            {hi ? '🔮 AI अंतर्दृष्टि' : '🔮 AI Insights'}
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {houses.map((house) => (
-              <div
-                key={house.house}
-                className="p-4 bg-cosmic-purple/10 rounded-lg border border-cosmic-gold/20"
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-lg font-semibold text-cosmic-gold">
-                    {language === 'en' ? `House ${house.house}` : `भाव ${house.house}`}
-                  </span>
-                  <span className="text-sm text-cosmic-pink">{house.sign}</span>
-                </div>
-                {house.planets.length > 0 && (
-                  <div className="mt-2">
-                    <p className="text-xs text-cosmic-text/60 mb-1">
-                      {language === 'en' ? 'Planets:' : 'ग्रह:'}
-                    </p>
-                    <p className="text-sm text-cosmic-text">
-                      {house.planets.join(', ')}
-                    </p>
+
+          {/* Interpretation cards */}
+          {[structured.personality, structured.career, structured.relationships, structured.challenges, structured.spiritual].map((section, i) => (
+            section && (
+              <motion.div key={i} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
+                <Card className="p-5 border-primary/20 bg-card/60 backdrop-blur">
+                  <h4 className="font-bold text-foreground text-lg flex items-center gap-2 mb-3">
+                    <span className="text-xl">{section.emoji}</span>
+                    {section.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed mb-3">{section.description}</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {('traits' in section ? section.traits :
+                      'strengths' in section ? section.strengths :
+                      'areas' in section ? section.areas :
+                      'practices' in section ? section.practices :
+                      'compatibleSigns' in section ? section.compatibleSigns : []
+                    )?.map((tag: string, j: number) => (
+                      <Badge key={j} variant="secondary" className="text-xs">{tag}</Badge>
+                    ))}
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </Card>
-      </TabsContent>
+                  {'bestFields' in section && section.bestFields && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {section.bestFields.map((f: string, j: number) => (
+                        <Badge key={j} variant="outline" className="text-xs">💼 {f}</Badge>
+                      ))}
+                    </div>
+                  )}
+                  {'remedies' in section && section.remedies && (
+                    <div className="mt-3 p-3 rounded-lg bg-primary/5 border border-primary/10">
+                      <p className="text-xs font-semibold text-primary mb-1">{hi ? 'उपाय:' : 'Remedies:'}</p>
+                      <ul className="text-xs text-muted-foreground space-y-1">
+                        {section.remedies.map((r: string, j: number) => (
+                          <li key={j}>✦ {r}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  {'loveStyle' in section && section.loveStyle && (
+                    <p className="mt-2 text-xs text-primary font-medium">💝 {hi ? 'प्रेम शैली' : 'Love Style'}: {section.loveStyle}</p>
+                  )}
+                </Card>
+              </motion.div>
+            )
+          ))}
 
-      <TabsContent value="insights" className="mt-6">
-        <Card className="cosmic-card p-6">
-          <h3 className="text-2xl font-bold text-gradient-gold mb-6">
-            {language === 'en' ? 'AI-Powered Astrological Insights' : 'AI-संचालित ज्योतिषीय अंतर्दृष्टि'}
-          </h3>
-          {loadingInsights ? (
-            <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-cosmic-gold" />
-              <span className="ml-3 text-cosmic-text/60">
-                {language === 'en' ? 'Generating insights...' : 'अंतर्दृष्टि उत्पन्न की जा रही है...'}
-              </span>
-            </div>
-          ) : insights ? (
-            <div className="prose prose-invert max-w-none">
-              <div className="text-cosmic-text whitespace-pre-wrap leading-relaxed">
-                {insights}
+          {/* Lucky Factors */}
+          {structured.luckyFactors && (
+            <Card className="p-5 border-primary/20 bg-card/60 backdrop-blur">
+              <h4 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                <span className="text-xl">🍀</span>
+                {hi ? 'भाग्यशाली कारक' : 'Lucky Factors'}
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {[
+                  { icon: <Hash className="w-4 h-4" />, l: hi ? 'अंक' : 'Number', v: structured.luckyFactors.number },
+                  { icon: <Palette className="w-4 h-4" />, l: hi ? 'रंग' : 'Color', v: structured.luckyFactors.color },
+                  { icon: <CalendarDays className="w-4 h-4" />, l: hi ? 'दिन' : 'Day', v: structured.luckyFactors.day },
+                  { icon: <Gem className="w-4 h-4" />, l: hi ? 'रत्न' : 'Gem', v: structured.luckyFactors.gemstone },
+                  { icon: <Star className="w-4 h-4" />, l: hi ? 'मंत्र' : 'Mantra', v: structured.luckyFactors.mantra },
+                ].map((f, i) => (
+                  <div key={i} className="text-center p-2.5 rounded-xl bg-background/50 border border-border/40">
+                    <div className="flex justify-center text-primary mb-1">{f.icon}</div>
+                    <p className="text-[10px] text-muted-foreground">{f.l}</p>
+                    <p className="text-xs font-bold text-foreground">{f.v}</p>
+                  </div>
+                ))}
               </div>
-            </div>
-          ) : (
-            <p className="text-cosmic-text/60 text-center py-12">
-              {language === 'en' 
-                ? 'AI insights will appear here once generated.' 
-                : 'एक बार उत्पन्न होने के बाद AI अंतर्दृष्टि यहां दिखाई देगी।'}
-            </p>
+            </Card>
           )}
+        </div>
+      ) : insights ? (
+        <Card className="p-5 border-primary/20 bg-card/60 backdrop-blur">
+          <h3 className="font-bold text-foreground mb-3">🔮 {hi ? 'AI अंतर्दृष्टि' : 'AI Insights'}</h3>
+          <div className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{insights}</div>
         </Card>
-      </TabsContent>
-    </Tabs>
+      ) : null}
+    </div>
   );
 };
 
