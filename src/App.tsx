@@ -80,6 +80,7 @@ const App = () => (
         <FloatingPlanets />
         <Toaster />
         <Sonner />
+        <PWAInstallPrompt />
         <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
             <Routes>
