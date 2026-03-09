@@ -85,23 +85,37 @@ const Meditation = () => {
     };
   }, []);
 
-  // Stop ambient when session completes
+  // Log completion & stop ambient when session completes
   useEffect(() => {
-    if (progress >= 100 && activeAmbient) {
-      // Fade out after completion
-      const engine = engineRef.current;
-      const fadeOut = setInterval(() => {
-        const cur = engine.getVolume();
-        if (cur <= 0.02) {
-          engine.stop();
-          setActiveAmbient(null);
-          clearInterval(fadeOut);
-          engine.setVolume(ambientVolume / 100); // restore
-        } else {
-          engine.setVolume(cur - 0.02);
+    if (progress >= 100) {
+      // Log meditation to spiritual_growth_logs
+      const logMeditation = async () => {
+        const { user } = (await supabase.auth.getUser()).data;
+        if (user) {
+          const today = new Date().toISOString().split('T')[0];
+          await supabase.from('spiritual_growth_logs').upsert(
+            { user_id: user.id, activity_type: 'meditation', completed_date: today },
+            { onConflict: 'user_id,activity_type,completed_date' }
+          ).then(() => {});
         }
-      }, 100);
-      return () => clearInterval(fadeOut);
+      };
+      logMeditation();
+
+      if (activeAmbient) {
+        const engine = engineRef.current;
+        const fadeOut = setInterval(() => {
+          const cur = engine.getVolume();
+          if (cur <= 0.02) {
+            engine.stop();
+            setActiveAmbient(null);
+            clearInterval(fadeOut);
+            engine.setVolume(ambientVolume / 100);
+          } else {
+            engine.setVolume(cur - 0.02);
+          }
+        }, 100);
+        return () => clearInterval(fadeOut);
+      }
     }
   }, [progress >= 100]);
 
