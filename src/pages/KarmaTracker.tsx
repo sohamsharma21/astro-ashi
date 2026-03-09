@@ -92,7 +92,7 @@ const KarmaTracker = () => {
       <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
         <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl py-4 sm:py-6">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6">
-            <h1 className="text-2xl font-bold text-foreground mb-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">
               {language === 'hi' ? 'दैनिक सद्कर्म' : 'Daily Good Deeds'}
             </h1>
             <p className="text-sm text-muted-foreground">
