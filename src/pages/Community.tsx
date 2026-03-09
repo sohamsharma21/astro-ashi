@@ -128,7 +128,7 @@ const Community = () => {
         <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl py-4 sm:py-6">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">
                 {language === 'hi' ? 'आध्यात्मिक समुदाय' : 'Spiritual Community'}
               </h1>
               <p className="text-xs text-muted-foreground">
