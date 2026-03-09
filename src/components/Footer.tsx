@@ -98,7 +98,6 @@ const Footer = () => {
           <p className="text-[9px] sm:text-[10px] text-muted-foreground/40 text-center mt-3">
             Made with ❤️ by <span className="text-primary/60 font-semibold">ASA</span>
           </p>
-          </div>
         </div>
       </div>
     </footer>
