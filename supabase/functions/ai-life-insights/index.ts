@@ -36,6 +36,15 @@ serve(async (req) => {
       });
     }
 
+    // Rate limit: 10 requests per minute per user
+    const rateLimit = checkRateLimit(`ai-life-insights:${user.id}`, { maxRequests: 10, windowMs: 60000 });
+    if (!rateLimit.allowed) {
+      return new Response(JSON.stringify({ error: "Rate limit exceeded. Please wait a moment." }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { language = "en", insightType = "all" } = await req.json();
 
     // Fetch user data
