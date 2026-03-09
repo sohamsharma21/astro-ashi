@@ -37,27 +37,23 @@ const Index = () => {
 
   // Effect to simulate some loading time but ensure not too long
   useEffect(() => {
-    // Resources to preload
     const imagesToPreload = [
       '/lovable-uploads/6118717f-8111-4495-bfb2-9b576cb27629.png'
     ];
     
-    // Preload images
     const preloadImages = async () => {
       const imagePromises = imagesToPreload.map((src) => {
         return new Promise<void>((resolve) => {
           const img = new Image();
           img.onload = () => resolve();
-          img.onerror = () => resolve(); // Continue even if image fails to load
+          img.onerror = () => resolve();
           img.src = src;
         });
       });
       
-      // Wait for all images or timeout after 2 seconds
       const timeout = new Promise<void>((resolve) => setTimeout(resolve, 2000));
       await Promise.race([Promise.all(imagePromises), timeout]);
       
-      // Add a small delay for better UX
       setTimeout(() => {
         setLoading(false);
       }, 500);
@@ -65,7 +61,6 @@ const Index = () => {
 
     preloadImages();
     
-    // Failsafe: if still loading after 3.5 seconds, force stop loading
     const timer = setTimeout(() => {
       if (loading) {
         setLoading(false);
@@ -79,7 +74,6 @@ const Index = () => {
     return <Preloader onLoaded={handleLoaded} />;
   }
 
-  // Show personalized dashboard for logged-in users with Kundli
   const showDashboard = user && userProfile?.kundli_generated;
 
   return (
@@ -94,20 +88,17 @@ const Index = () => {
         <StarBackground starCount={150} />
         <Navigation />
         
-        {/* Kundli Onboarding Modal */}
         <KundliOnboardingModal 
           open={showOnboarding} 
           onComplete={handleOnboardingComplete} 
         />
 
-        <main>
+        <main className="overflow-x-hidden">
           {showDashboard ? (
-            // Personalized Kundli-based Dashboard for logged-in users
-            <div className="pt-20 pb-10">
+            <div className="pt-16 sm:pt-18 md:pt-20 pb-8 sm:pb-10">
               <PersonalizedDashboard />
             </div>
           ) : (
-            // Landing page for guests
             <>
               <HeroSection />
               <AnimatedSection>
