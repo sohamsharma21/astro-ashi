@@ -36,6 +36,15 @@ serve(async (req) => {
     }
 
     const userId = claimsData.claims.sub;
+
+    // Rate limit: 5 requests per minute per user
+    const rateLimit = checkRateLimit(`face-reading:${userId}`, { maxRequests: 5, windowMs: 60000 });
+    if (!rateLimit.allowed) {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Please wait a moment.' }), {
+        status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const { imageBase64, language = 'en' } = await req.json();
 
     if (!imageBase64 || typeof imageBase64 !== 'string') {
