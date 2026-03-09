@@ -1,198 +1,33 @@
 
-
 import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle, BarChart3, MapPin, Target, Library, Brain, Trophy, FlaskConical, Hand } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const serviceFeatures = [
-  {
-    icon: BotMessageSquare,
-    titleEn: "AstroAshi AI",
-    titleHi: "AstroAshi AI",
-    descEn: "Get personalized AI-powered spiritual guidance based on your Kundli.",
-    descHi: "आपकी कुंडली के आधार पर AI मार्गदर्शन प्राप्त करें।",
-    path: "/ask-astroashi",
-    highlight: true
-  },
-  {
-    icon: Hand,
-    titleEn: "Palm Reading AI",
-    titleHi: "हस्तरेखा AI",
-    descEn: "Upload your palm photo for AI-powered spiritual insights.",
-    descHi: "AI आध्यात्मिक अंतर्दृष्टि के लिए अपनी हथेली की फोटो अपलोड करें।",
-    path: "/palm-reading",
-    highlight: true
-  },
-  {
-    icon: Star,
-    titleEn: "Daily Horoscopes",
-    titleHi: "दैनिक राशिफल",
-    descEn: "Personalized cosmic insights for your sign, updated daily.",
-    descHi: "आपकी राशि के लिए दैनिक अंतर्दृष्टि।",
-    path: "/daily-horoscope"
-  },
-  {
-    icon: Moon,
-    titleEn: "Kundli Generator",
-    titleHi: "कुंडली जनरेटर",
-    descEn: "Detailed Vedic birth chart analysis with AI interpretations.",
-    descHi: "AI व्याख्याओं के साथ वैदिक जन्म कुंडली।",
-    path: "/kundli-generator"
-  },
-  {
-    icon: Users,
-    titleEn: "Compatibility",
-    titleHi: "संगतता जांच",
-    descEn: "Discover celestial compatibility with your partner.",
-    descHi: "अपने साथी के साथ आकाशीय संगतता जानें।",
-    path: "/compatibility"
-  },
-  {
-    icon: Heart,
-    titleEn: "Meditation",
-    titleHi: "ध्यान",
-    descEn: "Guided meditation with ambient sounds like rain, ocean & temple bells.",
-    descHi: "बारिश, समुद्र और मंदिर की घंटियों के साथ ध्यान करें।",
-    path: "/meditation"
-  },
-  {
-    icon: BookOpen,
-    titleEn: "Gratitude Journal",
-    titleHi: "कृतज्ञता डायरी",
-    descEn: "Daily gratitude practice with mood tracking and streaks.",
-    descHi: "मूड ट्रैकिंग के साथ दैनिक कृतज्ञता अभ्यास।",
-    path: "/gratitude-journal"
-  },
-  {
-    icon: Sparkles,
-    titleEn: "Daily Inspiration",
-    titleHi: "दैनिक प्रेरणा",
-    descEn: "Spiritual quotes and wisdom from all faiths, updated daily.",
-    descHi: "सभी धर्मों से आध्यात्मिक उद्धरण और ज्ञान।",
-    path: "/daily-inspiration"
-  },
-  {
-    icon: ListChecks,
-    titleEn: "Spiritual Routine",
-    titleHi: "आध्यात्मिक दिनचर्या",
-    descEn: "Build your daily spiritual practice with personalized routines.",
-    descHi: "व्यक्तिगत दिनचर्या के साथ दैनिक आध्यात्मिक अभ्यास बनाएं।",
-    path: "/spiritual-routine"
-  },
-  {
-    icon: Calendar,
-    titleEn: "Sacred Calendar",
-    titleHi: "पवित्र कैलेंडर",
-    descEn: "Festivals, fasts & auspicious dates for your faith tradition.",
-    descHi: "आपकी धार्मिक परंपरा के त्योहार, व्रत और शुभ तिथियां।",
-    path: "/sacred-calendar"
-  },
-  {
-    icon: Book,
-    titleEn: "Cosmic Journal",
-    titleHi: "कॉस्मिक जर्नल",
-    descEn: "Articles on astrology, spirituality, and cosmic wisdom.",
-    descHi: "ज्योतिष और आध्यात्मिकता पर लेख।",
-    path: "/cosmic-journal"
-  },
-  {
-    icon: Sparkles,
-    titleEn: "Spiritual Guide",
-    titleHi: "आध्यात्मिक गाइड",
-    descEn: "AI-powered spiritual guidance from your faith tradition.",
-    descHi: "आपकी धार्मिक परंपरा से AI आध्यात्मिक मार्गदर्शन।",
-    path: "/spiritual-guide"
-  },
-  {
-    icon: HandHeart,
-    titleEn: "Good Deeds",
-    titleHi: "दैनिक सद्कर्म",
-    descEn: "Track daily good deeds, earn karma points and build streaks.",
-    descHi: "दैनिक सद्कर्म ट्रैक करें, कर्म अंक अर्जित करें।",
-    path: "/karma-tracker"
-  },
-  {
-    icon: Music,
-    titleEn: "Spiritual Music",
-    titleHi: "आध्यात्मिक संगीत",
-    descEn: "Devotional music, mantras and chants from all traditions.",
-    descHi: "सभी परंपराओं से भक्ति संगीत, मंत्र और जाप।",
-    path: "/devotional-music"
-  },
-  {
-    icon: CloudMoon,
-    titleEn: "Sleep & Relaxation",
-    titleHi: "नींद और विश्राम",
-    descEn: "Guided sleep meditation, nature sounds and bedtime stories.",
-    descHi: "निर्देशित नींद ध्यान, प्रकृति ध्वनि और सोने की कहानियां।",
-    path: "/sleep-relaxation"
-  },
-  {
-    icon: MessageCircle,
-    titleEn: "Community",
-    titleHi: "समुदाय",
-    descEn: "Connect with spiritual seekers worldwide in discussion groups.",
-    descHi: "दुनिया भर के आध्यात्मिक साधकों से जुड़ें।",
-    path: "/community"
-  },
-  {
-    icon: BarChart3,
-    titleEn: "Spiritual Progress",
-    titleHi: "आध्यात्मिक प्रगति",
-    descEn: "Track growth with streaks, badges and daily/weekly/monthly progress.",
-    descHi: "स्ट्रीक, बैज और दैनिक/साप्ताहिक/मासिक प्रगति ट्रैक करें।",
-    path: "/spiritual-progress"
-  },
-  {
-    icon: MapPin,
-    titleEn: "Worship Places",
-    titleHi: "पूजा स्थल",
-    descEn: "Find nearby temples, mosques, churches and spiritual places.",
-    descHi: "पास के मंदिर, मस्जिद, चर्च और आध्यात्मिक स्थान खोजें।",
-    path: "/worship-places"
-  },
-  {
-    icon: Target,
-    titleEn: "Life Path Planner",
-    titleHi: "जीवन पथ योजना",
-    descEn: "Align life goals with spiritual values and dharma path.",
-    descHi: "जीवन लक्ष्यों को आध्यात्मिक मूल्यों से जोड़ें।",
-    path: "/life-path"
-  },
-  {
-    icon: Library,
-    titleEn: "Spiritual Knowledge",
-    titleHi: "आध्यात्मिक ज्ञान",
-    descEn: "Multi-faith library with sacred texts, teachings and stories.",
-    descHi: "पवित्र ग्रंथ, शिक्षाएं और कथाओं की बहु-धार्मिक लाइब्रेरी।",
-    path: "/spiritual-knowledge"
-  },
-  {
-    icon: Brain,
-    titleEn: "AI Life Insights",
-    titleHi: "AI जीवन अंतर्दृष्टि",
-    descEn: "Personalized career, relationship and spiritual guidance from AI.",
-    descHi: "AI से व्यक्तिगत करियर, संबंध और आध्यात्मिक मार्गदर्शन।",
-    path: "/ai-life-insights",
-    highlight: true
-  },
-  {
-    icon: Trophy,
-    titleEn: "Spiritual Challenges",
-    titleHi: "आध्यात्मिक चुनौतियां",
-    descEn: "7, 14, 21 and 30-day challenges with streaks and rewards.",
-    descHi: "7, 14, 21 और 30-दिवसीय चुनौतियां स्ट्रीक और पुरस्कारों के साथ।",
-    path: "/spiritual-challenges"
-  },
-  {
-    icon: FlaskConical,
-    titleEn: "Personality Test",
-    titleHi: "व्यक्तित्व परीक्षण",
-    descEn: "Discover your spiritual personality type with an interactive quiz.",
-    descHi: "इंटरैक्टिव क्विज़ से अपना आध्यात्मिक व्यक्तित्व खोजें।",
-    path: "/personality-test"
-  }
+  { icon: BotMessageSquare, titleEn: "AstroAshi AI", titleHi: "AstroAshi AI", descEn: "Get personalized AI-powered spiritual guidance based on your Kundli.", descHi: "आपकी कुंडली के आधार पर AI मार्गदर्शन प्राप्त करें।", path: "/ask-astroashi", highlight: true },
+  { icon: Hand, titleEn: "Palm Reading AI", titleHi: "हस्तरेखा AI", descEn: "Upload your palm photo for AI-powered spiritual insights.", descHi: "AI आध्यात्मिक अंतर्दृष्टि के लिए अपनी हथेली की फोटो अपलोड करें।", path: "/palm-reading", highlight: true },
+  { icon: Star, titleEn: "Daily Horoscopes", titleHi: "दैनिक राशिफल", descEn: "Personalized cosmic insights for your sign, updated daily.", descHi: "आपकी राशि के लिए दैनिक अंतर्दृष्टि।", path: "/daily-horoscope" },
+  { icon: Moon, titleEn: "Kundli Generator", titleHi: "कुंडली जनरेटर", descEn: "Detailed Vedic birth chart analysis with AI interpretations.", descHi: "AI व्याख्याओं के साथ वैदिक जन्म कुंडली।", path: "/kundli-generator" },
+  { icon: Users, titleEn: "Compatibility", titleHi: "संगतता जांच", descEn: "Discover celestial compatibility with your partner.", descHi: "अपने साथी के साथ आकाशीय संगतता जानें।", path: "/compatibility" },
+  { icon: Heart, titleEn: "Meditation", titleHi: "ध्यान", descEn: "Guided meditation with ambient sounds like rain, ocean & temple bells.", descHi: "बारिश, समुद्र और मंदिर की घंटियों के साथ ध्यान करें।", path: "/meditation" },
+  { icon: BookOpen, titleEn: "Gratitude Journal", titleHi: "कृतज्ञता डायरी", descEn: "Daily gratitude practice with mood tracking and streaks.", descHi: "मूड ट्रैकिंग के साथ दैनिक कृतज्ञता अभ्यास।", path: "/gratitude-journal" },
+  { icon: Sparkles, titleEn: "Daily Inspiration", titleHi: "दैनिक प्रेरणा", descEn: "Spiritual quotes and wisdom from all faiths, updated daily.", descHi: "सभी धर्मों से आध्यात्मिक उद्धरण और ज्ञान।", path: "/daily-inspiration" },
+  { icon: ListChecks, titleEn: "Spiritual Routine", titleHi: "आध्यात्मिक दिनचर्या", descEn: "Build your daily spiritual practice with personalized routines.", descHi: "व्यक्तिगत दिनचर्या के साथ दैनिक आध्यात्मिक अभ्यास बनाएं।", path: "/spiritual-routine" },
+  { icon: Calendar, titleEn: "Sacred Calendar", titleHi: "पवित्र कैलेंडर", descEn: "Festivals, fasts & auspicious dates for your faith tradition.", descHi: "आपकी धार्मिक परंपरा के त्योहार, व्रत और शुभ तिथियां।", path: "/sacred-calendar" },
+  { icon: Book, titleEn: "Cosmic Journal", titleHi: "कॉस्मिक जर्नल", descEn: "Articles on astrology, spirituality, and cosmic wisdom.", descHi: "ज्योतिष और आध्यात्मिकता पर लेख।", path: "/cosmic-journal" },
+  { icon: Sparkles, titleEn: "Spiritual Guide", titleHi: "आध्यात्मिक गाइड", descEn: "AI-powered spiritual guidance from your faith tradition.", descHi: "आपकी धार्मिक परंपरा से AI आध्यात्मिक मार्गदर्शन।", path: "/spiritual-guide" },
+  { icon: HandHeart, titleEn: "Good Deeds", titleHi: "दैनिक सद्कर्म", descEn: "Track daily good deeds, earn karma points and build streaks.", descHi: "दैनिक सद्कर्म ट्रैक करें, कर्म अंक अर्जित करें।", path: "/karma-tracker" },
+  { icon: Music, titleEn: "Spiritual Music", titleHi: "आध्यात्मिक संगीत", descEn: "Devotional music, mantras and chants from all traditions.", descHi: "सभी परंपराओं से भक्ति संगीत, मंत्र और जाप।", path: "/devotional-music" },
+  { icon: CloudMoon, titleEn: "Sleep & Relaxation", titleHi: "नींद और विश्राम", descEn: "Guided sleep meditation, nature sounds and bedtime stories.", descHi: "निर्देशित नींद ध्यान, प्रकृति ध्वनि और सोने की कहानियां।", path: "/sleep-relaxation" },
+  { icon: MessageCircle, titleEn: "Community", titleHi: "समुदाय", descEn: "Connect with spiritual seekers worldwide in discussion groups.", descHi: "दुनिया भर के आध्यात्मिक साधकों से जुड़ें।", path: "/community" },
+  { icon: BarChart3, titleEn: "Spiritual Progress", titleHi: "आध्यात्मिक प्रगति", descEn: "Track growth with streaks, badges and daily/weekly/monthly progress.", descHi: "स्ट्रीक, बैज और दैनिक/साप्ताहिक/मासिक प्रगति ट्रैक करें।", path: "/spiritual-progress" },
+  { icon: MapPin, titleEn: "Worship Places", titleHi: "पूजा स्थल", descEn: "Find nearby temples, mosques, churches and spiritual places.", descHi: "पास के मंदिर, मस्जिद, चर्च और आध्यात्मिक स्थान खोजें।", path: "/worship-places" },
+  { icon: Target, titleEn: "Life Path Planner", titleHi: "जीवन पथ योजना", descEn: "Align life goals with spiritual values and dharma path.", descHi: "जीवन लक्ष्यों को आध्यात्मिक मूल्यों से जोड़ें।", path: "/life-path" },
+  { icon: Library, titleEn: "Spiritual Knowledge", titleHi: "आध्यात्मिक ज्ञान", descEn: "Multi-faith library with sacred texts, teachings and stories.", descHi: "पवित्र ग्रंथ, शिक्षाएं और कथाओं की बहु-धार्मिक लाइब्रेरी।", path: "/spiritual-knowledge" },
+  { icon: Brain, titleEn: "AI Life Insights", titleHi: "AI जीवन अंतर्दृष्टि", descEn: "Personalized career, relationship and spiritual guidance from AI.", descHi: "AI से व्यक्तिगत करियर, संबंध और आध्यात्मिक मार्गदर्शन।", path: "/ai-life-insights", highlight: true },
+  { icon: Trophy, titleEn: "Spiritual Challenges", titleHi: "आध्यात्मिक चुनौतियां", descEn: "7, 14, 21 and 30-day challenges with streaks and rewards.", descHi: "7, 14, 21 और 30-दिवसीय चुनौतियां स्ट्रीक और पुरस्कारों के साथ।", path: "/spiritual-challenges" },
+  { icon: FlaskConical, titleEn: "Personality Test", titleHi: "व्यक्तित्व परीक्षण", descEn: "Discover your spiritual personality type with an interactive quiz.", descHi: "इंटरैक्टिव क्विज़ से अपना आध्यात्मिक व्यक्तित्व खोजें।", path: "/personality-test" }
 ];
 
 export const ServicesSection = () => {
@@ -202,23 +37,23 @@ export const ServicesSection = () => {
   const go = (path: string) => navigate(user ? path : '/auth');
 
   return (
-    <section className="py-24 relative">
-      <div className="container mx-auto px-4">
+    <section className="py-16 sm:py-20 md:py-24 relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div 
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-14 md:mb-16"
         >
-          <p className="text-[11px] uppercase tracking-[0.25em] text-primary/50 mb-3 font-semibold">
+          <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-primary/50 mb-2 sm:mb-3 font-semibold">
             {language === 'en' ? 'Features' : 'विशेषताएं'}
           </p>
-          <h2 className={`text-3xl md:text-4xl font-extrabold text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
             {language === 'en' ? 'Cosmic Services' : 'ब्रह्मांडीय सेवाएं'}
           </h2>
         </motion.div>
         
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 md:gap-4 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-2.5 sm:gap-3 md:gap-4 max-w-6xl mx-auto">
           {serviceFeatures.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -227,25 +62,25 @@ export const ServicesSection = () => {
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.06 }}
-                className={`group text-left rounded-2xl p-3.5 md:p-5 transition-all duration-300 border ${
+                transition={{ delay: index * 0.04 }}
+                className={`group text-left rounded-xl sm:rounded-2xl p-3 sm:p-3.5 md:p-5 transition-all duration-300 border ${
                   feature.highlight 
                     ? 'bg-primary/[0.06] border-primary/15 hover:border-primary/30' 
                     : 'bg-card/40 border-border/40 hover:border-primary/15'
                 } hover:shadow-xl hover:shadow-primary/[0.04] hover:-translate-y-1`}
                 onClick={() => go(feature.path)}
               >
-                <div className={`mb-2.5 md:mb-3.5 w-9 h-9 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+                <div className={`mb-2 sm:mb-2.5 md:mb-3.5 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-lg sm:rounded-xl flex items-center justify-center transition-all duration-300 ${
                   feature.highlight 
                     ? 'bg-primary/15 text-primary' 
                     : 'bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary'
                 }`}>
-                  <Icon className="h-4 w-4 md:h-[18px] md:w-[18px]" />
+                  <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 md:h-[18px] md:w-[18px]" />
                 </div>
-                <h3 className={`text-[13px] md:text-[15px] font-bold mb-1 md:mb-1.5 text-foreground ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
+                <h3 className={`text-[12px] sm:text-[13px] md:text-[15px] font-bold mb-0.5 sm:mb-1 md:mb-1.5 text-foreground ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
                   {language === 'en' ? feature.titleEn : feature.titleHi}
                 </h3>
-                <p className={`text-[11px] md:text-[13px] text-muted-foreground leading-relaxed line-clamp-2 ${language === 'hi' ? 'font-hindi' : ''}`}>
+                <p className={`text-[10px] sm:text-[11px] md:text-[13px] text-muted-foreground leading-relaxed line-clamp-2 ${language === 'hi' ? 'font-hindi' : ''}`}>
                   {language === 'en' ? feature.descEn : feature.descHi}
                 </p>
               </motion.button>

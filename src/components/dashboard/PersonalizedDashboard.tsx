@@ -10,7 +10,6 @@ import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
-// Email verification banner removed - Google OAuth already verifies email
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
 import { getDailyInspiration } from '@/lib/inspirationData';
@@ -65,7 +64,7 @@ const PersonalizedDashboard = () => {
 
   if (loading) {
     return (
-      <div className="space-y-4 px-4 py-4 max-w-5xl mx-auto">
+      <div className="space-y-4 px-4 sm:px-6 lg:px-8 py-4 max-w-6xl mx-auto">
         <Skeleton className="h-36 w-full rounded-2xl" />
         <div className="grid grid-cols-3 gap-2.5">
           <Skeleton className="h-16 rounded-xl" />
@@ -115,9 +114,7 @@ const PersonalizedDashboard = () => {
   });
 
   return (
-    <motion.div {...anim(0)} className="space-y-4 px-4 py-4 max-w-5xl mx-auto">
-      {/* Email verification removed - Google OAuth verifies email automatically */}
-
+    <motion.div {...anim(0)} className="space-y-4 px-4 sm:px-6 lg:px-8 py-4 max-w-6xl mx-auto">
       {/* Spiritual Snapshot */}
       <motion.div {...anim(0.05)}>
         <UserSnapshotCard
@@ -128,19 +125,19 @@ const PersonalizedDashboard = () => {
       </motion.div>
 
       {/* Quick Actions */}
-      <motion.div {...anim(0.1)} className="grid grid-cols-3 gap-2.5">
+      <motion.div {...anim(0.1)} className="grid grid-cols-3 gap-2 sm:gap-3">
         {quickActions.map((action) => {
           const Icon = action.icon;
           return (
             <button
               key={action.path}
               onClick={() => navigate(action.path)}
-              className={`group flex flex-col items-start gap-1.5 p-3.5 rounded-xl border bg-gradient-to-br transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/[0.04] ${action.gradient}`}
+              className={`group flex flex-col items-start gap-1 sm:gap-1.5 p-3 sm:p-3.5 rounded-xl border bg-gradient-to-br transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/[0.04] ${action.gradient}`}
             >
-              <Icon className={`w-5 h-5 ${action.iconColor}`} />
+              <Icon className={`w-4 h-4 sm:w-5 sm:h-5 ${action.iconColor}`} />
               <div>
-                <span className="text-xs font-bold text-foreground font-heading block">{action.label}</span>
-                <span className="text-[10px] text-muted-foreground hidden sm:block">{action.desc}</span>
+                <span className="text-[11px] sm:text-xs font-bold text-foreground font-heading block">{action.label}</span>
+                <span className="text-[9px] sm:text-[10px] text-muted-foreground hidden sm:block">{action.desc}</span>
               </div>
               <ArrowRight className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-colors mt-auto" />
             </button>
@@ -159,7 +156,7 @@ const PersonalizedDashboard = () => {
       </motion.div>
 
       {/* Daily Guidance & Panchang */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
         <motion.div {...anim(0.2)}>
           <PersonalDailyPrediction
             prediction={dashboardData?.predictions}
@@ -220,28 +217,28 @@ const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Reli
   return (
     <div className="space-y-3">
       {/* Shortcut buttons */}
-      <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 lg:grid-cols-7 gap-1.5 sm:gap-2">
         {shortcuts.map(s => (
           <button key={s.path} onClick={() => navigate(s.path)}
-            className="flex flex-col items-center gap-1 px-2 py-2.5 rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all">
-            <span className="text-lg">{s.icon}</span>
-            <span className="text-[9px] font-medium text-muted-foreground leading-tight text-center">{s.label}</span>
+            className="flex flex-col items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-2 sm:py-2.5 rounded-lg sm:rounded-xl bg-muted/50 border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-all">
+            <span className="text-base sm:text-lg">{s.icon}</span>
+            <span className="text-[8px] sm:text-[9px] font-medium text-muted-foreground leading-tight text-center truncate w-full">{s.label}</span>
           </button>
         ))}
       </div>
 
       {/* Daily Quote + Next Festival mini cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-        <Card className="p-3 cursor-pointer hover:border-primary/30 transition-all" onClick={() => navigate('/daily-inspiration')}>
-          <p className="text-[10px] text-muted-foreground mb-1">✨ {language === 'hi' ? 'आज की प्रेरणा' : "Today's Inspiration"}</p>
-          <p className="text-xs text-foreground italic line-clamp-2">"{quote.quote[language]}"</p>
-          <p className="text-[10px] text-primary mt-1">— {quote.source[language]}</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-2.5">
+        <Card className="p-2.5 sm:p-3 cursor-pointer hover:border-primary/30 transition-all" onClick={() => navigate('/daily-inspiration')}>
+          <p className="text-[9px] sm:text-[10px] text-muted-foreground mb-1">✨ {language === 'hi' ? 'आज की प्रेरणा' : "Today's Inspiration"}</p>
+          <p className="text-[11px] sm:text-xs text-foreground italic line-clamp-2">"{quote.quote[language]}"</p>
+          <p className="text-[9px] sm:text-[10px] text-primary mt-1">— {quote.source[language]}</p>
         </Card>
         {nextFestival && (
-          <Card className="p-3 cursor-pointer hover:border-primary/30 transition-all" onClick={() => navigate('/sacred-calendar')}>
-            <p className="text-[10px] text-muted-foreground mb-1">📅 {language === 'hi' ? 'आगामी त्योहार' : 'Upcoming Festival'}</p>
-            <p className="text-xs font-semibold text-foreground">{nextFestival.name[language]}</p>
-            <p className="text-[10px] text-primary mt-1">{daysUntil === 0 ? '🎉 Today!' : `${daysUntil} ${language === 'hi' ? 'दिन बाकी' : 'days away'}`}</p>
+          <Card className="p-2.5 sm:p-3 cursor-pointer hover:border-primary/30 transition-all" onClick={() => navigate('/sacred-calendar')}>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground mb-1">📅 {language === 'hi' ? 'आगामी त्योहार' : 'Upcoming Festival'}</p>
+            <p className="text-[11px] sm:text-xs font-semibold text-foreground">{nextFestival.name[language]}</p>
+            <p className="text-[9px] sm:text-[10px] text-primary mt-1">{daysUntil === 0 ? '🎉 Today!' : `${daysUntil} ${language === 'hi' ? 'दिन बाकी' : 'days away'}`}</p>
           </Card>
         )}
       </div>

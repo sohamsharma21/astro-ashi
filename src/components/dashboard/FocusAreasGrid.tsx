@@ -45,14 +45,14 @@ const FocusAreasGrid = ({ focusAreas }: FocusAreasGridProps) => {
 
   return (
     <Card className="border-border/40 bg-card">
-      <CardHeader className="pb-3 px-5 pt-5">
+      <CardHeader className="pb-2 sm:pb-3 px-4 sm:px-5 pt-4 sm:pt-5">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-heading font-bold">{t.title}</CardTitle>
-          <span className="text-[10px] text-muted-foreground font-medium">{t.subtitle}</span>
+          <CardTitle className="text-xs sm:text-sm font-heading font-bold">{t.title}</CardTitle>
+          <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">{t.subtitle}</span>
         </div>
       </CardHeader>
-      <CardContent className="px-5 pb-5">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
+      <CardContent className="px-4 sm:px-5 pb-4 sm:pb-5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-2.5">
           {areaConfig.map(({ key, icon: Icon, label }) => {
             const area = areas[key] || defaultFocusAreas[key as keyof typeof defaultFocusAreas];
             const insight = language === 'hi' ? area.insight_hi : area.insight_en;
@@ -60,17 +60,17 @@ const FocusAreasGrid = ({ focusAreas }: FocusAreasGridProps) => {
             const style = statusStyles[area.status] || statusStyles.neutral;
 
             return (
-              <div key={key} className={`p-3.5 rounded-xl border bg-muted/10 transition-all duration-300 hover:-translate-y-0.5 ${style.border}`}>
-                <div className="flex items-center justify-between mb-2.5">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${style.iconBg}`}>
-                    <Icon className="w-3.5 h-3.5" />
+              <div key={key} className={`p-3 sm:p-3.5 rounded-xl border bg-muted/10 transition-all duration-300 hover:-translate-y-0.5 ${style.border}`}>
+                <div className="flex items-center justify-between mb-2 sm:mb-2.5">
+                  <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center ${style.iconBg}`}>
+                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                   </div>
-                  <span className={`w-2 h-2 rounded-full ${style.dot}`} />
+                  <span className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${style.dot}`} />
                 </div>
-                <h4 className="text-xs font-bold text-foreground font-heading mb-1">{label}</h4>
-                <p className="text-[11px] text-muted-foreground mb-3 line-clamp-2 leading-relaxed">{insight}</p>
-                <div className="flex items-center gap-1 text-[11px] text-primary font-medium">
-                  <ArrowUpRight className="w-3 h-3" />
+                <h4 className="text-[11px] sm:text-xs font-bold text-foreground font-heading mb-0.5 sm:mb-1">{label}</h4>
+                <p className="text-[10px] sm:text-[11px] text-muted-foreground mb-2 sm:mb-3 line-clamp-2 leading-relaxed">{insight}</p>
+                <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-primary font-medium">
+                  <ArrowUpRight className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                   <span>{action}</span>
                 </div>
               </div>

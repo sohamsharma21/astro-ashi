@@ -30,12 +30,12 @@ export const BottomTabBar = () => {
               <Link
                 key={tab.path}
                 to={tab.path}
-                className="relative flex flex-col items-center justify-center py-2 px-3 min-w-[64px] group"
+                className="relative flex flex-col items-center justify-center py-1.5 sm:py-2 px-2 sm:px-3 min-w-[56px] sm:min-w-[64px] group"
               >
                 {isActive && (
                   <motion.div
                     layoutId="bottomTabIndicator"
-                    className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-0.5 rounded-full bg-primary"
+                    className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-7 sm:w-8 h-0.5 rounded-full bg-primary"
                     transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   />
                 )}
@@ -49,13 +49,13 @@ export const BottomTabBar = () => {
                     transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
                     <Icon
-                      className={`h-5 w-5 transition-colors duration-200 ${
+                      className={`h-[18px] w-[18px] sm:h-5 sm:w-5 transition-colors duration-200 ${
                         isActive ? 'text-primary' : 'text-muted-foreground group-active:text-foreground'
                       }`}
                     />
                   </motion.div>
                   <span
-                    className={`text-[10px] mt-0.5 font-medium transition-colors duration-200 ${
+                    className={`text-[9px] sm:text-[10px] mt-0.5 font-medium transition-colors duration-200 ${
                       isActive ? 'text-primary' : 'text-muted-foreground'
                     }`}
                   >

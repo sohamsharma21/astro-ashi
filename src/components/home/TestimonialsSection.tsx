@@ -31,23 +31,23 @@ export const TestimonialsSection = () => {
   const { language } = useAuth();
 
   return (
-    <section className="py-24 relative">
-      <div className="container mx-auto px-4">
+    <section className="py-16 sm:py-20 md:py-24 relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-14"
+          className="text-center mb-10 sm:mb-14"
         >
-          <p className="text-[11px] uppercase tracking-[0.25em] text-primary/50 mb-3 font-semibold">
+          <p className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-primary/50 mb-2 sm:mb-3 font-semibold">
             {language === 'en' ? 'Testimonials' : 'प्रशंसापत्र'}
           </p>
-          <h2 className={`text-3xl md:text-4xl font-extrabold text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-extrabold text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>
             {language === 'en' ? 'Cosmic Transformations' : 'ब्रह्मांडीय परिवर्तन'}
           </h2>
         </motion.div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 max-w-5xl mx-auto">
           {testimonials.map((t, index) => (
             <motion.div
               key={index}
@@ -55,29 +55,29 @@ export const TestimonialsSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08 }}
-              className="cosmic-card p-6"
+              className="cosmic-card p-4 sm:p-5 md:p-6"
             >
-              <Quote className="w-5 h-5 text-primary/30 mb-3" />
-              <div className="flex gap-0.5 mb-3">
+              <Quote className="w-4 h-4 sm:w-5 sm:h-5 text-primary/30 mb-2 sm:mb-3" />
+              <div className="flex gap-0.5 mb-2 sm:mb-3">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star 
                     key={i} 
-                    className={`w-3.5 h-3.5 ${i < t.rating ? 'text-primary fill-primary' : 'text-muted-foreground/30'}`}
+                    className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${i < t.rating ? 'text-primary fill-primary' : 'text-muted-foreground/30'}`}
                   />
                 ))}
               </div>
-              <p className={`text-sm text-foreground/80 mb-4 leading-relaxed italic ${language === 'hi' ? 'font-hindi' : ''}`}>
+              <p className={`text-xs sm:text-sm text-foreground/80 mb-3 sm:mb-4 leading-relaxed italic ${language === 'hi' ? 'font-hindi' : ''}`}>
                 "{language === 'en' ? t.textEn : t.textHi}"
               </p>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary/10 flex items-center justify-center text-[10px] sm:text-xs font-bold text-primary">
                   {(language === 'en' ? t.nameEn : t.nameHi)[0]}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground font-heading">
+                  <p className="text-xs sm:text-sm font-semibold text-foreground font-heading">
                     {language === 'en' ? t.nameEn : t.nameHi}
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-[10px] sm:text-[11px] text-muted-foreground">
                     {language === 'en' ? t.locationEn : t.locationHi}
                   </p>
                 </div>
