@@ -19,7 +19,7 @@ const AstroLove = () => {
       <StarBackground starCount={200} />
       <Navigation />
 
-      <main className="container mx-auto px-4 pt-24 pb-28 lg:pb-20">
+      <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ const AstroLove = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-xs font-medium text-pink-400 mb-4">
             <Heart className="h-3 w-3" /> {language === 'en' ? '6-Dimension Love Analysis' : '6-आयामी प्रेम विश्लेषण'}
           </div>
-          <h1 className={`text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+          <h1 className={`text-2xl sm:text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
             {language === 'en' ? 'AstroLove Calculator' : 'एस्ट्रोलव कैलकुलेटर'}
           </h1>
           <p className={`text-muted-foreground mt-3 max-w-lg mx-auto ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>

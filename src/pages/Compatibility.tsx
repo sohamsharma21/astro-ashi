@@ -19,7 +19,7 @@ const Compatibility = () => {
       <StarBackground starCount={150} />
       <Navigation />
 
-      <main className="container mx-auto px-4 pt-24 pb-28 lg:pb-20">
+      <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ const Compatibility = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-xs font-medium text-primary mb-4">
             <Sparkles className="h-3 w-3" /> {language === 'en' ? 'Vedic 36-Point System' : 'वैदिक 36-अंक प्रणाली'}
           </div>
-          <h1 className={`text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+          <h1 className={`text-2xl sm:text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
             {language === 'en' ? 'Ashtakoot Milan' : 'अष्टकूट मिलान'}
           </h1>
           <p className={`text-muted-foreground mt-3 max-w-lg mx-auto ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>

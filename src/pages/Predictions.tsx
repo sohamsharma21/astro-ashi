@@ -19,14 +19,14 @@ const Predictions = () => {
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={100} />
         <Navigation />
-        <main className="container mx-auto px-4 pt-24 pb-12">
+        <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-4xl mx-auto"
+            className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto"
           >
-            <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-cinzel text-gradient-gold mb-2">
+            <div className="text-center mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-cinzel text-gradient-gold mb-2">
                 {language === 'hi' ? 'आपका भविष्यफल' : 'Your Predictions'}
               </h1>
               <p className="text-muted-foreground">

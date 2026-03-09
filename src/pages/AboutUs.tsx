@@ -12,9 +12,9 @@ const AboutUs = () => {
       <StarBackground starCount={150} />
       <Navigation />
       
-      <main className="container mx-auto px-4 pt-32 pb-20">
+      <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
         <div className="max-w-4xl mx-auto">
-          <h1 className={`text-4xl md:text-5xl font-bold mb-12 text-center text-gradient-gold ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+          <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center text-gradient-gold ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
             {language === 'en' ? 'About Us' : 'हमारे बारे में'}
           </h1>
           

@@ -97,8 +97,8 @@ const SpiritualGuide = () => {
     <>
       <SEOHead title="Spiritual Guide - AstroAshi" description="AI-powered spiritual guidance personalized for your faith" />
       <Navigation />
-      <main className="min-h-screen pt-16 pb-24 lg:pb-8">
-        <div className="container mx-auto px-4 max-w-2xl flex flex-col h-[calc(100vh-8rem)]">
+      <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
+        <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl flex flex-col h-[calc(100vh-8rem)]">
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center py-4">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 mb-2">

@@ -110,8 +110,8 @@ const DevotionalMusic = () => {
     <>
       <SEOHead title="Spiritual Music - AstroAshi" description="Devotional music and chants from all faith traditions" />
       <Navigation />
-      <main className="min-h-screen pt-16 pb-24 lg:pb-8">
-        <div className="container mx-auto px-4 max-w-2xl py-6">
+      <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
+        <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl py-4 sm:py-6">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 mb-2">
               <Music className="h-4 w-4 text-primary" />
