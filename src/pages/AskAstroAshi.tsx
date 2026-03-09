@@ -283,7 +283,7 @@ const AskAstroAshi = () => {
                 </div>
                 <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" />
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold font-display text-primary">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold font-display text-primary">
                 {isHindi ? 'AstroAshi AI से पूछें' : 'Ask AstroAshi AI'}
               </h1>
             </div>
