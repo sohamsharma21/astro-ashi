@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, RotateCcw, Share2, Bookmark, Sparkles, ShieldCheck, Eye, Brain, Smile, Crown, Zap, Heart, ScanFace } from 'lucide-react';
+import { Camera, Upload, RotateCcw, Share2, Bookmark, Sparkles, ShieldCheck, Eye, Brain, Smile, Crown, Zap, Heart, ScanFace, Download } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
@@ -134,6 +134,130 @@ const FaceReadingPage = () => {
       toast({ title: hi ? 'कॉपी किया गया!' : 'Copied to clipboard!' });
     }
   };
+
+  const generateStoryCard = useCallback(async () => {
+    if (!reading) return;
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext('2d')!;
+
+    // Background gradient
+    const grad = ctx.createLinearGradient(0, 0, 0, 1920);
+    grad.addColorStop(0, '#0f0a1e');
+    grad.addColorStop(0.5, '#1a1035');
+    grad.addColorStop(1, '#0f0a1e');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1080, 1920);
+
+    // Decorative circles
+    ctx.globalAlpha = 0.08;
+    ctx.beginPath();
+    ctx.arc(200, 300, 250, 0, Math.PI * 2);
+    ctx.fillStyle = '#a78bfa';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(900, 1600, 300, 0, Math.PI * 2);
+    ctx.fillStyle = '#f59e0b';
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Face circle with image
+    if (imagePreview) {
+      try {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        await new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = imagePreview;
+        });
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(540, 380, 150, 0, Math.PI * 2);
+        ctx.clip();
+        const size = Math.min(img.width, img.height);
+        const sx = (img.width - size) / 2;
+        const sy = (img.height - size) / 2;
+        ctx.drawImage(img, sx, sy, size, size, 390, 230, 300, 300);
+        ctx.restore();
+        // Ring
+        ctx.beginPath();
+        ctx.arc(540, 380, 155, 0, Math.PI * 2);
+        ctx.strokeStyle = '#a78bfa';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      } catch {}
+    }
+
+    // Title
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#e2e0ff';
+    ctx.font = 'bold 52px system-ui, -apple-system, sans-serif';
+    ctx.fillText('🧑 Face Reading AI', 540, 610);
+
+    // Face shape
+    ctx.fillStyle = '#a78bfa';
+    ctx.font = 'bold 32px system-ui, sans-serif';
+    ctx.fillText(reading.faceShape.type, 540, 680);
+
+    // Personality traits
+    let y = 760;
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '24px system-ui, sans-serif';
+    ctx.fillText('━━━ Personality Traits ━━━', 540, y);
+    y += 50;
+
+    reading.personality.slice(0, 4).forEach((trait) => {
+      ctx.fillStyle = '#f3f4f6';
+      ctx.font = 'bold 30px system-ui, sans-serif';
+      ctx.fillText(trait.trait, 540, y);
+      y += 36;
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '22px system-ui, sans-serif';
+      const desc = trait.description.length > 50 ? trait.description.slice(0, 50) + '...' : trait.description;
+      ctx.fillText(desc, 540, y);
+      y += 50;
+    });
+
+    // Energy Type
+    y += 20;
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = 'bold 28px system-ui, sans-serif';
+    ctx.fillText(`⚡ ${reading.energyType.type}`, 540, y);
+    y += 40;
+    ctx.fillStyle = '#9ca3af';
+    ctx.font = '22px system-ui, sans-serif';
+    const energyDesc = reading.energyType.description.length > 60 ? reading.energyType.description.slice(0, 60) + '...' : reading.energyType.description;
+    ctx.fillText(energyDesc, 540, y);
+
+    // Leadership
+    y += 70;
+    ctx.fillStyle = '#f59e0b';
+    ctx.font = 'bold 28px system-ui, sans-serif';
+    ctx.fillText(`👑 ${reading.leadership.style}`, 540, y);
+
+    // Footer
+    ctx.fillStyle = '#6b7280';
+    ctx.font = '22px system-ui, sans-serif';
+    ctx.fillText('Discover yours at', 540, 1780);
+    ctx.fillStyle = '#a78bfa';
+    ctx.font = 'bold 26px system-ui, sans-serif';
+    ctx.fillText('astroashi.lovable.app/face-reading', 540, 1820);
+
+    // Watermark
+    ctx.fillStyle = '#4b5563';
+    ctx.font = '20px system-ui, sans-serif';
+    ctx.fillText('✨ AstroAshi', 540, 1880);
+
+    // Download
+    const link = document.createElement('a');
+    link.download = 'astroashi-face-reading.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    toast({ title: hi ? '📸 स्टोरी कार्ड डाउनलोड हो गया!' : '📸 Story card downloaded!' });
+  }, [reading, imagePreview, hi]);
 
   const handleSave = () => {
     toast({ title: hi ? '✅ रीडिंग सहेजी गई!' : '✅ Reading saved!', description: hi ? 'आपकी रीडिंग इतिहास में सहेजी गई' : 'Saved to your reading history' });
@@ -401,14 +525,17 @@ const FaceReadingPage = () => {
                 </Card>
 
                 {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <Button onClick={handleSave} variant="outline" className="flex-1 gap-2">
+                <div className="grid grid-cols-2 gap-3">
+                  <Button onClick={handleSave} variant="outline" className="gap-2">
                     <Bookmark className="w-4 h-4" /> {hi ? 'सहेजें' : 'Save'}
                   </Button>
-                  <Button onClick={handleShare} variant="outline" className="flex-1 gap-2">
+                  <Button onClick={handleShare} variant="outline" className="gap-2">
                     <Share2 className="w-4 h-4" /> {hi ? 'शेयर' : 'Share'}
                   </Button>
-                  <Button onClick={handleReset} className="flex-1 gap-2 bg-primary hover:bg-primary/90">
+                  <Button onClick={generateStoryCard} className="gap-2 bg-gradient-to-r from-purple-600 to-pink-500 hover:from-purple-700 hover:to-pink-600 text-white border-0">
+                    <Download className="w-4 h-4" /> {hi ? 'Instagram स्टोरी' : 'Story Card'}
+                  </Button>
+                  <Button onClick={handleReset} variant="outline" className="gap-2">
                     <RotateCcw className="w-4 h-4" /> {hi ? 'दोबारा' : 'Try Again'}
                   </Button>
                 </div>

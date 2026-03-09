@@ -24,6 +24,7 @@ import {
   Trophy,
   FlaskConical,
   Hand,
+  ScanFace,
   type LucideIcon 
 } from 'lucide-react';
 
@@ -250,6 +251,14 @@ export const navigationConfig: NavItem[] = [
     labelEn: 'Palm Reading',
     labelHi: 'हस्तरेखा',
     icon: Hand,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
+    path: '/face-reading',
+    labelEn: 'Face Reading',
+    labelHi: 'फेस रीडिंग',
+    icon: ScanFace,
     requiresAuth: true,
     showWhenLoggedOut: false
   },
