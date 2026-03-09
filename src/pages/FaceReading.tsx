@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Camera, Upload, RotateCcw, Share2, Bookmark, Sparkles, ShieldCheck, Eye, Brain, Smile, Crown, Zap, Heart, ScanFace } from 'lucide-react';
+import { Camera, Upload, RotateCcw, Share2, Bookmark, Sparkles, ShieldCheck, Eye, Brain, Smile, Crown, Zap, Heart, ScanFace, Download, Instagram } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import Navigation from '@/components/Navigation';
