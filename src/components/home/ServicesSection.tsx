@@ -1,6 +1,6 @@
 
 
-import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle, BarChart3, MapPin, Target, Library, Brain, Trophy, FlaskConical } from 'lucide-react';
+import { Star, Moon, Users, Book, BotMessageSquare, Heart, BookOpen, Sparkles, ListChecks, Calendar, Music, HandHeart, CloudMoon, MessageCircle, BarChart3, MapPin, Target, Library, Brain, Trophy, FlaskConical, Hand } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -13,6 +13,15 @@ const serviceFeatures = [
     descEn: "Get personalized AI-powered spiritual guidance based on your Kundli.",
     descHi: "आपकी कुंडली के आधार पर AI मार्गदर्शन प्राप्त करें।",
     path: "/ask-astroashi",
+    highlight: true
+  },
+  {
+    icon: Hand,
+    titleEn: "Palm Reading AI",
+    titleHi: "हस्तरेखा AI",
+    descEn: "Upload your palm photo for AI-powered spiritual insights.",
+    descHi: "AI आध्यात्मिक अंतर्दृष्टि के लिए अपनी हथेली की फोटो अपलोड करें।",
+    path: "/palm-reading",
     highlight: true
   },
   {
