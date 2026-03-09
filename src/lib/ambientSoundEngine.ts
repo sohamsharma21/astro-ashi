@@ -63,6 +63,10 @@ class AmbientSoundEngine {
       case 'crickets': this.createCrickets(); break;
       case 'fire': this.createFire(); break;
       case 'om': this.createOm(); break;
+      case 'thunder': this.createThunder(); break;
+      case 'river': this.createRiver(); break;
+      case 'birds': this.createBirds(); break;
+      case 'flute': this.createFlute(); break;
     }
   }
 
