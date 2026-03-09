@@ -150,7 +150,7 @@ const SpiritualProgress = () => {
           </Tabs>
 
           {/* Activity Progress */}
-          <div className="space-y-3 mb-8">
+          <div className="space-y-3 mb-8 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {activities.map((a, i) => (
               <motion.div key={a.key} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 * i }}>
                 <Card className="p-4">
