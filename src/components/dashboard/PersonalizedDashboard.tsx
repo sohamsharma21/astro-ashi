@@ -10,7 +10,7 @@ import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
-import EmailVerificationBanner from './EmailVerificationBanner';
+// Email verification banner removed - Google OAuth already verifies email
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
 import { getDailyInspiration } from '@/lib/inspirationData';
