@@ -20,9 +20,9 @@ const Footer = () => {
               <span className="text-base sm:text-lg font-heading font-extrabold text-gradient-gold">AstroAshi</span>
             </Link>
             <p className="mt-2 sm:mt-3 text-[11px] sm:text-xs text-muted-foreground leading-relaxed max-w-xs">
-              {language === 'en' 
-                ? 'AI-powered Vedic astrology and spiritual guidance platform.'
-                : 'AI-संचालित वैदिक ज्योतिष और आध्यात्मिक मार्गदर्शन।'}
+              {language === 'en' ?
+              'AI-powered Vedic astrology and spiritual guidance platform.' :
+              'AI-संचालित वैदिक ज्योतिष और आध्यात्मिक मार्गदर्शन।'}
             </p>
           </div>
 
@@ -33,17 +33,17 @@ const Footer = () => {
             </h3>
             <ul className="space-y-1.5 sm:space-y-2">
               {[
-                { to: '/about-us', en: 'About', hi: 'हमारे बारे में' },
-                { to: '/daily-horoscope', en: 'Horoscope', hi: 'राशिफल' },
-                { to: '/kundli-generator', en: 'Kundli', hi: 'कुंडली' },
-                { to: '/contact-us', en: 'Contact', hi: 'संपर्क' },
-              ].map(link => (
-                <li key={link.to}>
+              { to: '/about-us', en: 'About', hi: 'हमारे बारे में' },
+              { to: '/daily-horoscope', en: 'Horoscope', hi: 'राशिफल' },
+              { to: '/kundli-generator', en: 'Kundli', hi: 'कुंडली' },
+              { to: '/contact-us', en: 'Contact', hi: 'संपर्क' }].
+              map((link) =>
+              <li key={link.to}>
                   <Link to={link.to} className="text-[11px] sm:text-xs text-muted-foreground hover:text-primary transition-colors">
                     {language === 'en' ? link.en : link.hi}
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
 
@@ -54,16 +54,16 @@ const Footer = () => {
             </h3>
             <ul className="space-y-1.5 sm:space-y-2">
               {[
-                { to: '/ask-astroashi', en: 'AstroAshi AI', hi: 'AstroAshi AI' },
-                { to: '/predictions', en: 'Predictions', hi: 'भविष्यफल' },
-                { to: '/panchang', en: 'Panchang', hi: 'पंचांग' },
-              ].map(link => (
-                <li key={link.to}>
+              { to: '/ask-astroashi', en: 'AstroAshi AI', hi: 'AstroAshi AI' },
+              { to: '/predictions', en: 'Predictions', hi: 'भविष्यफल' },
+              { to: '/panchang', en: 'Panchang', hi: 'पंचांग' }].
+              map((link) =>
+              <li key={link.to}>
                   <Link to={link.to} className="text-[11px] sm:text-xs text-muted-foreground hover:text-primary transition-colors">
                     {language === 'en' ? link.en : link.hi}
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
 
@@ -95,13 +95,13 @@ const Footer = () => {
               <li><Link to="/terms-of-service" className="text-muted-foreground/60 hover:text-primary transition-colors">{language === 'en' ? 'Terms' : 'शर्तें'}</Link></li>
             </ul>
           </div>
-          <p className="text-[9px] sm:text-[10px] text-muted-foreground/40 text-center mt-3">
+          <p className="text-[9px] text-muted-foreground/40 text-center mt-3 my-px sm:text-xl font-semibold">
             Made with ❤️ by <span className="text-primary/60 font-semibold">AstroAshi</span>
           </p>
         </div>
       </div>
-    </footer>
-  );
+    </footer>);
+
 };
 
 export default Footer;
