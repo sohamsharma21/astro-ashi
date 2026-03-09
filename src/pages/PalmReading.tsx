@@ -135,8 +135,8 @@ const PalmReadingPage = () => {
     <>
       <SEOHead title="Palm Reading AI - AstroAshi" description="Upload a photo of your palm and receive AI-powered spiritual insights about your life lines, personality, and future patterns." canonical="/palm-reading" />
       <Navigation />
-      <main className="min-h-screen pt-16 pb-24 lg:pb-8">
-        <div className="container mx-auto px-4 max-w-2xl py-6">
+      <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10">
+        <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl py-4 sm:py-6">
 
           {/* Header */}
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-8">
