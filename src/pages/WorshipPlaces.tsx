@@ -64,9 +64,14 @@ const WorshipPlaces = () => {
     const query = searchQuery || placeTypes[selectedType]?.query || 'temple';
     // Use OpenStreetMap Nominatim API (free, no key needed)
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=20&viewbox=${userLocation.lng - 0.15},${userLocation.lat + 0.15},${userLocation.lng + 0.15},${userLocation.lat - 0.15}&bounded=1&addressdetails=1`
-      );
+      const bbox = 0.2;
+      const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=20&viewbox=${userLocation.lng - bbox},${userLocation.lat + bbox},${userLocation.lng + bbox},${userLocation.lat - bbox}&bounded=1&addressdetails=1`;
+      const res = await fetch(url, {
+        headers: {
+          'Accept': 'application/json',
+          'User-Agent': 'AstroAshi/1.0 (astroashi.app)',
+        },
+      });
       const data = await res.json();
       const results: Place[] = data.map((item: any) => ({
         name: item.display_name.split(',')[0],
