@@ -24,6 +24,7 @@ import {
   Trophy,
   FlaskConical,
   Hand,
+  ScanFace,
   type LucideIcon 
 } from 'lucide-react';
 
