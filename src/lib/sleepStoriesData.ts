@@ -4,12 +4,12 @@ export interface SleepContent {
   titleHi: string;
   descEn: string;
   descHi: string;
-  type: 'story' | 'nature' | 'guided';
+  type: 'story' | 'nature' | 'guided' | 'asmr';
   religion: string;
   duration: string;
   icon: string;
-  ambientId?: string; // maps to ambientSoundEngine preset
-  audioUrl?: string;  // archive.org or external URL
+  ambientId?: string;
+  audioUrl?: string;
 }
 
 export const sleepContent: SleepContent[] = [
@@ -17,15 +17,23 @@ export const sleepContent: SleepContent[] = [
   { id: 'g1', titleEn: 'Om Drone Deep Sleep', titleHi: 'ॐ ध्वनि गहरी नींद', descEn: 'Continuous Om vibration for deep relaxation', descHi: 'गहरी नींद के लिए ॐ ध्वनि', type: 'guided', religion: 'other', duration: '∞', icon: '🕉️', ambientId: 'om' },
   { id: 'g2', titleEn: 'Singing Bowl Sleep', titleHi: 'सिंगिंग बाउल नींद', descEn: 'Tibetan singing bowl tones for restful sleep', descHi: 'आरामदायक नींद के लिए सिंगिंग बाउल', type: 'guided', religion: 'other', duration: '∞', icon: '🥣', ambientId: 'singing-bowl' },
   { id: 'g3', titleEn: 'Temple Bells Lullaby', titleHi: 'मंदिर घंटी लोरी', descEn: 'Gentle temple bell chimes for peaceful sleep', descHi: 'शांत नींद के लिए मंदिर घंटी', type: 'guided', religion: 'other', duration: '∞', icon: '🔔', ambientId: 'bells' },
+  { id: 'g4', titleEn: 'Flute Sleep Meditation', titleHi: 'बांसुरी नींद ध्यान', descEn: 'Soothing bamboo flute for deep sleep', descHi: 'गहरी नींद के लिए बांसुरी की धुन', type: 'guided', religion: 'other', duration: '∞', icon: '🎵', ambientId: 'flute' },
 
-  // Nature sounds — ambient engine (no external URLs needed)
+  // Nature sounds — ambient engine
   { id: 'n1', titleEn: 'Rain on Leaves', titleHi: 'पत्तों पर बारिश', descEn: 'Gentle rainfall on a forest canopy', descHi: 'जंगल में कोमल बारिश', type: 'nature', religion: 'other', duration: '∞', icon: '🌧️', ambientId: 'rain' },
   { id: 'n2', titleEn: 'Ocean Waves', titleHi: 'समुद्र की लहरें', descEn: 'Rhythmic ocean waves on a moonlit beach', descHi: 'चांदनी रात में समुद्र की लहरें', type: 'nature', religion: 'other', duration: '∞', icon: '🌊', ambientId: 'ocean' },
   { id: 'n3', titleEn: 'Forest Wind', titleHi: 'वन की हवा', descEn: 'Whispering wind through tall trees', descHi: 'ऊँचे पेड़ों से गुज़रती हवा', type: 'nature', religion: 'other', duration: '∞', icon: '🌿', ambientId: 'wind' },
   { id: 'n4', titleEn: 'Crackling Campfire', titleHi: 'जलती लकड़ी', descEn: 'Warm crackling fire for cozy nights', descHi: 'आरामदायक रातों के लिए जलती आग', type: 'nature', religion: 'other', duration: '∞', icon: '🔥', ambientId: 'fire' },
   { id: 'n5', titleEn: 'Night Crickets', titleHi: 'रात के झींगुर', descEn: 'Peaceful night cricket chorus', descHi: 'शांत रात के झींगुर', type: 'nature', religion: 'other', duration: '∞', icon: '🦗', ambientId: 'crickets' },
+  { id: 'n6', titleEn: 'Thunderstorm Night', titleHi: 'तूफानी रात', descEn: 'Distant thunder with rain for deep sleep', descHi: 'गहरी नींद के लिए दूर की गरज और बारिश', type: 'nature', religion: 'other', duration: '∞', icon: '⛈️', ambientId: 'thunder' },
+  { id: 'n7', titleEn: 'River Stream', titleHi: 'नदी की धारा', descEn: 'Gentle flowing river water sounds', descHi: 'बहती नदी की कोमल ध्वनि', type: 'nature', religion: 'other', duration: '∞', icon: '🏞️', ambientId: 'river' },
+  { id: 'n8', titleEn: 'Birds at Dawn', titleHi: 'सुबह की चिड़ियाँ', descEn: 'Early morning birdsong chorus', descHi: 'सुबह की चिड़ियों का कलरव', type: 'nature', religion: 'other', duration: '∞', icon: '🐦', ambientId: 'birds' },
 
-  // Spiritual stories — archive.org audio where available
+  // ASMR / Relaxation
+  { id: 'a1', titleEn: 'Gentle Rain + Fire', titleHi: 'बारिश + आग', descEn: 'Cozy rain with crackling fire sounds', descHi: 'बारिश और जलती आग का मिश्रण', type: 'asmr', religion: 'other', duration: '∞', icon: '🏡', ambientId: 'rain' },
+  { id: 'a2', titleEn: 'Night Garden', titleHi: 'रात का बगीचा', descEn: 'Crickets, wind and distant water', descHi: 'झींगुर, हवा और दूर का पानी', type: 'asmr', religion: 'other', duration: '∞', icon: '🌺', ambientId: 'crickets' },
+
+  // Spiritual stories — archive.org audio
   { id: 's1', titleEn: 'Tibetan Buddhist Chants', titleHi: 'तिब्बती बौद्ध मंत्र', descEn: 'Meditative sound of Buddhist chants for deep sleep', descHi: 'गहरी नींद के लिए बौद्ध मंत्र', type: 'story', religion: 'buddhist', duration: '55:00', icon: '🌸',
     audioUrl: 'https://archive.org/download/jamendo-019797/01%20-%20Tibetan%20Incantations-The%20Meditative%20Sound%20Of%20Buddhist%20Chants%20-%20Track%2001.ogg' },
   { id: 's2', titleEn: 'The Lord\'s Prayer', titleHi: 'प्रभु की प्रार्थना', descEn: 'Billy Graham\'s peaceful bedtime prayer', descHi: 'बिली ग्राहम की शांतिपूर्ण प्रार्थना', type: 'story', religion: 'christian', duration: '3:20', icon: '✝️',
@@ -40,6 +48,10 @@ export const sleepContent: SleepContent[] = [
     audioUrl: 'https://archive.org/download/mantrachantingmeditation/01%20Om%20Mani%20Padme%20Hum.mp3' },
   { id: 's7', titleEn: 'Waheguru Meditation', titleHi: 'वाहेगुरु ध्यान', descEn: 'Calming Waheguru vibration for sleep', descHi: 'नींद के लिए शांत वाहेगुरु ध्वनि', type: 'story', religion: 'sikh', duration: '∞', icon: '☬', ambientId: 'om' },
   { id: 's8', titleEn: 'Navkar Mantra Drone', titleHi: 'णमोकार मंत्र ध्वनि', descEn: 'Meditative Om drone inspired by Jain tradition', descHi: 'जैन परंपरा से प्रेरित ॐ ध्वनि', type: 'story', religion: 'jain', duration: '∞', icon: '🙏', ambientId: 'om' },
+  { id: 's9', titleEn: 'Surah Rahman for Sleep', titleHi: 'सूरह रहमान (नींद)', descEn: 'Soothing Quran recitation for peaceful sleep', descHi: 'शांत नींद के लिए कुरान पाठ', type: 'story', religion: 'muslim', duration: '12:00', icon: '☪️',
+    audioUrl: 'https://archive.org/download/055-ar-rahman-surah-quran-by-abdul-basit-mujawwad-128kb-mp-3/055%20%20ArRahman%20surah%20Quran%20by%20Abdul%20Basit%20%28%20Mujawwad%20%29%20%20128kb%20mp3.mp3' },
+  { id: 's10', titleEn: 'Gayatri Mantra for Sleep', titleHi: 'गायत्री मंत्र (नींद)', descEn: 'Gentle Gayatri Mantra chanting for rest', descHi: 'आराम के लिए गायत्री मंत्र', type: 'story', religion: 'hindu', duration: '4:01', icon: '🙏',
+    audioUrl: 'https://archive.org/download/GayatriMantra_835/Gayatri%20Mantra.mp4' },
 ];
 
 export const getSleepContent = (religion: string): SleepContent[] => {
@@ -50,4 +62,5 @@ export const typeLabels: Record<string, { en: string; hi: string }> = {
   story: { en: 'Sleep Stories', hi: 'सोने की कहानियां' },
   nature: { en: 'Nature Sounds', hi: 'प्रकृति ध्वनि' },
   guided: { en: 'Guided Sleep', hi: 'निर्देशित नींद' },
+  asmr: { en: 'ASMR & Ambient', hi: 'ASMR और एम्बिएंट' },
 };
