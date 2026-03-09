@@ -309,7 +309,7 @@ const AskAstroAshi = () => {
           </div>
 
           {/* Chat Card */}
-          <Card className="border-border bg-card/80 backdrop-blur-lg flex flex-col h-[calc(100vh-280px)] min-h-[500px]">
+          <Card className="border-border bg-card/80 backdrop-blur-lg flex flex-col h-[calc(100vh-260px)] sm:h-[calc(100vh-280px)] min-h-[400px] sm:min-h-[500px]">
             {/* Scrollable Messages Area */}
             <div
               ref={chatContainerRef}
