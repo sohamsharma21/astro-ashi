@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS spiritual_growth_logs_unique_daily ON spiritual_growth_logs (user_id, activity_type, completed_date);
