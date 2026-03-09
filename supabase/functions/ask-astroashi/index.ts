@@ -39,6 +39,14 @@ serve(async (req) => {
     }
     const userId = claimsData.claims.sub as string;
 
+    // Rate limit: 20 requests per minute per user
+    const rateLimit = checkRateLimit(`ask-astroashi:${userId}`, { maxRequests: 20, windowMs: 60000 });
+    if (!rateLimit.allowed) {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Please wait a moment.' }), {
+        status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     const { question, language = 'en', conversationHistory = [] } = await req.json();
     if (!question || typeof question !== 'string' || question.trim().length === 0) {
       return new Response(JSON.stringify({ error: 'Question is required' }), {
