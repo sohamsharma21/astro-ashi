@@ -40,6 +40,15 @@ serve(async (req) => {
     }
 
     const userId = data.claims.sub as string;
+
+    // Rate limit: 10 requests per minute per user
+    const rateLimit = checkRateLimit(`prediction:${userId}`, { maxRequests: 10, windowMs: 60000 });
+    if (!rateLimit.allowed) {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded. Please wait a moment.' }), {
+        status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     const { predictionType, language } = await req.json();
     
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
