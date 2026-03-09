@@ -95,6 +95,10 @@ const Footer = () => {
               <li><Link to="/terms-of-service" className="text-muted-foreground/60 hover:text-primary transition-colors">{language === 'en' ? 'Terms' : 'शर्तें'}</Link></li>
             </ul>
           </div>
+          <p className="text-[9px] sm:text-[10px] text-muted-foreground/40 text-center mt-3">
+            Made with ❤️ by <span className="text-primary/60 font-semibold">ASA</span>
+          </p>
+          </div>
         </div>
       </div>
     </footer>
