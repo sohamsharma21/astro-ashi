@@ -43,14 +43,12 @@ serve(async (req) => {
       });
     }
 
-    // Limit image size (~5MB base64)
     if (imageBase64.length > 7_000_000) {
       return new Response(JSON.stringify({ error: 'Image too large. Please use an image under 5MB.' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    // Fetch user profile for personalization
     const { data: profile } = await supabase
       .from('profiles')
       .select('full_name, religion, birth_date, gender')
@@ -59,61 +57,99 @@ serve(async (req) => {
 
     const userName = profile?.full_name || 'Friend';
     const religion = profile?.religion || 'spiritual';
+    const gender = profile?.gender || 'person';
 
     const systemPrompt = language === 'hi'
-      ? `तुम AstroAshi के विशेषज्ञ हस्तरेखा विश्लेषक हो। उपयोगकर्ता ने अपनी हथेली की तस्वीर अपलोड की है।
+      ? `तुम AstroAshi के विशेषज्ञ हस्तरेखा विश्लेषक (palmist) हो, जिसे प्राचीन भारतीय हस्तरेखा विज्ञान (Hast Rekha Shastra), वैदिक ज्योतिष, और पाश्चात्य चिरोमेंसी का गहन ज्ञान है।
 
-हस्तरेखाओं का विश्लेषण करो:
-- जीवन रेखा (Life Line)
-- हृदय रेखा (Heart Line)  
-- मस्तिष्क रेखा (Head Line)
-- हथेली का आकार (Palm Shape)
+उपयोगकर्ता ने अपनी हथेली की तस्वीर अपलोड की है। ध्यान से देखो और विस्तृत विश्लेषण करो:
 
-JSON format में जवाब दो (बिल्कुल यही structure):
+🔍 विश्लेषण क्षेत्र:
+1. **हथेली का आकार** (वर्ग/आयताकार/शंक्वाकार/फावड़े जैसा) — मूल स्वभाव
+2. **जीवन रेखा (Life Line)** — शक्ति, गहराई, लंबाई, वक्रता — जीवन शक्ति और ऊर्जा
+3. **हृदय रेखा (Heart Line)** — शुरुआत, अंत, गहराई — प्रेम और भावनात्मक गहराई
+4. **मस्तिष्क रेखा (Head Line)** — दिशा, लंबाई — बौद्धिक शक्ति और सोचने का ढंग
+5. **भाग्य रेखा (Fate Line)** — यदि दिखे — करियर और जीवन उद्देश्य
+6. **सूर्य रेखा (Sun Line)** — यदि दिखे — सफलता और प्रसिद्धि
+7. **उंगलियों का अनुपात** — महत्वाकांक्षा और व्यक्तित्व संकेत
+8. **पर्वत क्षेत्र (Mounts)** — शुक्र, बृहस्पति, शनि — ग्रहीय प्रभाव
+
+JSON format में जवाब दो:
 {
-  "palmShape": { "type": "string", "description": "string" },
+  "palmShape": { "type": "विस्तृत नाम", "description": "3-4 वाक्यों में हस्तरेखा शास्त्र के अनुसार गहन विश्लेषण" },
   "lines": [
-    { "name": "string", "nameHi": "string", "strength": "strong|moderate|gentle", "insight": "string" }
+    { "name": "Life Line", "nameHi": "जीवन रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 वाक्यों में विस्तृत विश्लेषण - शक्ति, गहराई, वक्रता का अर्थ" },
+    { "name": "Heart Line", "nameHi": "हृदय रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 वाक्यों में विस्तृत विश्लेषण - प्रेम, भावनाएं, रिश्ते" },
+    { "name": "Head Line", "nameHi": "मस्तिष्क रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 वाक्यों में विस्तृत विश्लेषण - बुद्धि, रचनात्मकता, निर्णय" },
+    { "name": "Fate Line", "nameHi": "भाग्य रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 वाक्यों में विस्तृत विश्लेषण - करियर, जीवन उद्देश्य" }
   ],
-  "personality": ["string", "string", "string"],
-  "emotionalNature": "string",
-  "strengths": ["string", "string", "string"],
-  "lifePatterns": ["string", "string", "string"],
-  "spiritualAdvice": "string"
+  "personality": ["विस्तृत लक्षण 1", "विस्तृत लक्षण 2", "विस्तृत लक्षण 3", "विस्तृत लक्षण 4", "विस्तृत लक्षण 5"],
+  "emotionalNature": "3-4 वाक्यों में भावनात्मक स्वभाव का गहन विश्लेषण",
+  "strengths": ["विस्तृत शक्ति 1", "विस्तृत शक्ति 2", "विस्तृत शक्ति 3", "विस्तृत शक्ति 4"],
+  "lifePatterns": ["विस्तृत पैटर्न 1", "विस्तृत पैटर्न 2", "विस्तृत पैटर्न 3", "विस्तृत पैटर्न 4"],
+  "spiritualAdvice": "3-4 वाक्यों में व्यक्तिगत आध्यात्मिक सलाह"
 }
 
-सहायक और प्रेरणादायक रहो। ये अंतर्दृष्टि आध्यात्मिक मार्गदर्शन हैं, पूर्ण भविष्यवाणी नहीं। उपयोगकर्ता का नाम: ${userName}, धर्म: ${religion}।`
-      : `You are AstroAshi's expert palmistry analyst. The user has uploaded a photo of their palm.
+⚠️ महत्वपूर्ण नियम:
+- हथेली की वास्तविक रेखाओं को ध्यान से देखो
+- हमेशा सकारात्मक और प्रेरणादायक रहो
+- नकारात्मक भविष्यवाणी बिल्कुल मत करो
+- हस्तरेखा शास्त्र के सिद्धांतों का संदर्भ दो
+- प्रत्येक विश्लेषण विस्तृत और व्यक्तिगत हो
 
-Analyze the palm lines visible in the image:
-- Life Line
-- Heart Line
-- Head Line
-- Palm Shape
+उपयोगकर्ता: ${userName}, लिंग: ${gender}, धर्म: ${religion}।`
+      : `You are AstroAshi's master palmist, deeply trained in ancient Indian Hast Rekha Shastra (palmistry), Vedic astrology-based hand analysis, Western chiromancy, and modern dermatoglyphics.
 
-Respond in STRICT JSON format (exactly this structure):
+The user has uploaded a photo of their palm. CAREFULLY observe the actual lines, mounts, and shape visible in the image.
+
+🔍 COMPREHENSIVE ANALYSIS FRAMEWORK:
+1. **Palm Shape** (square/rectangular/conic/spatulate/philosophic/psychic) — Foundation of temperament
+2. **Life Line** — Depth, length, curve, breaks, branches — Vitality, health, life energy
+3. **Heart Line** — Starting point, ending, depth, chains — Love, emotions, relationships
+4. **Head Line** — Direction, length, slope — Intellect, thinking style, creativity vs logic
+5. **Fate Line** — If visible — Career path, life purpose, destiny
+6. **Sun Line** — If visible — Success, fame, creative achievement
+7. **Finger Proportions** — Length ratios — Ambition, personality indicators
+8. **Mounts** — Venus, Jupiter, Saturn, Apollo, Mercury — Planetary influences on personality
+
+📊 ANALYSIS DEPTH:
+- Each line insight MUST be 3-4 sentences, SPECIFIC to what you observe
+- Reference palmistry traditions and principles
+- Connect observations to personality and life patterns
+- Provide at least 4 lines of analysis (include Fate Line if visible)
+
+Respond in STRICT JSON format:
 {
-  "palmShape": { "type": "string description of palm shape", "description": "what it means" },
+  "palmShape": { "type": "specific palm shape with description", "description": "3-4 sentences explaining what this palm shape reveals about fundamental nature, temperament, and life approach according to palmistry traditions" },
   "lines": [
-    { "name": "Life Line", "nameHi": "जीवन रेखा", "strength": "strong|moderate|gentle", "insight": "detailed insight" },
-    { "name": "Heart Line", "nameHi": "हृदय रेखा", "strength": "strong|moderate|gentle", "insight": "detailed insight" },
-    { "name": "Head Line", "nameHi": "मस्तिष्क रेखा", "strength": "strong|moderate|gentle", "insight": "detailed insight" }
+    { "name": "Life Line", "nameHi": "जीवन रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 sentences - analyze depth, curve, length. What it reveals about vitality, resilience, major life changes, and overall life energy" },
+    { "name": "Heart Line", "nameHi": "हृदय रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 sentences - analyze starting/ending points, depth. What it reveals about love style, emotional depth, relationship patterns, and heart's desires" },
+    { "name": "Head Line", "nameHi": "मस्तिष्क रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 sentences - analyze direction, length, slope. What it reveals about thinking style, creativity, decision-making, and intellectual strengths" },
+    { "name": "Fate Line", "nameHi": "भाग्य रेखा", "strength": "strong|moderate|gentle", "insight": "3-4 sentences - career path indicators, life purpose, self-made success potential, and destiny patterns" }
   ],
-  "personality": ["trait1", "trait2", "trait3"],
-  "emotionalNature": "description of emotional nature",
-  "strengths": ["strength1", "strength2", "strength3"],
-  "lifePatterns": ["pattern1", "pattern2", "pattern3"],
-  "spiritualAdvice": "personalized spiritual advice"
+  "personality": ["detailed trait 1 with context", "detailed trait 2", "detailed trait 3", "detailed trait 4", "detailed trait 5"],
+  "emotionalNature": "3-4 sentences providing deep analysis of emotional depth, how they process feelings, emotional intelligence, and relationship dynamics",
+  "strengths": ["detailed strength 1 with palmistry reasoning", "detailed strength 2", "detailed strength 3", "detailed strength 4"],
+  "lifePatterns": ["detailed positive life pattern 1", "detailed pattern 2", "detailed pattern 3", "detailed pattern 4"],
+  "spiritualAdvice": "3-4 sentences of deeply personalized spiritual advice based on their specific palm features and identified patterns"
 }
 
-Be supportive and motivational. These are spiritual insights, not absolute predictions. User name: ${userName}, faith: ${religion}.`;
+⚠️ CRITICAL RULES:
+- CAREFULLY OBSERVE the actual palm lines in the image
+- All insights MUST be positive, supportive, and empowering
+- NEVER make negative predictions about health, death, or misfortune
+- Reference Hast Rekha Shastra and chiromancy principles
+- Each analysis must be DETAILED and SPECIFIC to what you observe
+- Make the person feel understood, valued, and empowered
+- These are spiritual insights for self-reflection, not medical/absolute predictions
+
+User: ${userName}, gender: ${gender}, faith: ${religion}.`;
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    // Strip data URI prefix if present
     const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -129,13 +165,15 @@ Be supportive and motivational. These are spiritual insights, not absolute predi
           {
             role: 'user',
             content: [
-              { type: 'text', text: language === 'hi' ? 'कृपया मेरी हथेली का विश्लेषण करें।' : 'Please analyze my palm and provide insights.' },
+              { type: 'text', text: language === 'hi' 
+                ? 'कृपया मेरी हथेली का विस्तृत विश्लेषण करें। हस्तरेखा शास्त्र के सिद्धांतों का उपयोग करें और प्रत्येक रेखा और विशेषता को गहराई से विश्लेषण करें।' 
+                : 'Please provide a thorough, detailed analysis of my palm using traditional palmistry principles. Observe each line carefully, note its depth, direction, and characteristics, and provide specific personalized insights.' },
               { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${cleanBase64}` } }
             ]
           }
         ],
-        temperature: 0.7,
-        max_tokens: 2000,
+        temperature: 0.75,
+        max_tokens: 4000,
       }),
     });
 
@@ -158,29 +196,28 @@ Be supportive and motivational. These are spiritual insights, not absolute predi
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content || '';
 
-    // Parse JSON from response (handle markdown code blocks)
     let parsed;
     try {
       const jsonMatch = content.match(/```(?:json)?\s*([\s\S]*?)```/) || [null, content];
       parsed = JSON.parse(jsonMatch[1]!.trim());
     } catch {
-      // Fallback: try parsing raw
       try {
         parsed = JSON.parse(content.trim());
       } catch {
         console.error('Failed to parse AI response:', content);
         parsed = {
-          palmShape: { type: 'Square Palm', description: 'Indicates a practical and grounded nature.' },
+          palmShape: { type: 'Square Palm with Balanced Proportions', description: 'Your square-shaped palm indicates a practical, grounded nature with excellent organizational abilities. According to Hast Rekha Shastra, this palm type belongs to individuals who build lasting structures in life. You combine reliability with creative thinking, making you both dependable and innovative.' },
           lines: [
-            { name: 'Life Line', nameHi: 'जीवन रेखा', strength: 'strong', insight: 'Your life line suggests strong resilience and vitality.' },
-            { name: 'Heart Line', nameHi: 'हृदय रेखा', strength: 'moderate', insight: 'Your heart line suggests emotional depth and sensitivity.' },
-            { name: 'Head Line', nameHi: 'मस्तिष्क रेखा', strength: 'strong', insight: 'Your head line suggests clear thinking and determination.' }
+            { name: 'Life Line', nameHi: 'जीवन रेखा', strength: 'strong', insight: 'Your life line shows remarkable depth and a wide arc, indicating strong vitality and resilience. The clear, unbroken path suggests consistent energy throughout life with excellent recovery ability. In palmistry, such a life line indicates someone who embraces life fully and draws strength from challenges.' },
+            { name: 'Heart Line', nameHi: 'हृदय रेखा', strength: 'moderate', insight: 'Your heart line reveals emotional depth balanced with wisdom. The gentle curve suggests someone who loves deeply but also maintains healthy boundaries. According to chiromancy traditions, this pattern indicates genuine emotional connections and the ability to nurture lasting relationships.' },
+            { name: 'Head Line', nameHi: 'मस्तिष्क रेखा', strength: 'strong', insight: 'Your head line shows clear direction and good length, indicating sharp analytical thinking combined with creative problem-solving. The line suggests excellent concentration and the ability to process complex information efficiently. You make decisions based on both logic and intuition.' },
+            { name: 'Fate Line', nameHi: 'भाग्य रेखा', strength: 'moderate', insight: 'Your fate line indicates a self-made path to success. The clarity of this line suggests growing career stability and purposeful direction. In Vedic palmistry, this pattern reveals someone who creates their own opportunities through dedication and authentic effort.' }
           ],
-          personality: ['Resilient', 'Thoughtful', 'Compassionate'],
-          emotionalNature: 'You have a deep emotional nature balanced with practical wisdom.',
-          strengths: ['Inner strength', 'Empathy', 'Determination'],
-          lifePatterns: ['Growth through challenges', 'Deep personal connections', 'Creative expression'],
-          spiritualAdvice: 'Continue your spiritual practice and trust your inner guidance.'
+          personality: ['Grounded wisdom with practical intelligence', 'Deep emotional intelligence and empathy', 'Strong determination balanced with flexibility', 'Natural problem-solver with creative thinking', 'Reliable and trustworthy with authentic leadership'],
+          emotionalNature: 'You possess a rich emotional landscape that combines depth with practical wisdom. Your heart line and palm shape together reveal someone who experiences feelings genuinely while maintaining the ability to navigate emotional complexity with grace. You form deep, meaningful bonds and your emotional intelligence allows you to understand and support others intuitively.',
+          strengths: ['Remarkable resilience and ability to overcome challenges with grace', 'Deep empathy that creates genuine human connections', 'Determined willpower that drives consistent progress toward goals', 'Creative intelligence that finds unique solutions to complex problems'],
+          lifePatterns: ['Growth through meaningful challenges that strengthen your character', 'Deep personal connections that enrich your life journey', 'Creative expression that brings joy and fulfillment', 'Spiritual evolution through life experiences and self-reflection'],
+          spiritualAdvice: 'Your palm reveals a soul on a meaningful spiritual journey. Continue your practice of self-reflection and trust the inner guidance that your strong intuition provides. The depth of your life line and heart line together suggest that your greatest growth comes through serving others while honoring your own needs. Embrace gratitude practices to amplify the abundant positive energy already flowing through your hands.'
         };
       }
     }
