@@ -254,6 +254,14 @@ export const navigationConfig: NavItem[] = [
     showWhenLoggedOut: false
   },
   {
+    path: '/face-reading',
+    labelEn: 'Face Reading',
+    labelHi: 'फेस रीडिंग',
+    icon: ScanFace,
+    requiresAuth: true,
+    showWhenLoggedOut: false
+  },
+  {
     path: '/about-us',
     labelEn: 'About',
     labelHi: 'हमारे बारे में',
