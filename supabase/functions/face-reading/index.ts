@@ -168,6 +168,51 @@ User: ${userName}, gender: ${gender}, faith: ${religion}.`;
 
     const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
 
+    // Step 1: Validate image is actually a human face
+    const validationResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: 'You are an image validation assistant. Your ONLY job is to determine if the uploaded image contains a clear human face. Respond with ONLY a JSON object: {"is_face": true/false, "reason": "brief reason"}. A face must be clearly visible - not a cartoon, drawing, animal, object, landscape, text, or anything else. It must be a real human face photo.' },
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: 'Does this image contain a clear human face? Respond ONLY with JSON.' },
+              { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${cleanBase64}` } }
+            ]
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 100,
+      }),
+    });
+
+    if (validationResponse.ok) {
+      const valData = await validationResponse.json();
+      const valContent = valData.choices?.[0]?.message?.content || '';
+      try {
+        const valMatch = valContent.match(/\{[\s\S]*?\}/) || [null];
+        const valParsed = JSON.parse(valMatch[0] || valContent.trim());
+        if (valParsed.is_face === false) {
+          return new Response(JSON.stringify({ 
+            error: language === 'hi' 
+              ? '⚠️ यह चेहरे की तस्वीर नहीं है। कृपया अपने चेहरे की एक स्पष्ट सेल्फी अपलोड करें।' 
+              : '⚠️ This does not appear to be a face photo. Please upload a clear selfie of your face.' 
+          }), {
+            status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      } catch (e) {
+        console.log('Validation parse warning (continuing):', e);
+      }
+    }
+
+    // Step 2: Main face reading analysis
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {

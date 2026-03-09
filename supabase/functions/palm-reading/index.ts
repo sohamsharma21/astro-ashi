@@ -152,6 +152,51 @@ User: ${userName}, gender: ${gender}, faith: ${religion}.`;
 
     const cleanBase64 = imageBase64.replace(/^data:image\/\w+;base64,/, '');
 
+    // Step 1: Validate image is actually a palm/hand
+    const validationResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: 'You are an image validation assistant. Your ONLY job is to determine if the uploaded image contains a clear human palm/hand with visible palm lines. Respond with ONLY a JSON object: {"is_palm": true/false, "reason": "brief reason"}. The image must show a real human palm with lines visible - not a face, animal, object, landscape, text, cartoon, or anything else.' },
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: 'Does this image contain a clear human palm with visible lines? Respond ONLY with JSON.' },
+              { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${cleanBase64}` } }
+            ]
+          }
+        ],
+        temperature: 0.1,
+        max_tokens: 100,
+      }),
+    });
+
+    if (validationResponse.ok) {
+      const valData = await validationResponse.json();
+      const valContent = valData.choices?.[0]?.message?.content || '';
+      try {
+        const valMatch = valContent.match(/\{[\s\S]*?\}/) || [null];
+        const valParsed = JSON.parse(valMatch[0] || valContent.trim());
+        if (valParsed.is_palm === false) {
+          return new Response(JSON.stringify({ 
+            error: language === 'hi' 
+              ? '⚠️ यह हथेली की तस्वीर नहीं है। कृपया अपनी हथेली की एक स्पष्ट तस्वीर अपलोड करें जिसमें रेखाएं दिखें।' 
+              : '⚠️ This does not appear to be a palm photo. Please upload a clear photo of your palm with visible lines.' 
+          }), {
+            status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      } catch (e) {
+        console.log('Validation parse warning (continuing):', e);
+      }
+    }
+
+    // Step 2: Main palm reading analysis
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
