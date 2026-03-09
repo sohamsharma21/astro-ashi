@@ -20,17 +20,41 @@ export const usePushNotifications = () => {
   const [isSupported, setIsSupported] = useState(false);
 
   useEffect(() => {
-    setIsSupported('Notification' in window);
-    if ('Notification' in window) {
+    // Check if we're in a secure context and Notification API is available
+    const supported = typeof window !== 'undefined' && 
+      'Notification' in window && 
+      window.isSecureContext !== false;
+    setIsSupported(supported);
+    if (supported) {
       setPermission(Notification.permission);
     }
   }, []);
 
   const requestPermission = useCallback(async () => {
     if (!isSupported) {
-      toast.error(language === 'hi' 
-        ? 'आपका ब्राउज़र नोटिफिकेशन सपोर्ट नहीं करता' 
-        : 'Your browser does not support notifications');
+      // Check specific reasons why it's not supported
+      if (!window.isSecureContext) {
+        toast.error(language === 'hi' 
+          ? 'नोटिफिकेशन के लिए HTTPS ज़रूरी है। कृपया published URL पर जाएं।' 
+          : 'Notifications require HTTPS. Please use the published URL.');
+      } else if (!('Notification' in window)) {
+        toast.error(language === 'hi' 
+          ? 'आपका ब्राउज़र नोटिफिकेशन सपोर्ट नहीं करता' 
+          : 'Your browser does not support notifications');
+      } else {
+        toast.error(language === 'hi'
+          ? 'नोटिफिकेशन इस preview में उपलब्ध नहीं हैं। Published app पर ट्राय करें।'
+          : 'Notifications are not available in preview. Try on the published app.');
+      }
+      return false;
+    }
+
+    // Check if already denied at browser level
+    if (Notification.permission === 'denied') {
+      toast.error(language === 'hi'
+        ? 'नोटिफिकेशन ब्राउज़र सेटिंग्स में ब्लॉक हैं। कृपया ब्राउज़र की साइट सेटिंग्स में जाकर नोटिफिकेशन allow करें।'
+        : 'Notifications are blocked in browser settings. Please go to your browser\'s site settings and allow notifications for this site.');
+      setPermission('denied');
       return false;
     }
 
@@ -39,22 +63,30 @@ export const usePushNotifications = () => {
       setPermission(result);
       
       if (result === 'granted') {
-        // Register for push notifications
         if (user) {
           await registerSubscription();
         }
         toast.success(language === 'hi'
-          ? 'नोटिफिकेशन सक्षम!'
-          : 'Notifications enabled!');
+          ? '🔔 नोटिफिकेशन सक्षम!'
+          : '🔔 Notifications enabled!');
         return true;
-      } else {
+      } else if (result === 'denied') {
         toast.error(language === 'hi'
-          ? 'नोटिफिकेशन अनुमति अस्वीकृत'
-          : 'Notification permission denied');
+          ? 'नोटिफिकेशन अस्वीकृत। ब्राउज़र सेटिंग्स → साइट सेटिंग्स → नोटिफिकेशन में जाकर allow करें।'
+          : 'Permission denied. Go to Browser Settings → Site Settings → Notifications to allow.');
+        return false;
+      } else {
+        // 'default' - user dismissed the prompt
+        toast.info(language === 'hi'
+          ? 'नोटिफिकेशन प्रॉम्प्ट को dismiss किया गया। बाद में फिर से ट्राय करें।'
+          : 'Notification prompt dismissed. You can try again later.');
         return false;
       }
     } catch (error) {
       console.error('Permission request error:', error);
+      toast.error(language === 'hi'
+        ? 'नोटिफिकेशन सेटअप में त्रुटि। कृपया published app पर ट्राय करें।'
+        : 'Error setting up notifications. Please try on the published app.');
       return false;
     }
   }, [isSupported, user, language]);
@@ -63,7 +95,6 @@ export const usePushNotifications = () => {
     if (!user) return;
 
     try {
-      // Store subscription using direct API call since types aren't updated yet
       const session = await supabase.auth.getSession();
       await fetch(
         `https://czpumlrofurdktvjtibl.supabase.co/rest/v1/push_subscriptions`,
@@ -91,7 +122,6 @@ export const usePushNotifications = () => {
     if (!user) return;
 
     try {
-      // Use raw fetch since types aren't updated yet
       const response = await fetch(
         `https://czpumlrofurdktvjtibl.supabase.co/rest/v1/notifications?user_id=eq.${user.id}&order=created_at.desc&limit=20`,
         {
