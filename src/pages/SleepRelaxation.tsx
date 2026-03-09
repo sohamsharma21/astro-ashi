@@ -115,8 +115,8 @@ const SleepRelaxation = () => {
     <>
       <SEOHead title="Sleep & Relaxation - AstroAshi" description="Guided sleep meditation and spiritual bedtime stories" />
       <Navigation />
-      <main className="min-h-screen pt-16 pb-24 lg:pb-8 bg-gradient-to-b from-background to-background/95">
-        <div className="container mx-auto px-4 max-w-2xl py-6">
+      <main className="min-h-screen pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10 bg-gradient-to-b from-background to-background/95">
+        <div className="container mx-auto px-4 max-w-2xl md:max-w-3xl lg:max-w-4xl py-4 sm:py-6">
           <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-6">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-500/10 mb-2">
               <Moon className="h-4 w-4 text-indigo-400" />

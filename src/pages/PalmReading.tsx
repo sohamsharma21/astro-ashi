@@ -143,7 +143,7 @@ const PalmReadingPage = () => {
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium mb-3">
               <Hand className="w-3.5 h-3.5" /> {hi ? 'AI हस्तरेखा विज्ञान' : 'AI Palmistry'}
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-2">
               {hi ? '🖐️ हस्तरेखा पठन' : '🖐️ Palm Reading AI'}
             </h1>
             <p className="text-sm text-muted-foreground max-w-md mx-auto">

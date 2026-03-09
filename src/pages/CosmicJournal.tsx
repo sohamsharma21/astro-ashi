@@ -552,7 +552,7 @@ const CosmicJournal = () => {
       <StarBackground starCount={100} />
       <Navigation />
       
-      <main className="container mx-auto px-4 pt-24 pb-20">
+      <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-3xl md:text-4xl font-bold mb-3 text-gradient-gold ${language === 'hi' ? 'font-hindi' : 'font-heading'}`}>

@@ -181,12 +181,12 @@ const Profile = () => {
   );
 
   return (
-    <div className="cosmic-bg min-h-screen pb-24">
+    <div className="cosmic-bg min-h-screen pb-24 lg:pb-10">
       <SEOHead title="Profile | AstroAshi" description="Your AstroAshi profile" />
       <StarBackground starCount={100} />
       <Navigation />
 
-      <main className="pt-20 px-4 max-w-lg mx-auto">
+      <main className="pt-16 sm:pt-18 md:pt-20 px-4 max-w-lg md:max-w-xl lg:max-w-2xl mx-auto">
         {/* Avatar & Name */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}

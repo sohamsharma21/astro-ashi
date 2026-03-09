@@ -109,10 +109,10 @@ const Settings = () => {
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={100} />
         <Navigation />
-        <main className="container mx-auto px-4 pt-24 pb-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto space-y-6">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-cinzel text-gradient-gold mb-2">{tr.title}</h1>
+        <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl lg:max-w-3xl mx-auto space-y-6">
+            <div className="text-center mb-6 sm:mb-8">
+              <h1 className="text-2xl sm:text-3xl font-cinzel text-gradient-gold mb-2">{tr.title}</h1>
             </div>
 
             {/* Language & Religion */}

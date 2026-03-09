@@ -28,7 +28,7 @@ const AstroLove = () => {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-pink-500/10 border border-pink-500/20 text-xs font-medium text-pink-400 mb-4">
             <Heart className="h-3 w-3" /> {language === 'en' ? '6-Dimension Love Analysis' : '6-आयामी प्रेम विश्लेषण'}
           </div>
-          <h1 className={`text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+          <h1 className={`text-2xl sm:text-3xl md:text-5xl font-bold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
             {language === 'en' ? 'AstroLove Calculator' : 'एस्ट्रोलव कैलकुलेटर'}
           </h1>
           <p className={`text-muted-foreground mt-3 max-w-lg mx-auto ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
