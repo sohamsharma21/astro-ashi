@@ -50,3 +50,6 @@ verify_jwt = false
 
 [functions.palm-reading]
 verify_jwt = false
+
+[functions.face-reading]
+verify_jwt = false
