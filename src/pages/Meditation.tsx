@@ -157,7 +157,7 @@ const Meditation = () => {
               <p className="text-xs text-muted-foreground mb-4">{tr.ambientDesc}</p>
 
               {/* Sound grid */}
-              <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 mb-4">
+              <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4">
                 {ambientSounds.map(sound => {
                   const isActive = activeAmbient === sound.id;
                   return (
