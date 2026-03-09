@@ -16,6 +16,10 @@ export const ambientSounds: AmbientSound[] = [
   { id: 'crickets', label: { en: 'Night Crickets', hi: 'रात के झींगुर' }, icon: '🦗' },
   { id: 'fire', label: { en: 'Crackling Fire', hi: 'जलती आग' }, icon: '🔥' },
   { id: 'om', label: { en: 'Om Drone', hi: 'ॐ ध्वनि' }, icon: '🕉️' },
+  { id: 'thunder', label: { en: 'Thunderstorm', hi: 'तूफान' }, icon: '⛈️' },
+  { id: 'river', label: { en: 'River Stream', hi: 'नदी की धारा' }, icon: '🏞️' },
+  { id: 'birds', label: { en: 'Birds at Dawn', hi: 'सुबह की चिड़ियाँ' }, icon: '🐦' },
+  { id: 'flute', label: { en: 'Bamboo Flute', hi: 'बांसुरी' }, icon: '🎵' },
 ];
 
 class AmbientSoundEngine {
