@@ -269,7 +269,7 @@ const AskAstroAshi = () => {
       <div className="min-h-screen bg-background text-foreground">
         <Navigation />
 
-        <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
+        <main className="max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
