@@ -87,8 +87,8 @@ const ReadingHistory = () => {
       <StarBackground starCount={150} />
       <Navigation />
       
-      <main className="container mx-auto px-4 pt-32 pb-20">
-        <h1 className={`text-4xl md:text-6xl font-bold mb-8 text-center text-gradient-gold ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+      <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
+        <h1 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 text-center text-gradient-gold ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
           {language === 'en' ? 'Reading History' : 'पठन इतिहास'}
         </h1>
 

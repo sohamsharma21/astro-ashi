@@ -70,8 +70,8 @@ const DailyInspiration = () => {
       <div className="cosmic-bg min-h-screen">
         <StarBackground starCount={100} />
         <Navigation />
-        <main className="pt-20 pb-24 px-4 max-w-2xl mx-auto">
-          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-3xl font-bold text-foreground text-center mb-8">
+        <main className="pt-16 sm:pt-18 md:pt-20 pb-24 lg:pb-10 px-4 max-w-2xl md:max-w-3xl mx-auto">
+          <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground text-center mb-6 sm:mb-8">
             ✨ {tr.title}
           </motion.h1>
 

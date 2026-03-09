@@ -117,8 +117,8 @@ const SpiritualPersonalityTest = () => {
         <StarBackground starCount={120} />
         <Navigation />
 
-        <main className="container mx-auto px-4 pt-24 pb-12">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl mx-auto">
+        <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-2xl md:max-w-3xl mx-auto">
             
             {/* Show saved result prompt */}
             {savedResult && !showResult && answers.length === 0 && (
