@@ -134,7 +134,7 @@ const Panchang = () => {
           >
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-cinzel text-gradient-gold mb-2">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-cinzel text-gradient-gold mb-2">
                 {t.title}
               </h1>
               <p className="text-muted-foreground">{t.subtitle}</p>

@@ -265,7 +265,7 @@ const Meditation = () => {
           {/* All General */}
           <section>
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2"><Wind className="w-5 h-5 text-primary" /> {tr.all}</h2>
-            <div className="grid gap-3">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
               {allGeneral.map((m, i) => (
                 <MeditationCard key={m.id} session={m} language={language} index={i} onSelect={() => { resetTimer(); setActiveSession(m); }} />
               ))}

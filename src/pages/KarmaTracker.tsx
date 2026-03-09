@@ -118,7 +118,7 @@ const KarmaTracker = () => {
           </div>
 
           {/* Deeds */}
-          <div className="space-y-3">
+          <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {dailyDeeds.map((deed, i) => {
               const done = completedDeeds.includes(deed.key);
               return (

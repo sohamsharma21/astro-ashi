@@ -182,7 +182,7 @@ const Community = () => {
           </div>
 
           {/* Posts */}
-          <div className="space-y-3">
+          <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
             {loading ? (
               <div className="text-center py-12 text-muted-foreground text-sm">
                 {language === 'hi' ? 'लोड हो रहा है...' : 'Loading...'}

@@ -126,9 +126,9 @@ const DailyHoroscope = () => {
         <StarBackground starCount={150} />
         <Navigation />
       
-        <main className="container mx-auto px-4 pt-28 pb-20">
+        <main className="container mx-auto px-4 pt-16 sm:pt-20 md:pt-24 pb-24 lg:pb-10">
           <motion.h1 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
-            className="text-3xl md:text-5xl font-bold mb-10 text-center text-gradient-gold font-cinzel">
+            className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 md:mb-10 text-center text-gradient-gold font-cinzel">
             {lb.title}
           </motion.h1>
 
