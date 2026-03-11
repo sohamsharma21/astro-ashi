@@ -120,6 +120,8 @@ const App = () => (
               <Route path="/personality-test" element={<ProtectedRoute><SpiritualPersonalityTest /></ProtectedRoute>} />
               <Route path="/palm-reading" element={<ProtectedRoute><PalmReading /></ProtectedRoute>} />
               <Route path="/face-reading" element={<ProtectedRoute><FaceReading /></ProtectedRoute>} />
+              <Route path="/moon-phase" element={<ProtectedRoute><MoonPhase /></ProtectedRoute>} />
+              <Route path="/dream-interpreter" element={<ProtectedRoute><DreamInterpreter /></ProtectedRoute>} />
               <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
               <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />
               <Route path="/verify-booking" element={<Navigate to="/" replace />} />
