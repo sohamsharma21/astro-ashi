@@ -47,6 +47,8 @@ const SpiritualChallenges = lazy(() => import("./pages/SpiritualChallenges"));
 const SpiritualPersonalityTest = lazy(() => import("./pages/SpiritualPersonalityTest"));
 const PalmReading = lazy(() => import("./pages/PalmReading"));
 const FaceReading = lazy(() => import("./pages/FaceReading"));
+const MoonPhase = lazy(() => import("./pages/MoonPhase"));
+const DreamInterpreter = lazy(() => import("./pages/DreamInterpreter"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
