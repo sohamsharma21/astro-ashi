@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { ZodiacSign } from '@/lib/constants';
 
-export interface SwissEphemerisHoroscope {
+export interface HoroscopeData {
   id: string;
   zodiac_sign: ZodiacSign;
   date: string;
@@ -9,13 +9,11 @@ export interface SwissEphemerisHoroscope {
   content_hi: string;
 }
 
-export const swissEphemerisService = {
-  // Get horoscope data using Swiss Ephemeris calculations
-  async getDailyHoroscope(sign: ZodiacSign, date?: string): Promise<SwissEphemerisHoroscope | null> {
+export const horoscopeService = {
+  async getDailyHoroscope(sign: ZodiacSign, date?: string): Promise<HoroscopeData | null> {
     const targetDate = date || new Date().toISOString().split('T')[0];
     
     try {
-      // First check if it exists in our database
       const { data: existingHoroscope, error } = await supabase
         .from('daily_horoscopes')
         .select('*')
@@ -29,10 +27,9 @@ export const swissEphemerisService = {
       }
       
       if (existingHoroscope) {
-        return existingHoroscope as SwissEphemerisHoroscope;
+        return existingHoroscope as HoroscopeData;
       }
       
-      // If not found in database, generate a new one using the edge function
       const response = await supabase.functions.invoke('generate-horoscope', {
         body: { zodiacSign: sign, date: targetDate }
       });
@@ -42,27 +39,23 @@ export const swissEphemerisService = {
         throw new Error(response.error.message);
       }
       
-      return response.data.horoscope as SwissEphemerisHoroscope;
+      return response.data.horoscope as HoroscopeData;
     } catch (error) {
-      console.error('Error in swissEphemerisService:', error);
+      console.error('Error in horoscopeService:', error);
       return null;
     }
   },
   
-  // Generate full Kundli data using Swiss Ephemeris
   async generateKundli(name: string, birthDate: string, birthTime: string, birthPlace: string, latitude?: number, longitude?: number) {
-    // In a production implementation, we would call an edge function that uses Swiss Ephemeris
-    // For now we'll return mock data as we're focusing on the structure
     return {
       name,
       birthDate,
       birthTime,
       birthPlace,
-      ascendant: 'Aries', // This would be calculated by Swiss Ephemeris
+      ascendant: 'Aries',
       houses: [
         { house: 1, sign: 'Aries', planets: ['Sun'] },
         { house: 2, sign: 'Taurus', planets: ['Venus'] },
-        // ... other houses
       ]
     };
   }

@@ -1,7 +1,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { ZodiacSign } from '@/lib/constants';
-import { swissEphemerisService } from '@/services/swissEphemerisService';
+import { horoscopeService } from '@/services/horoscopeService';
 import { useToast } from '@/hooks/use-toast';
 import { useReadingHistory } from '@/hooks/useReadingHistory';
 
@@ -14,10 +14,10 @@ export const useHoroscope = (
   const { recordReading } = useReadingHistory();
 
   return useQuery({
-    queryKey: ['swiss-ephemeris-horoscope', selectedSign],
+    queryKey: ['horoscope', selectedSign],
     queryFn: async () => {
       try {
-        const data = await swissEphemerisService.getDailyHoroscope(selectedSign);
+        const data = await horoscopeService.getDailyHoroscope(selectedSign);
         
         if (!data) {
           toast({
@@ -30,7 +30,6 @@ export const useHoroscope = (
           return null;
         }
 
-        // Record reading history when horoscope is successfully loaded
         if (userId) {
           await recordReading('horoscope', data.id);
         }
