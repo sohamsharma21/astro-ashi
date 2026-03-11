@@ -10,6 +10,8 @@ import FocusAreasGrid from './FocusAreasGrid';
 import PanchangWidget from './PanchangWidget';
 import PredictionTabs from './PredictionTabs';
 import FaithDashboardModule from './FaithDashboardModule';
+import LuckMeterWidget from './LuckMeterWidget';
+import DailyEnergyWidget from './DailyEnergyWidget';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Religion } from '@/lib/faithModules';
 import { getDailyInspiration } from '@/lib/inspirationData';
