@@ -170,8 +170,18 @@ const PersonalizedDashboard = () => {
         </motion.div>
       </div>
 
+      {/* Luck Meter & Energy */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <motion.div {...anim(0.28)}>
+          <LuckMeterWidget zodiacSign={dashboardData?.profile?.moon_sign || 'aries'} language={language} />
+        </motion.div>
+        <motion.div {...anim(0.3)}>
+          <DailyEnergyWidget zodiacSign={dashboardData?.profile?.moon_sign || 'aries'} language={language} />
+        </motion.div>
+      </div>
+
       {/* Life Areas */}
-      <motion.div {...anim(0.3)}>
+      <motion.div {...anim(0.33)}>
         <FocusAreasGrid
           focusAreas={dashboardData?.predictions?.focus_areas}
           kundliData={dashboardData?.profile?.kundli_data}
@@ -179,7 +189,7 @@ const PersonalizedDashboard = () => {
       </motion.div>
 
       {/* Predictions */}
-      <motion.div {...anim(0.35)}>
+      <motion.div {...anim(0.38)}>
         <PredictionTabs userId={user?.id || ''} />
       </motion.div>
     </motion.div>
