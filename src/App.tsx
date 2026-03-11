@@ -47,6 +47,8 @@ const SpiritualChallenges = lazy(() => import("./pages/SpiritualChallenges"));
 const SpiritualPersonalityTest = lazy(() => import("./pages/SpiritualPersonalityTest"));
 const PalmReading = lazy(() => import("./pages/PalmReading"));
 const FaceReading = lazy(() => import("./pages/FaceReading"));
+const MoonPhase = lazy(() => import("./pages/MoonPhase"));
+const DreamInterpreter = lazy(() => import("./pages/DreamInterpreter"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
@@ -118,6 +120,8 @@ const App = () => (
               <Route path="/personality-test" element={<ProtectedRoute><SpiritualPersonalityTest /></ProtectedRoute>} />
               <Route path="/palm-reading" element={<ProtectedRoute><PalmReading /></ProtectedRoute>} />
               <Route path="/face-reading" element={<ProtectedRoute><FaceReading /></ProtectedRoute>} />
+              <Route path="/moon-phase" element={<ProtectedRoute><MoonPhase /></ProtectedRoute>} />
+              <Route path="/dream-interpreter" element={<ProtectedRoute><DreamInterpreter /></ProtectedRoute>} />
               <Route path="/consultations" element={<Navigate to="/ask-astroashi" replace />} />
               <Route path="/live-consultation" element={<Navigate to="/ask-astroashi" replace />} />
               <Route path="/verify-booking" element={<Navigate to="/" replace />} />
