@@ -226,6 +226,8 @@ const SpiritualQuickAccess = ({ religion, language, navigate }: { religion: Reli
     { icon: '🧪', label: language === 'hi' ? 'व्यक्तित्व' : 'Personality', path: '/personality-test' },
     { icon: '🤚', label: language === 'hi' ? 'हस्तरेखा' : 'Palm', path: '/palm-reading' },
     { icon: '🧑', label: language === 'hi' ? 'फेस रीडिंग' : 'Face AI', path: '/face-reading' },
+    { icon: '🌙', label: language === 'hi' ? 'चंद्र चरण' : 'Moon Phase', path: '/moon-phase' },
+    { icon: '💭', label: language === 'hi' ? 'स्वप्न' : 'Dreams', path: '/dream-interpreter' },
   ];
 
   return (
