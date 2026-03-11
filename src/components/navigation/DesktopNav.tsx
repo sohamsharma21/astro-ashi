@@ -32,7 +32,7 @@ export const DesktopNav = () => {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const navItems = getFilteredNavItems(!!user);
   const navMap = new Map(navItems.map(item => [item.path, item]));
