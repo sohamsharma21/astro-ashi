@@ -12,9 +12,7 @@ const corsHeaders = {
 
 // Allowed domains for actionUrl to prevent phishing
 const ALLOWED_DOMAINS = [
-  'astroashi-24419.lovable.app',
-  'astroashi.lovable.app',
-  'localhost',
+  'astroashi.vercel.app',
   'czpumlrofurdktvjtibl.supabase.co',
 ];
 
