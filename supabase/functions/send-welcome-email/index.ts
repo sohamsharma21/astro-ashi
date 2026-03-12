@@ -104,7 +104,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <li>📞 Book professional consultations</li>
                 </ul>
                 
-                <a href="https://astroashi.lovable.app" class="button">Explore AstroAshi</a>
+                <a href="https://astroashi.vercel.app" class="button">Explore AstroAshi</a>
                 
                 <p>If you have any questions, feel free to reach out to us anytime.</p>
                 
