@@ -52,11 +52,11 @@ const Community = () => {
     let commentCounts: Record<string, number> = {};
     if (postIds.length > 0) {
       const { data: comments } = await supabase
-        .from('community_comments')
+        .from('community_comments_safe' as any)
         .select('post_id')
         .in('post_id', postIds);
       if (comments) {
-        comments.forEach(c => { commentCounts[c.post_id] = (commentCounts[c.post_id] || 0) + 1; });
+        (comments as any[]).forEach((c: any) => { commentCounts[c.post_id] = (commentCounts[c.post_id] || 0) + 1; });
       }
     }
 
