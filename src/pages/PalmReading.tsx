@@ -125,7 +125,7 @@ const PalmReadingPage = () => {
     const text = `🖐️ My Palm Reading by AstroAshi\n\n` +
       `Personality: ${reading.personality.join(', ')}\n` +
       `Strengths: ${reading.strengths.join(', ')}\n\n` +
-      `${reading.spiritualAdvice}\n\nTry yours at astroashi.lovable.app/palm-reading`;
+      `${reading.spiritualAdvice}\n\nTry yours at astroashi.vercel.app/palm-reading`;
     if (navigator.share) {
       await navigator.share({ title: 'My Palm Reading', text });
     } else {

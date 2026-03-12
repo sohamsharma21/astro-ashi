@@ -10,10 +10,10 @@ interface SEOHeadProps {
 }
 
 export const SEOHead = ({
-  title = 'AstroAshi - Your Personal Astrology & Kundli Platform',
-  description = 'Get personalized horoscopes, Kundli analysis, astrology consultations, and AI-powered astrological insights. Explore your cosmic journey with AstroAshi - the complete astrology platform.',
-  keywords = 'astrology, horoscope, kundli, birth chart, zodiac signs, astrology consultation, daily horoscope, vedic astrology, jyotish, राशिफल, कुंडली',
-  ogImage = 'https://czpumlrofurdktvjtibl.supabase.co/storage/v1/object/public/astroashi-logo.png',
+  title = 'AstroAshi – AI Astrology, Kundli, Horoscope & Spiritual Guidance',
+  description = 'AstroAshi is an AI-powered astrology platform offering daily horoscope, kundli generation, compatibility analysis, panchang, and spiritual insights for users worldwide.',
+  keywords = 'astrology, kundli, rashifal, horoscope, vedic astrology, compatibility, panchang, daily horoscope, astrology app, jyotish, राशिफल, कुंडली',
+  ogImage = 'https://storage.googleapis.com/gpt-engineer-file-uploads/inogvCMFtXgqO55dhqInkVMcKUB2/social-images/social-1773057092698-6118717f-8111-4495-bfb2-9b576cb27629.webp',
   ogType = 'website',
   canonical
 }: SEOHeadProps) => {
@@ -48,7 +48,6 @@ export const SEOHead = ({
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English, Hindi" />
       <meta name="author" content="AstroAshi" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       
       {/* Schema.org markup */}
       <script type="application/ld+json">

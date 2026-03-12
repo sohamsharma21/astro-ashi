@@ -104,7 +104,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <li>📞 Book professional consultations</li>
                 </ul>
                 
-                <a href="https://astroashi.lovable.app" class="button">Explore AstroAshi</a>
+                <a href="https://astroashi.vercel.app" class="button">Explore AstroAshi</a>
                 
                 <p>If you have any questions, feel free to reach out to us anytime.</p>
                 
@@ -149,7 +149,7 @@ const handler = async (req: Request): Promise<Response> => {
                   <li>📞 पेशेवर परामर्श बुक करें</li>
                 </ul>
                 
-                <a href="https://astroashi.lovable.app" class="button">AstroAshi एक्सप्लोर करें</a>
+                <a href="https://astroashi.vercel.app" class="button">AstroAshi एक्सप्लोर करें</a>
                 
                 <p>यदि आपके कोई प्रश्न हैं, तो कभी भी हमसे संपर्क करने में संकोच न करें।</p>
                 

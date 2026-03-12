@@ -12,9 +12,7 @@ const corsHeaders = {
 
 // Allowed domains for actionUrl to prevent phishing
 const ALLOWED_DOMAINS = [
-  'astroashi-24419.lovable.app',
-  'astroashi.lovable.app',
-  'localhost',
+  'astroashi.vercel.app',
   'czpumlrofurdktvjtibl.supabase.co',
 ];
 
@@ -115,7 +113,7 @@ function generateEmailHtml(type: string, actionUrl: string, userName: string | u
               <table width="100%" style="background: linear-gradient(135deg, #1a0b2e 0%, #321c5c 100%); border-radius: 16px 16px 0 0; padding: 40px 20px; text-align: center;">
                 <tr>
                   <td>
-                    <img src="https://astroashi.lovable.app/lovable-uploads/6118717f-8111-4495-bfb2-9b576cb27629.png" width="80" height="80" alt="AstroAshi" style="border-radius: 50%; border: 3px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);">
+                    <img src="https://astroashi.vercel.app/lovable-uploads/6118717f-8111-4495-bfb2-9b576cb27629.png" width="80" height="80" alt="AstroAshi" style="border-radius: 50%; border: 3px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);">
                     <h1 style="color: #ffd700; font-size: 32px; font-weight: bold; margin: 16px 0 8px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);">AstroAshi</h1>
                     <p style="color: #c0c0c0; font-size: 14px; margin: 0;">✨ Your Personal Vedic Astrology Guide ✨</p>
                   </td>
