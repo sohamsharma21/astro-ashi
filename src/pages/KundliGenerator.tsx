@@ -154,9 +154,9 @@ const KundliGenerator = () => {
   const handleShare = useCallback(async () => {
     if (!kundliData) return;
     const moonSign = kundliData.planetPositions.find(p => p.planet === 'Moon')?.sign || '';
-    const shareText = hi
-      ? `🔮 मेरी AstroAshi कुंडली:\n✨ लग्न: ${kundliData.ascendant}\n🌙 चंद्र राशि: ${moonSign}\n\nअपनी कुंडली बनाएं: https://astroashi-24419.lovable.app/kundli-generator`
-      : `🔮 My AstroAshi Kundli:\n✨ Ascendant: ${kundliData.ascendant}\n🌙 Moon Sign: ${moonSign}\n\nGenerate yours: https://astroashi-24419.lovable.app/kundli-generator`;
+     const shareText = hi
+       ? `🔮 मेरी AstroAshi कुंडली:\n✨ लग्न: ${kundliData.ascendant}\n🌙 चंद्र राशि: ${moonSign}\n\nअपनी कुंडली बनाएं: https://astroashi.vercel.app/kundli-generator`
+       : `🔮 My AstroAshi Kundli:\n✨ Ascendant: ${kundliData.ascendant}\n🌙 Moon Sign: ${moonSign}\n\nGenerate yours: https://astroashi.vercel.app/kundli-generator`;
 
     if (navigator.share) {
       try {

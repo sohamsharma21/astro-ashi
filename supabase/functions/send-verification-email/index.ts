@@ -8,9 +8,7 @@ const corsHeaders = {
 
 // Allowed frontend domains for verification links
 const ALLOWED_ORIGINS = [
-  'https://astroashi-24419.lovable.app',
-  'http://localhost:5173',
-  'http://localhost:3000',
+  'https://astroashi.vercel.app',
 ];
 
 serve(async (req) => {

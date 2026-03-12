@@ -259,7 +259,7 @@ const FaceReadingPage = () => {
     ctx.fillText('Discover yours at', 540, 1780);
     ctx.fillStyle = '#a78bfa';
     ctx.font = 'bold 26px system-ui, sans-serif';
-    ctx.fillText('astroashi.lovable.app/face-reading', 540, 1820);
+    ctx.fillText('astroashi.vercel.app/face-reading', 540, 1820);
 
     ctx.fillStyle = '#4b5563';
     ctx.font = '20px system-ui, sans-serif';
