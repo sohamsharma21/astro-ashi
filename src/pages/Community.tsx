@@ -56,7 +56,7 @@ const Community = () => {
         .select('post_id')
         .in('post_id', postIds);
       if (comments) {
-        comments.forEach(c => { commentCounts[c.post_id] = (commentCounts[c.post_id] || 0) + 1; });
+        (comments as any[]).forEach((c: any) => { commentCounts[c.post_id] = (commentCounts[c.post_id] || 0) + 1; });
       }
     }
 
