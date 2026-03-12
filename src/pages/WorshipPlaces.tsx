@@ -23,16 +23,17 @@ interface Place {
 }
 
 const placeTypes: Record<string, { label: { en: string; hi: string }; icon: string; query: string }> = {
+  all: { label: { en: 'All', hi: 'सभी' }, icon: '🙏', query: 'place of worship' },
   temple: { label: { en: 'Hindu Temple', hi: 'हिंदू मंदिर' }, icon: '🛕', query: 'hindu temple' },
   mosque: { label: { en: 'Mosque', hi: 'मस्जिद' }, icon: '🕌', query: 'mosque' },
   church: { label: { en: 'Church', hi: 'चर्च' }, icon: '⛪', query: 'church' },
-  gurudwara: { label: { en: 'Gurudwara', hi: 'गुरुद्वारा' }, icon: '🙏', query: 'gurudwara' },
+  gurudwara: { label: { en: 'Gurudwara', hi: 'गुरुद्वारा' }, icon: '🪯', query: 'gurudwara' },
   jain_temple: { label: { en: 'Jain Temple', hi: 'जैन मंदिर' }, icon: '🪷', query: 'jain temple' },
   monastery: { label: { en: 'Buddhist Monastery', hi: 'बौद्ध मठ' }, icon: '☸️', query: 'buddhist monastery' },
 };
 
 const religionToType: Record<string, string> = {
-  hindu: 'temple', muslim: 'mosque', christian: 'church', sikh: 'gurudwara', jain: 'jain_temple', buddhist: 'monastery', other: 'temple',
+  hindu: 'temple', muslim: 'mosque', christian: 'church', sikh: 'gurudwara', jain: 'jain_temple', buddhist: 'monastery', other: 'all',
 };
 
 const WorshipPlaces = () => {
@@ -62,14 +63,13 @@ const WorshipPlaces = () => {
     if (!userLocation) return;
     setLoading(true);
     const query = searchQuery || placeTypes[selectedType]?.query || 'temple';
-    // Use OpenStreetMap Nominatim API (free, no key needed)
     try {
       const bbox = 0.2;
       const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=20&viewbox=${userLocation.lng - bbox},${userLocation.lat + bbox},${userLocation.lng + bbox},${userLocation.lat - bbox}&bounded=1&addressdetails=1`;
       const res = await fetch(url, {
         headers: {
           'Accept': 'application/json',
-          'User-Agent': 'AstroAshi/1.0 (astroashi.app)',
+          'User-Agent': 'AstroAshi/1.0 (astroashi.vercel.app)',
         },
       });
       const data = await res.json();

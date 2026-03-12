@@ -15,7 +15,7 @@ const Community = () => {
   const { user, language } = useAuth();
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeGroup, setActiveGroup] = useState('general');
+  const [activeGroup, setActiveGroup] = useState('all');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
   const [showCreate, setShowCreate] = useState(false);
@@ -27,8 +27,11 @@ const Community = () => {
     let query = supabase
       .from('community_posts_safe' as any)
       .select('*')
-      .eq('group_name', activeGroup)
       .limit(50);
+
+    if (activeGroup !== 'all') {
+      query = query.eq('group_name', activeGroup);
+    }
 
     if (sortBy === 'trending') {
       query = query.order('likes_count', { ascending: false });
