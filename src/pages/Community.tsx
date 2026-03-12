@@ -52,7 +52,7 @@ const Community = () => {
     let commentCounts: Record<string, number> = {};
     if (postIds.length > 0) {
       const { data: comments } = await supabase
-        .from('community_comments')
+        .from('community_comments_safe' as any)
         .select('post_id')
         .in('post_id', postIds);
       if (comments) {
