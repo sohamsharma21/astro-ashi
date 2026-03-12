@@ -145,7 +145,7 @@ const FaceReadingPage = () => {
       `Energy Type: ${reading.energyType.type}\n` +
       `Leadership: ${reading.leadership.style}\n` +
       `Traits: ${reading.personality.map(p => p.trait).join(', ')}\n\n` +
-      `${reading.spiritualAdvice}\n\nTry yours at astroashi.lovable.app/face-reading`;
+      `${reading.spiritualAdvice}\n\nTry yours at astroashi.vercel.app/face-reading`;
     if (navigator.share) {
       await navigator.share({ title: 'My Face Reading - AstroAshi', text });
     } else {
