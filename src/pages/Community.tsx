@@ -15,7 +15,7 @@ const Community = () => {
   const { user, language } = useAuth();
   const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeGroup, setActiveGroup] = useState('general');
+  const [activeGroup, setActiveGroup] = useState('all');
   const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
   const [bookmarkedPosts, setBookmarkedPosts] = useState<Set<string>>(new Set());
   const [showCreate, setShowCreate] = useState(false);
