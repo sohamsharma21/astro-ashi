@@ -14,6 +14,69 @@ interface CompatibilityFormProps {
 
 export { type CompatibilityFormData };
 
+const getSignName = (sign: ZodiacSign, language: string) => {
+  const names: Record<ZodiacSign, { en: string; hi: string }> = {
+    aries: { en: 'Aries ♈', hi: 'मेष ♈' }, taurus: { en: 'Taurus ♉', hi: 'वृषभ ♉' },
+    gemini: { en: 'Gemini ♊', hi: 'मिथुन ♊' }, cancer: { en: 'Cancer ♋', hi: 'कर्क ♋' },
+    leo: { en: 'Leo ♌', hi: 'सिंह ♌' }, virgo: { en: 'Virgo ♍', hi: 'कन्या ♍' },
+    libra: { en: 'Libra ♎', hi: 'तुला ♎' }, scorpio: { en: 'Scorpio ♏', hi: 'वृश्चिक ♏' },
+    sagittarius: { en: 'Sagittarius ♐', hi: 'धनु ♐' }, capricorn: { en: 'Capricorn ♑', hi: 'मकर ♑' },
+    aquarius: { en: 'Aquarius ♒', hi: 'कुंभ ♒' }, pisces: { en: 'Pisces ♓', hi: 'मीन ♓' }
+  };
+  return language === 'en' ? names[sign].en : names[sign].hi;
+};
+
+interface PersonSectionProps {
+  person: 'person1' | 'person2';
+  index: number;
+  formData: CompatibilityFormData;
+  onChange: (person: 'person1' | 'person2', field: string, value: string) => void;
+  language: string;
+}
+
+const PersonSection = ({ person, index, formData, onChange, language }: PersonSectionProps) => (
+  <motion.div
+    initial={{ opacity: 0, x: index === 0 ? -20 : 20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ delay: 0.2 + index * 0.1 }}
+    className="space-y-3 p-4 rounded-xl"
+    style={{ background: `hsl(${index === 0 ? '280' : '200'} 60% 50% / 0.05)`, borderColor: `hsl(${index === 0 ? '280' : '200'} 60% 50% / 0.15)`, borderWidth: 1, borderStyle: 'solid' }}
+  >
+    <div className="flex items-center gap-2 mb-3">
+      <div className="h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold text-foreground"
+        style={{ background: `hsl(${index === 0 ? '280' : '200'} 60% 50% / 0.2)` }}>
+        {index + 1}
+      </div>
+      <span className={`text-sm font-semibold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
+        {language === 'en' ? (index === 0 ? 'First Person' : 'Second Person') : (index === 0 ? 'पहला व्यक्ति' : 'दूसरा व्यक्ति')}
+      </span>
+    </div>
+    <Input
+      placeholder={language === 'en' ? 'Name' : 'नाम'}
+      value={formData[person].name}
+      onChange={(e) => onChange(person, 'name', e.target.value)}
+      required
+      className="bg-background/50 border-border/50"
+    />
+    <select
+      value={formData[person].sign}
+      onChange={(e) => onChange(person, 'sign', e.target.value)}
+      required
+      className="w-full h-10 px-3 rounded-md bg-background/50 border border-border/50 text-foreground text-sm"
+    >
+      {zodiacSigns.map((sign) => (
+        <option key={sign} value={sign}>{getSignName(sign, language)}</option>
+      ))}
+    </select>
+    <Input
+      type="date"
+      value={formData[person].birthDate}
+      onChange={(e) => onChange(person, 'birthDate', e.target.value)}
+      className="bg-background/50 border-border/50"
+    />
+  </motion.div>
+);
+
 export const CompatibilityForm = ({ onSubmit, loading }: CompatibilityFormProps) => {
   const { language } = useAuth();
   const [formData, setFormData] = useState<CompatibilityFormData>({
@@ -22,71 +85,16 @@ export const CompatibilityForm = ({ onSubmit, loading }: CompatibilityFormProps)
   });
 
   const handleChange = (person: 'person1' | 'person2', field: string, value: string) => {
-    setFormData({
-      ...formData,
-      [person]: { ...formData[person], [field]: field === 'sign' ? value as ZodiacSign : value }
-    });
+    setFormData(prev => ({
+      ...prev,
+      [person]: { ...prev[person], [field]: field === 'sign' ? value as ZodiacSign : value }
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
   };
-
-  const getSignName = (sign: ZodiacSign) => {
-    const names: Record<ZodiacSign, { en: string; hi: string }> = {
-      aries: { en: 'Aries ♈', hi: 'मेष ♈' }, taurus: { en: 'Taurus ♉', hi: 'वृषभ ♉' },
-      gemini: { en: 'Gemini ♊', hi: 'मिथुन ♊' }, cancer: { en: 'Cancer ♋', hi: 'कर्क ♋' },
-      leo: { en: 'Leo ♌', hi: 'सिंह ♌' }, virgo: { en: 'Virgo ♍', hi: 'कन्या ♍' },
-      libra: { en: 'Libra ♎', hi: 'तुला ♎' }, scorpio: { en: 'Scorpio ♏', hi: 'वृश्चिक ♏' },
-      sagittarius: { en: 'Sagittarius ♐', hi: 'धनु ♐' }, capricorn: { en: 'Capricorn ♑', hi: 'मकर ♑' },
-      aquarius: { en: 'Aquarius ♒', hi: 'कुंभ ♒' }, pisces: { en: 'Pisces ♓', hi: 'मीन ♓' }
-    };
-    return language === 'en' ? names[sign].en : names[sign].hi;
-  };
-
-  const PersonSection = ({ person, index, color }: { person: 'person1' | 'person2'; index: number; color: string }) => (
-    <motion.div
-      initial={{ opacity: 0, x: index === 0 ? -20 : 20 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.2 + index * 0.1 }}
-      className={`space-y-3 p-4 rounded-xl bg-${color}-500/5 border border-${color}-500/15`}
-      style={{ background: `hsl(${index === 0 ? '280' : '200'} 60% 50% / 0.05)`, borderColor: `hsl(${index === 0 ? '280' : '200'} 60% 50% / 0.15)` }}
-    >
-      <div className="flex items-center gap-2 mb-3">
-        <div className="h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold text-foreground"
-          style={{ background: `hsl(${index === 0 ? '280' : '200'} 60% 50% / 0.2)` }}>
-          {index + 1}
-        </div>
-        <span className={`text-sm font-semibold text-foreground ${language === 'hi' ? 'font-noto-devanagari' : ''}`}>
-          {language === 'en' ? (index === 0 ? 'First Person' : 'Second Person') : (index === 0 ? 'पहला व्यक्ति' : 'दूसरा व्यक्ति')}
-        </span>
-      </div>
-      <Input
-        placeholder={language === 'en' ? 'Name' : 'नाम'}
-        value={formData[person].name}
-        onChange={(e) => handleChange(person, 'name', e.target.value)}
-        required
-        className="bg-background/50 border-border/50"
-      />
-      <select
-        value={formData[person].sign}
-        onChange={(e) => handleChange(person, 'sign', e.target.value)}
-        required
-        className="w-full h-10 px-3 rounded-md bg-background/50 border border-border/50 text-foreground text-sm"
-      >
-        {zodiacSigns.map((sign) => (
-          <option key={sign} value={sign}>{getSignName(sign)}</option>
-        ))}
-      </select>
-      <Input
-        type="date"
-        value={formData[person].birthDate}
-        onChange={(e) => handleChange(person, 'birthDate', e.target.value)}
-        className="bg-background/50 border-border/50"
-      />
-    </motion.div>
-  );
 
   return (
     <motion.div
@@ -109,7 +117,7 @@ export const CompatibilityForm = ({ onSubmit, loading }: CompatibilityFormProps)
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 pt-2 space-y-5">
-          <PersonSection person="person1" index={0} color="purple" />
+          <PersonSection person="person1" index={0} formData={formData} onChange={handleChange} language={language} />
 
           <div className="flex justify-center">
             <motion.div animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
@@ -117,7 +125,7 @@ export const CompatibilityForm = ({ onSubmit, loading }: CompatibilityFormProps)
             </motion.div>
           </div>
 
-          <PersonSection person="person2" index={1} color="blue" />
+          <PersonSection person="person2" index={1} formData={formData} onChange={handleChange} language={language} />
 
           <Button
             type="submit"

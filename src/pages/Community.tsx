@@ -27,8 +27,11 @@ const Community = () => {
     let query = supabase
       .from('community_posts_safe' as any)
       .select('*')
-      .eq('group_name', activeGroup)
       .limit(50);
+
+    if (activeGroup !== 'all') {
+      query = query.eq('group_name', activeGroup);
+    }
 
     if (sortBy === 'trending') {
       query = query.order('likes_count', { ascending: false });

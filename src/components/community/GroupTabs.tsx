@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { Sparkles, BookOpen, Flame, Heart, MessageCircle } from 'lucide-react';
+import { Sparkles, BookOpen, Flame, Heart, MessageCircle, LayoutGrid } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const GROUPS: { key: string; en: string; hi: string; icon: LucideIcon }[] = [
+  { key: 'all', en: 'All', hi: 'सभी', icon: LayoutGrid },
   { key: 'general', en: 'General', hi: 'सामान्य', icon: MessageCircle },
   { key: 'mindfulness', en: 'Mindfulness', hi: 'सचेतनता', icon: Sparkles },
   { key: 'daily-prayer', en: 'Daily Prayer', hi: 'दैनिक प्रार्थना', icon: BookOpen },
