@@ -134,8 +134,8 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
       
       <p className="text-xs text-gray-400 text-center">
         {language === 'en' 
-          ? 'JPEG, PNG, GIF or WEBP. Max 5MB.' 
-          : 'JPEG, PNG, GIF या WEBP. अधिकतम 5MB.'}
+          ? 'JPEG, PNG or WEBP. Max 5MB. Auto-compressed.' 
+          : 'JPEG, PNG या WEBP. अधिकतम 5MB. स्वतः संपीड़ित.'}
       </p>
     </div>
   );
