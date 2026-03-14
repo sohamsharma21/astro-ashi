@@ -33,7 +33,7 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       // Check file type
-      if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(selectedFile.type)) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(selectedFile.type)) {
         toast({
           title: language === 'en' ? 'Invalid file type' : 'अमान्य फ़ाइल प्रकार',
           description: language === 'en' 
