@@ -33,12 +33,12 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
       // Check file type
-      if (!['image/jpeg', 'image/png', 'image/gif', 'image/webp'].includes(selectedFile.type)) {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(selectedFile.type)) {
         toast({
           title: language === 'en' ? 'Invalid file type' : 'अमान्य फ़ाइल प्रकार',
           description: language === 'en' 
-            ? 'Please select a JPEG, PNG, GIF or WEBP image' 
-            : 'कृपया JPEG, PNG, GIF या WEBP छवि चुनें',
+            ? 'Please select a JPEG, PNG or WEBP image' 
+            : 'कृपया JPEG, PNG या WEBP छवि चुनें',
           variant: 'destructive'
         });
         return;
@@ -110,7 +110,7 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
           type="file"
           id="avatar-upload"
           className="sr-only"
-          accept="image/jpeg,image/png,image/gif,image/webp"
+          accept="image/jpeg,image/png,image/webp"
           onChange={handleFileChange}
           disabled={uploading}
         />
@@ -134,8 +134,8 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
       
       <p className="text-xs text-gray-400 text-center">
         {language === 'en' 
-          ? 'JPEG, PNG, GIF or WEBP. Max 5MB.' 
-          : 'JPEG, PNG, GIF या WEBP. अधिकतम 5MB.'}
+          ? 'JPEG, PNG or WEBP. Max 5MB. Auto-compressed.' 
+          : 'JPEG, PNG या WEBP. अधिकतम 5MB. स्वतः संपीड़ित.'}
       </p>
     </div>
   );
