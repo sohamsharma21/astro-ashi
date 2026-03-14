@@ -110,7 +110,7 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
           type="file"
           id="avatar-upload"
           className="sr-only"
-          accept="image/jpeg,image/png,image/gif,image/webp"
+          accept="image/jpeg,image/png,image/webp"
           onChange={handleFileChange}
           disabled={uploading}
         />
