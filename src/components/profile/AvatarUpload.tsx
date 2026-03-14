@@ -37,8 +37,8 @@ const AvatarUpload = ({ initialUrl, onUpdate }: AvatarUploadProps) => {
         toast({
           title: language === 'en' ? 'Invalid file type' : 'अमान्य फ़ाइल प्रकार',
           description: language === 'en' 
-            ? 'Please select a JPEG, PNG, GIF or WEBP image' 
-            : 'कृपया JPEG, PNG, GIF या WEBP छवि चुनें',
+            ? 'Please select a JPEG, PNG or WEBP image' 
+            : 'कृपया JPEG, PNG या WEBP छवि चुनें',
           variant: 'destructive'
         });
         return;
