@@ -93,13 +93,20 @@ const Community = () => {
 
     if (liked) {
       await supabase.from('community_likes').delete().eq('user_id', user.id).eq('post_id', postId);
-      const post = posts.find(p => p.id === postId);
-      if (post) await supabase.from('community_posts').update({ likes_count: Math.max(0, post.likes_count - 1) }).eq('id', postId);
     } else {
-      await supabase.from('community_likes').insert({ user_id: user.id, post_id: postId });
-      const post = posts.find(p => p.id === postId);
-      if (post) await supabase.from('community_posts').update({ likes_count: post.likes_count + 1 }).eq('id', postId);
+      await supabase.from('community_likes').upsert({ user_id: user.id, post_id: postId }, { onConflict: 'post_id,user_id' });
     }
+
+    // Sync actual count from DB to community_posts
+    const { count } = await supabase
+      .from('community_likes')
+      .select('*', { count: 'exact', head: true })
+      .eq('post_id', postId);
+    
+    const actualCount = count ?? 0;
+    await supabase.from('community_posts').update({ likes_count: actualCount }).eq('id', postId);
+    // Update local state with actual count
+    setPosts(prev => prev.map(p => p.id === postId ? { ...p, likes_count: actualCount } : p));
   };
 
   const toggleBookmark = (postId: string) => {
