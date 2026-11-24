@@ -1,73 +1,329 @@
-# Welcome to your Lovable project
+✦ AstroAshi
 
-## Project info
+Your AI Spiritual Companion
 
-**URL**: https://lovable.dev/projects/1260ffd7-e20a-4b48-a43c-4366696ae00b
+Wisdom. Faith. Purpose. Personalized.
 
-## How can I edit this code?
+AstroAshi is an AI-powered, multi-faith spiritual intelligence platform designed to make spiritual wisdom, ancient scriptures, astrology, and personalized life guidance accessible to everyone.
 
-There are several ways of editing your application.
+We are building a space where technology meets spirituality — helping people explore their beliefs, understand ancient wisdom, find clarity, and grow through personalized AI experiences.
 
-**Use Lovable**
+🌐 Website: https://astroashi.vercel.app
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/1260ffd7-e20a-4b48-a43c-4366696ae00b) and start prompting.
+---
 
-Changes made via Lovable will be committed automatically to this repo.
+✨ Our Vision
 
-**Use your preferred IDE**
+To build the world's first AI-powered, multi-faith spiritual intelligence platform that adapts to every individual's religion, beliefs, language, culture, and personal goals.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+We believe spiritual guidance should not be limited by language, geography, or religious boundaries.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+AstroAshi brings together ancient wisdom and modern artificial intelligence to create a personalized spiritual companion for everyone.
 
-Follow these steps:
+🚀 What We're Building
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+🤖 AI Spiritual Companion
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+A personalized AI companion that helps users explore:
 
-# Step 3: Install the necessary dependencies.
-npm i
+- Life questions and personal growth
+- Spirituality and purpose
+- Faith and religious teachings
+- Meditation and mindfulness
+- Career and relationship guidance
+- Personal development
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+📖 AI Scripture Intelligence
 
-**Edit a file directly in GitHub**
+Interact with ancient scriptures through specialized AI experiences.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Planned scripture experiences include:
 
-**Use GitHub Codespaces**
+Scripture| AI Experience
+Bhagavad Gita| Gita AI
+Ramayana| Ramayana AI
+Mahabharata| Mahabharata AI
+Shiva Purana| Shiva Purana AI
+Quran| Quran AI
+Bible| Bible AI
+Guru Granth Sahib| Sikh Scripture AI
+Dhammapada| Buddhist Wisdom AI
+Jain Agamas| Jain Scripture AI
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Key capabilities:
 
-## What technologies are used for this project?
+- Retrieval-Augmented Generation (RAG)
+- Semantic search using vector embeddings
+- Chapter and verse references
+- Source-grounded responses
+- Multilingual explanations
+- Simple and understandable interpretations
 
-This project is built with:
+🌌 Astrology & Cosmic Intelligence
 
-- Vite
+A modern astrology engine powered by real astronomical calculations.
+
+Planned capabilities:
+
+- Personalized daily, weekly, monthly and yearly horoscopes
+- Birth chart and Kundli generation
+- Panchang
+- Tithi, Nakshatra, Yoga and Karana
+- Muhurat calculations
+- Rahu Kalam, Gulika Kalam and Yamaganda
+- Sunrise, sunset, moonrise and moonset
+- Moon phases
+- Festival calendar
+- Compatibility reports
+
+Our goal is to prioritize accurate astronomical calculations over fabricated astrological data.
+
+🕊️ Multi-Faith Experiences
+
+AstroAshi is designed for everyone.
+
+Users can personalize their experience according to their chosen faith and interests.
+
+Hinduism
+
+- Kundli and Panchang
+- Rashifal
+- Bhagavad Gita AI
+- Ramayana AI
+
+Islam
+
+- Quran AI
+- Prayer times
+- Qibla
+- Islamic calendar
+- Duas
+
+Christianity
+
+- Bible AI
+- Daily verses
+- Prayer journal
+
+Sikhism
+
+- Guru Granth Sahib AI
+- Hukamnama
+
+Buddhism
+
+- Dhammapada AI
+- Meditation
+
+Jainism
+
+- Jain Agama AI
+- Jain calendar
+
+Users remain in control of their preferences. AstroAshi aims to provide a respectful, inclusive experience without promoting one religion over another.
+
+🧠 AI-Powered Personal Growth
+
+Planned intelligent experiences:
+
+- AI Life Coach
+- Career Coach
+- Relationship Guidance
+- Numerology
+- Dream Interpretation
+- Personality Analysis
+- Manifestation Guidance
+- Goal Planning
+- Habit Tracking
+- Mood Tracking
+- Gratitude Journal
+
+🌍 Spiritual Community
+
+A community where people can share experiences, explore ideas, ask questions, and connect with others.
+
+Planned features:
+
+- Communities and discussions
+- Posts and comments
+- Likes and bookmarks
+- Trending topics
+- Anonymous posting
+- Real-time notifications
+- AI-assisted content moderation
+
+🎯 Personalized Dashboard
+
+A personalized home for every user.
+
+Dashboard experiences may include:
+
+- Daily spiritual insights
+- Personalized horoscope
+- Today's festival
+- Prayer and meditation
+- Daily good karma
+- Upcoming Muhurat
+- Reading streaks
+- Spiritual challenges
+- Achievements and rewards
+
+---
+
+🛠️ Technology Stack
+
+AstroAshi v2 is planned around a modern, scalable architecture.
+
+Frontend
+
+- Next.js 15 (App Router)
+- React 19
 - TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- Tailwind CSS v4
+- shadcn/ui
+- Framer Motion
+- Motion One
+- TanStack Query
+- Zustand
+- React Hook Form
+- Zod
 
-## How can I deploy this project?
+Backend & Database
 
-Simply open [Lovable](https://lovable.dev/projects/1260ffd7-e20a-4b48-a43c-4366696ae00b) and click on Share -> Publish.
+- Supabase
+- PostgreSQL
+- Row Level Security (RLS)
+- Supabase Realtime
+- Supabase Storage
+- Edge Functions
 
-## Can I connect a custom domain to my Lovable project?
+Artificial Intelligence
 
-Yes, you can!
+- OpenAI API
+- Google Gemini API
+- Retrieval-Augmented Generation (RAG)
+- pgvector
+- Embedding Models
+- Multi-Agent Architecture
+- Streaming AI Responses
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Infrastructure & Monitoring
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- Vercel
+- Cloudflare
+- Resend
+- Upstash Redis
+- Sentry
+- PostHog Analytics
+
+Note: This represents the planned AstroAshi v2 architecture, not a claim that every technology or feature is already deployed.
+
+---
+
+🎨 Design Philosophy
+
+AstroAshi aims to combine the simplicity of modern productivity products with the calmness of wellness experiences.
+
+Design inspirations:
+
+- Apple
+- Linear
+- Notion
+- Arc Browser
+- Raycast
+- Calm
+- Headspace
+
+Design principles:
+
+- Minimal and premium interfaces
+- Dark and light themes
+- Subtle cosmic gradients
+- Glass-inspired surfaces
+- Smooth animations
+- Accessible typography
+- Mobile-first responsiveness
+- No excessive neon colors
+
+---
+
+🗺️ Development Roadmap
+
+AstroAshi v2 is planned as a phased development project.
+
+Phase| Focus| Status
+Phase 1| Foundation, UI/UX, authentication, onboarding| Planned
+Phase 2| Astrology, Kundli, Panchang, festivals| Planned
+Phase 3| AI platform, RAG, Scripture AI, Life Coach| Planned
+Phase 4| Community, realtime features, moderation| Planned
+Phase 5| Premium, analytics, admin, scaling| Planned
+
+The roadmap will evolve as development progresses.
+
+---
+
+🔐 Security & Privacy
+
+Security and user privacy are important architectural priorities.
+
+Planned security measures:
+
+- Database Row Level Security
+- Secure authentication
+- JWT validation
+- API rate limiting
+- Input validation
+- Secure file uploads
+- XSS and CSRF protection
+- Audit logging
+- Secrets management
+- Monitoring and error tracking
+
+---
+
+💎 Our Philosophy
+
+We believe technology should help people understand themselves, explore wisdom, and make more informed decisions.
+
+AstroAshi is not about replacing faith, religious leaders, or human relationships.
+
+It is about making spiritual knowledge more accessible through responsible technology.
+
+One platform. Many beliefs. Endless possibilities.
+
+---
+
+🤝 Contributing
+
+We welcome developers, designers, researchers, and people passionate about AI, spirituality, and building meaningful technology.
+
+Potential contribution areas:
+
+- Frontend development
+- Backend engineering
+- AI and RAG systems
+- Scripture knowledge bases
+- Astrology calculations
+- UI/UX design
+- Localization and translations
+- Community development
+
+Contribution guidelines will be published as the project opens for community contributions.
+
+---
+
+📬 Connect With Us
+
+- 🌐 Website: https://astroashi.vercel.app
+- 💻 GitHub: https://github.com/your-username/astroashi
+- 📸 Instagram: AstroAshi
+
+---
+
+<p align="center">✦ AstroAshi
+
+Your AI Spiritual Companion
+
+Guidance beyond boundaries. Wisdom for everyone.
+
+</p>
